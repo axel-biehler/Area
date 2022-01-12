@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  mobile:
+    build:
+      context: ./mobile
+    volumes:
+      - "web:/opt"
+  nginx:
+    image: nginx
+    depends_on:
+      - mobile
+    ports:
+      - 8081:80
+    volumes:
+      - "web:/usr/share/nginx/html:ro"
+
+volumes:
+  web:
