@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useNavigation, CommonActions } from '@react-navigation/native';
+import {
+  useNavigation,
+  useRoute,
+  CommonActions,
+} from '@react-navigation/native';
 import {
   Button,
   IconButton,
@@ -10,13 +14,15 @@ import {
   ActivityIndicator,
 } from 'react-native-paper';
 import request from '../api/request';
+import { token } from '../utils/storage';
 
-const Register = () => {
+const Login = () => {
   const navigation = useNavigation();
+  const route = useRoute();
 
+  const { registerSuccess } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -24,8 +30,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      const result = await request('/auth/register', 'POST', {
-        email,
+      const result = await request('/auth/login', 'POST', {
         username,
         password,
       });
@@ -34,7 +39,8 @@ const Register = () => {
         setError(`An error occured: ${result.error}.`);
         setIsLoading(false);
       } else {
-        navigateToLogin(true);
+        await token.set(result.token);
+        navigateToHome();
       }
     } catch (err) {
       console.error(err);
@@ -44,18 +50,25 @@ const Register = () => {
   };
 
   const openServerSettings = () => navigation.navigate('Server settings');
-  const navigateToLogin = registerSuccess => {
+  const navigateToRegister = () => {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [
           {
-            name: 'Login',
-            params: registerSuccess
-              ? {
-                  registerSuccess: true,
-                }
-              : {},
+            name: 'Register',
+          },
+        ],
+      }),
+    );
+  };
+  const navigateToHome = () => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Home',
           },
         ],
       }),
@@ -72,14 +85,12 @@ const Register = () => {
           onPress={openServerSettings}
         />
       </View>
-      <TextInput
-        style={styles.input}
-        label="Email address"
-        left={<TextInput.Icon name="email" color={Colors.grey700} />}
-        value={email}
-        keyboardType="email-address"
-        onChangeText={setEmail}
-      />
+      {registerSuccess && (
+        <Text style={styles.registerText}>
+          You are now registered. Please validate your email address before
+          logging in.
+        </Text>
+      )}
       <TextInput
         style={styles.input}
         label="Username"
@@ -100,16 +111,14 @@ const Register = () => {
         {isLoading && <ActivityIndicator animating={true} size={'large'} />}
         <Button
           style={styles.button}
+          disabled={isLoading}
           icon="send"
           mode="contained"
-          disabled={isLoading}
           onPress={register}>
-          Sign me up
+          Log in
         </Button>
       </View>
-      <Button onPress={() => navigateToLogin(false)}>
-        Already have an account?
-      </Button>
+      <Button onPress={navigateToRegister}>Need an account?</Button>
     </View>
   );
 };
@@ -136,9 +145,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   errorText: {
+    color: '#e53935',
+    marginHorizontal: 6,
+    marginVertical: 2,
+  },
+  registerText: {
     marginHorizontal: 6,
     marginVertical: 2,
   },
 });
 
-export default Register;
+export default Login;
