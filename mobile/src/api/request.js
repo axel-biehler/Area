@@ -1,21 +1,15 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { serverUrl, token as tokenStorage } from '../utils/storage';
 
-// const AUTHORIZATION_PREFIX = 'Bearer ';
-const SERVER_URL_KEY = '@server_url';
-const SERVER_URL_DEFAULT = 'http://10.0.2.2:8080';
-
-const getApiUrl = async () => {
-  const val = await AsyncStorage.getItem(SERVER_URL_KEY);
-  return val || SERVER_URL_DEFAULT;
-};
+const AUTHORIZATION_PREFIX = 'Bearer ';
 
 const request = async (route, method = 'GET', body = undefined) => {
-  // const token = getToken();
-  const res = await fetch(`${await getApiUrl()}${route}`, {
+  const token = await tokenStorage.get();
+  const res = await fetch(`${await serverUrl.get()}${route}`, {
     method,
     headers: {
       'Content-Type': body !== undefined ? 'application/json' : undefined,
-      // Authorization: token != null ? `${AuthorizationPrefix}${token}` : undefined,
+      Authorization:
+        token != null ? `${AUTHORIZATION_PREFIX}${token}` : undefined,
     },
     body: JSON.stringify(body),
   });

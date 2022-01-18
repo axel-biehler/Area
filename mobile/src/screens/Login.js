@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   useNavigation,
@@ -13,20 +13,22 @@ import {
   Text,
   ActivityIndicator,
 } from 'react-native-paper';
+import { decode } from 'base-64';
 import request from '../api/request';
-import { token } from '../utils/storage';
+import { token, username as usernameStorage, exp } from '../utils/storage';
 
 const Login = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const { registerSuccess } = route.params;
+  const registerSuccess =
+    (route.params && route.params.registerSuccess) || false;
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const register = async () => {
+  const login = async () => {
     setIsLoading(true);
 
     try {
@@ -40,6 +42,11 @@ const Login = () => {
         setIsLoading(false);
       } else {
         await token.set(result.token);
+
+        const payload = JSON.parse(decode(result.token.split('.')[1]));
+        await usernameStorage.set(payload.username);
+        await exp.set(payload.exp.toString());
+
         navigateToHome();
       }
     } catch (err) {
@@ -62,7 +69,7 @@ const Login = () => {
       }),
     );
   };
-  const navigateToHome = () => {
+  const navigateToHome = useCallback(() => {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
@@ -73,7 +80,18 @@ const Login = () => {
         ],
       }),
     );
-  };
+  }, [navigation]);
+
+  useEffect(() => {
+    (async () => {
+      const expTime = parseInt((await exp.get()) || 0, 10);
+      const currentTime = new Date().getTime() / 1000;
+
+      if (expTime > currentTime) {
+        navigateToHome();
+      }
+    })();
+  }, [navigateToHome]);
 
   return (
     <View>
@@ -114,7 +132,7 @@ const Login = () => {
           disabled={isLoading}
           icon="send"
           mode="contained"
-          onPress={register}>
+          onPress={login}>
           Log in
         </Button>
       </View>
