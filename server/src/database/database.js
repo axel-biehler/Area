@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const clientOptions = {
   useNewUrlParser: true,
-  dbName: 'dashboard',
+  dbName: 'area',
 };
 
 const connectToDatabase = async () => {

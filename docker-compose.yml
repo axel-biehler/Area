@@ -21,7 +21,7 @@ services:
     networks:
       - backend
     environment:
-      - MONGO_URL=mongodb://dashboard:SyA7Zr4cbcDwjD@mongo
+      - MONGO_URL=mongodb://area:SyA7Zr4cbcDwjD@mongo
     env_file:
     - "server/.env"
   mongo:
