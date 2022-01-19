@@ -8,9 +8,9 @@ const main = async () => {
   const port = process.env.PORT || 8080;
 
   app.use(cors());
-
   app.use(express.json());
-  app.use('./auth', routes.authentication);
+  app.use('/auth', routes.authentication);
+  app.use('/profile', routes.profile);
   app.use('/about.json', routes.about);
 
   await database.database.connectToDatabase();
