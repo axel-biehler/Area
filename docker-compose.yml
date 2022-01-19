@@ -33,7 +33,7 @@ services:
     volumes:
       - database:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=dashboard
+      - MONGO_INITDB_ROOT_USERNAME=area
       - MONGO_INITDB_ROOT_PASSWORD=SyA7Zr4cbcDwjD
 networks:
   backend:

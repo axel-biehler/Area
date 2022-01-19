@@ -51,6 +51,14 @@ const register = async (req, res) => {
       return;
     }
 
+    if (!(await authentication.emailAvailable(email))) {
+      res.json({
+        status: false,
+        error: 'email already taken',
+      });
+      return;
+    }
+
     const u = new User({
       email,
       username,
