@@ -7,49 +7,45 @@ import {
   Headline,
   ActivityIndicator,
 } from 'react-native-paper';
-import { username as usernameStorage } from '../utils/storage';
 import request from '../api/request';
 
 const Profile = () => {
   const [isFetching, setIsFetching] = useState(true);
-  const [id, setId] = useState('');
-  const [originalUsername, setOriginalUsername] = useState('');
+  const [error, setError] = useState(null);
+  const [originalUsername, setOriginalUsername] = useState();
   const [username, setUsername] = useState({ changes: false, val: '' });
   const [email, setEmail] = useState({ changes: false, val: '' });
   const [password, setPassword] = useState({ changes: false, val: '' });
+  const [passwordConf, setPasswordConf] = useState('');
 
   const anyChanges = username.changes || email.changes || password.changes;
 
   const updateProfile = async () => {
-    await request('/profile/patch', 'PATCH', {
-      _id: id,
-      email: email.val,
-      username: username.val,
+    const res = await request('/profile', 'PATCH', {
+      email: email.changes ? email.val : undefined,
+      username: username.changes ? username.val : undefined,
+      password: password.changes ? password.val : undefined,
     });
 
-    if (password.changes) {
-      await request('/profile/password', 'PATCH', {
-        username: originalUsername,
-        password: password.val,
-      });
+    if (res.status) {
+      setEmail({ changes: false, val: email.val });
+      setUsername({ changes: false, val: username.val });
+      setPassword({ changes: false, val: '' });
+      setPasswordConf('');
+      setError(null);
+    } else {
+      setError(res.error);
     }
-
-    setEmail({ changes: false, val: email.val });
-    setUsername({ changes: false, val: username.val });
-    setPassword({ changes: false, val: password.val });
   };
 
   useEffect(() => {
     (async () => {
       setIsFetching(true);
 
-      const u = await usernameStorage.get();
-      const profile = await request(`/profile/get?username=${u}`);
-
-      setId(profile.user._id);
-      setUsername({ changes: false, val: profile.user.username });
-      setOriginalUsername(profile.user.username);
-      setEmail({ changes: false, val: profile.user.email });
+      const profile = await request('/profile');
+      setOriginalUsername(profile.username);
+      setUsername({ changes: false, val: profile.username });
+      setEmail({ changes: false, val: profile.email });
 
       setIsFetching(false);
     })();
@@ -67,7 +63,7 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
-      <Headline>Hi {username.val}!</Headline>
+      <Headline>Hi {originalUsername}!</Headline>
       <Text>Edit your profile</Text>
       <TextInput
         style={styles.textInput}
@@ -104,6 +100,14 @@ const Profile = () => {
           });
         }}
       />
+      <TextInput
+        style={styles.textInput}
+        secureTextEntry
+        label="Confirm password"
+        value={passwordConf}
+        onChangeText={setPasswordConf}
+      />
+      {error && <Text style={styles.errorText}>{error}</Text>}
       <Button disabled={!anyChanges} onPress={updateProfile}>
         Confirm changes
       </Button>
@@ -116,6 +120,10 @@ const styles = StyleSheet.create({
     margin: 8,
   },
   textInput: {
+    marginVertical: 2,
+  },
+  errorText: {
+    marginHorizontal: 6,
     marginVertical: 2,
   },
 });

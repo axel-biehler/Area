@@ -19,9 +19,16 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordConf, setPasswordConf] = useState('');
 
   const register = async () => {
     setIsLoading(true);
+
+    if (password !== passwordConf) {
+      setError("Passwords don't match.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const result = await request('/auth/register', 'POST', {
@@ -94,6 +101,14 @@ const Register = () => {
         left={<TextInput.Icon name="lock" color={Colors.grey700} />}
         value={password}
         onChangeText={setPassword}
+      />
+      <TextInput
+        style={styles.input}
+        secureTextEntry
+        label="Confirm password"
+        left={<TextInput.Icon name="lock" color={Colors.grey700} />}
+        value={passwordConf}
+        onChangeText={setPasswordConf}
       />
       {error && <Text style={styles.errorText}>{error}</Text>}
       <View style={styles.buttonContainer}>
