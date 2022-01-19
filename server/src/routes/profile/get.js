@@ -1,8 +1,8 @@
-const { User } = require("../../database")
+const { User } = require('../../database');
 
 const get = async (req, res) => {
   try {
-    const user = await User.findById(req.userId);
+    const user = await User.findOne(req.userId);
 
     res.json({
       username: user.username,
@@ -15,6 +15,6 @@ const get = async (req, res) => {
       error: 'internal error',
     });
   }
-}
+};
 
 module.exports = get;

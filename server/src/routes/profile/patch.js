@@ -1,12 +1,12 @@
 const validator = require('email-validator');
-const authentication = require('../authentication');
+const authentication = require('../../authentication');
 const { User } = require('../../database');
 
 const patch = async (req, res) => {
   let { username, password, email } = req.body;
 
   try {
-    const user = await User.findById(req.userId);
+    const user = await User.findOne(req.userId);
 
     if (typeof username === 'string') {
       username = username.trim();
