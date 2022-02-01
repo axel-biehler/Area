@@ -1,6 +1,11 @@
 version: "3"
 
 services:
+  front:
+    build: ./front/
+    ports:
+      - "3000:3000"
+
   mobile:
     build:
       context: ./mobile
