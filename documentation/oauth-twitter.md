@@ -2,7 +2,15 @@
 # Twitter Oauth 1.0a
 
 ## Get oauth token
-GET - {{url}}/services/twitter/connect
+POST - {{url}}/services/twitter/connect
+
+In this request you need to send a body like that:
+```JSON
+{
+    "callback": "http://localhost:8081/twitter/link"
+}
+```
+
 After this request you will receive an object la that :
 ```JSON
 {

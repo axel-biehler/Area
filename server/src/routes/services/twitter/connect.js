@@ -2,7 +2,8 @@ const OAuth = require('oauth');
 const { promisify } = require('util');
 
 const connect = async (req, res) => {
-  const encodedCallback = encodeURIComponent('http://localhost:8081/twitter/link');
+  const { callback } = req.body;
+  const encodedCallback = encodeURIComponent(callback);
 
   const oauth = new OAuth.OAuth(
     'https://api.twitter.com/oauth/request_token',
