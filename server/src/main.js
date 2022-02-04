@@ -11,6 +11,7 @@ const main = async () => {
   app.use(express.json());
   app.use('/auth', routes.authentication);
   app.use('/profile', routes.profile);
+  app.use('/services', routes.services);
   app.use('/about.json', routes.about);
 
   await database.database.connectToDatabase();

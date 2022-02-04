@@ -7,6 +7,9 @@ const UserSchema = new Schema({
   password: String,
   email: String,
   emailToken: String,
+  twitterAccess: String,
+  twitterRefresh: String,
+  twitterId: String,
 });
 
 const User = model(TABLE_NAME, UserSchema);
