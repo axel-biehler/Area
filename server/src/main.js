@@ -12,6 +12,8 @@ const main = async () => {
   app.use('/auth', routes.authentication);
   app.use('/profile', routes.profile);
   app.use('/services', routes.services);
+  app.use('/actions', routes.actions);
+  app.use('/reactions', routes.reactions);
   app.use('/about.json', routes.about);
 
   await database.database.connectToDatabase();
