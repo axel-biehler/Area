@@ -55,9 +55,15 @@ function LoginPage() {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
+  const [requestType, setRequestType] = useState(false);
 
-  // function to handle modal open
-  const handleOpen = () => {
+  const openLogin = () => {
+    setRequestType(true);
+    setOpen(true);
+  };
+
+  const openRegister = () => {
+    setRequestType(false);
     setOpen(true);
   };
 
@@ -73,14 +79,14 @@ function LoginPage() {
         <div className={classes.Container}>
           <Typography variant="h4" gutterBottom={true}>Welcome to the AREA !</Typography>
           <div className={classes.LoginForm}>
-            <Button variant="contained" color="primary" onClick={handleOpen}>
+            <Button variant="contained" color="primary" onClick={openLogin}>
               Signup
             </Button>
-            <Button variant="contained" color="primary" onClick={handleOpen}>
+            <Button variant="contained" color="primary" onClick={openRegister}>
               Register
             </Button>
           </div>
-          <ModalLogin open={open} handleClose={handleClose} />
+          <ModalLogin open={open} handleClose={handleClose} isLogin={requestType} />
         </div>
       </div>
     </CssBaseline>

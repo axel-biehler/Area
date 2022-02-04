@@ -28,19 +28,35 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function LoginForm(handleClose: any) {
+function RegisterForm(handleClose: any) {
   const classes = useStyles();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    console.log(email, password);
+    console.log(firstName, lastName, email, password);
     handleClose.handleClose();
   };
 
   return (
     <form className={classes.root} onSubmit={handleSubmit}>
+      <TextField
+        label="First Name"
+        variant="filled"
+        required
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+      />
+      <TextField
+        label="Last Name"
+        variant="filled"
+        required
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+      />
       <TextField
         label="Email"
         variant="filled"
@@ -65,4 +81,4 @@ function LoginForm(handleClose: any) {
   );
 }
 
-export default LoginForm;
+export default RegisterForm;
