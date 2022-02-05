@@ -8,6 +8,5 @@ module.exports = loadDirectory(__dirname).map((reaction) => ({
   widgets: loadDirectory(path.join(__dirname, reaction.name)).map((wid) => ({
     ...wid,
     params: [...wid.params],
-    route: require(path.join(__dirname, reaction.name, wid.name, 'route.js')),
   })),
 }));

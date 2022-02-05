@@ -8,6 +8,5 @@ module.exports = loadDirectory(__dirname).map((action) => ({
   widgets: loadDirectory(path.join(__dirname, action.name)).map((wid) => ({
     ...wid,
     params: [...wid.params],
-    route: require(path.join(__dirname, action.name, wid.name, 'route.js')),
   })),
 }));
