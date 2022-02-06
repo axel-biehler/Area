@@ -1,5 +1,5 @@
 
-# Twitter Oauth 1.0a
+# Trello Oauth 1.0a
 
 ## Get oauth token
 POST - {{url}}/services/trello/connect
