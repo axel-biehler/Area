@@ -15,7 +15,6 @@ const main = async () => {
   app.use('/profile', routes.profile);
   app.use('/reactions', routes.reactions);
   app.use('/services', routes.services);
-  app.use('/webhooks', routes.webhooks);
 
   await database.database.connectToDatabase();
   app.listen(port, () => {
