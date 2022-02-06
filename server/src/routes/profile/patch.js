@@ -6,7 +6,7 @@ const patch = async (req, res) => {
   let { username, password, email } = req.body;
 
   try {
-    const user = await User.findOne(req.userId);
+    const user = await User.findById(req.userId);
 
     if (typeof username === 'string') {
       username = username.trim();
