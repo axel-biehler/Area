@@ -9,10 +9,13 @@ const main = async () => {
 
   app.use(cors());
   app.use(express.json());
+  app.use('/about.json', routes.about);
+  app.use('/actions', routes.actions);
   app.use('/auth', routes.authentication);
   app.use('/profile', routes.profile);
+  app.use('/reactions', routes.reactions);
   app.use('/services', routes.services);
-  app.use('/about.json', routes.about);
+  app.use('/webhooks', routes.webhooks);
 
   await database.database.connectToDatabase();
   app.listen(port, () => {

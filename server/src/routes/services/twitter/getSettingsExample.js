@@ -19,7 +19,7 @@ const getSettingsTest = async (req, res) => {
   try {
     body = await getSettings('https://api.twitter.com/1.1/account/settings.json',
       u.twitterAccess,
-      u.twitterRefresh);
+      u.twitterRefresh).catch((err) => console.error(err));
     body = JSON.parse(body);
   } catch (err) {
     console.error(err);

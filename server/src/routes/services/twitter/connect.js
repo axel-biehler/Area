@@ -3,6 +3,14 @@ const { promisify } = require('util');
 
 const connect = async (req, res) => {
   const { callback } = req.body;
+  if (typeof callback !== 'string' && callback == null) {
+    res.status(400).json({
+      status: false,
+      error: 'Need callback url',
+    });
+    return;
+  }
+
   const encodedCallback = encodeURIComponent(callback);
 
   const oauth = new OAuth.OAuth(
@@ -19,8 +27,7 @@ const connect = async (req, res) => {
     null,
     null,
     null,
-    null,
-  );
+  ).catch((err) => console.error(err));
 
   const params = new URLSearchParams(body);
 

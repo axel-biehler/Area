@@ -21,8 +21,7 @@ const link = async (req, res) => {
       null,
       null,
       null,
-      null,
-    );
+    ).catch((err) => console.error(err));
 
     const params = new URLSearchParams(body);
 
