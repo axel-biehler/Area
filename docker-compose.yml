@@ -25,6 +25,8 @@ services:
       - 8080:8080
     networks:
       - backend
+    environment:
+      - MONGO_URL=mongodb://area:SyA7Zr4cbcDwjD@mongo
     env_file:
     - "server/.env"
   mongo:
