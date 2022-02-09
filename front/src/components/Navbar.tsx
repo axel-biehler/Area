@@ -7,11 +7,8 @@ import {
   makeStyles,
   Theme,
   createStyles,
-  useTheme,
-  useMediaQuery,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import DrawerComponent from "./DrawerComponent";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,8 +37,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function Navbar() {
   const classes = useStyles();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <AppBar>
@@ -50,9 +45,6 @@ function Navbar() {
         <Typography variant="h4" className={classes.logo}>
           Navbar
         </Typography>
-        {isMobile ? (
-          <DrawerComponent />
-        ) : (
           <div className={classes.navlinks}>
             <Link to="/" className={classes.link}>
               Home
@@ -64,7 +56,6 @@ function Navbar() {
               Register
             </Link>
           </div>
-        )}
       </Toolbar>
     </AppBar>
   );

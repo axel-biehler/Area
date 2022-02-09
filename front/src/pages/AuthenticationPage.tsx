@@ -5,10 +5,9 @@ import {
   Theme,
   createStyles,
   Button,
-  AppBar,
   Typography,
 } from "@material-ui/core";
-import ModalLogin from "../components/ModalLogin";
+import ModalAuth from "../components/ModalAuth";
 import Navbar from "../components/Navbar";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -43,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     LoginForm: {
       width: "300px",
-      margin: "auto",
+      margin: "auto auto 20px auto",
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-around",
@@ -51,9 +50,9 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function LoginPage() {
+function AuthenticationPage() {
   const classes = useStyles();
-
+  const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const [requestType, setRequestType] = useState(false);
 
@@ -86,11 +85,12 @@ function LoginPage() {
               Register
             </Button>
           </div>
-          <ModalLogin open={open} handleClose={handleClose} isLogin={requestType} />
+          <ModalAuth open={open} handleClose={handleClose} isLogin={requestType} setError={setError} />
+          {error.length ? <Typography variant="h5" gutterBottom={false}> {error} </Typography> : null}
         </div>
       </div>
     </CssBaseline>
   );
 }
 
-export default LoginPage;
+export default AuthenticationPage;

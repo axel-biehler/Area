@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   createStyles,
@@ -6,6 +7,7 @@ import {
   TextField,
   Theme,
 } from "@material-ui/core";
+import { IFormProps } from "./ModalAuth"
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,34 +30,46 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function RegisterForm(handleClose: any) {
+function RegisterForm(props: IFormProps) {
+  const navigate = useNavigate();
   const classes = useStyles();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
+  const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log(firstName, lastName, email, password);
-    handleClose.handleClose();
+    props.setError("");
+
+    const data = {
+      email: email,
+      username: username,
+      password: password,
+    };
+    fetch("http://localhost:8080/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).then(async function (response: any) {
+      const resBody = await response.json();
+      if (!resBody.status) {
+        props.setError(resBody.error);
+        props.handleClose();
+      } else {
+        navigate("/login");
+        props.handleClose();
+      }
+    });
   };
 
   return (
     <form className={classes.root} onSubmit={handleSubmit}>
       <TextField
-        label="First Name"
+        label="Username"
         variant="filled"
         required
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-      />
-      <TextField
-        label="Last Name"
-        variant="filled"
-        required
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
       <TextField
         label="Email"
@@ -72,7 +86,9 @@ function RegisterForm(handleClose: any) {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div>
-        <Button variant="contained" onClick={handleClose.handleClose}>Cancel</Button>
+        <Button variant="contained" onClick={props.handleClose}>
+          Cancel
+        </Button>
         <Button type="submit" variant="contained" color="primary">
           Signup
         </Button>
