@@ -79,7 +79,7 @@ function AuthenticationPage() {
           <Typography variant="h4" gutterBottom={true}>Welcome to the AREA !</Typography>
           <div className={classes.LoginForm}>
             <Button variant="contained" color="primary" onClick={openLogin}>
-              Signup
+              Login
             </Button>
             <Button variant="contained" color="primary" onClick={openRegister}>
               Register

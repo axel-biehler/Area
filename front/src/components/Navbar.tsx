@@ -46,14 +46,11 @@ function Navbar() {
           Navbar
         </Typography>
           <div className={classes.navlinks}>
-            <Link to="/" className={classes.link}>
+            <Link to="/home" className={classes.link}>
               Home
             </Link>
-            <Link to="/login" className={classes.link}>
-              Login
-            </Link>
-            <Link to="/register" className={classes.link}>
-              Register
+            <Link to="/auth" className={classes.link}>
+              Authenticate
             </Link>
           </div>
       </Toolbar>
