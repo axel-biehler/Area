@@ -1,47 +1,75 @@
-const axios = require("axios")
+const fetch = require("node-fetch")
 const { User } = require('../../../database');
 
 const validate = async (req, res) => {
   try {
-  let { code, state } = req.body;
+    const { code, state } = req.body;
 
-    if (!code || !state || state != process.env.GITHUB_STATE) {
-      res.json({
+    if (!code || !state || state != process.env.GITHUB_STATE)
+      return res.json({
         status: false,
         error: 'no code or state recieved from github service',
       });
-      return;
-    }
 
-    const { data } = await axios.post('https://github.com/login/oauth/access_token', {
-      client_id: process.env.GITHUB_CLIENT_ID,
-      client_secret: process.env.GITHUB_CLIENT_SECRET,
-      code: code
-    }, { headers: {Accept: 'application/json'} });
 
-    if (!data.access_token) {
-      res.json({
+    // Final verification to get the access token from github
+
+    const responseOauth = await fetch('https://github.com/login/oauth/access_token', {
+      method: 'POST',
+      body: JSON.stringify({
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        code: code
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    const dataOauth = await responseOauth.json();
+
+    if (!dataOauth.access_token)
+      return res.json({
         status: false,
-        error: 'no token from github service',
-      });
-      return;
-    }
+        error: 'no access token get from github service',
+      })
+
+
+    // Ask Github for login name
+
+    const responseUser = await fetch('https://api.github.com/user', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${dataOauth.access_token}`
+      }
+    })
+    const dataUser = await responseUser.json();
+
+    if (!dataUser.login)
+      return res.json({
+        status: false,
+        error: 'no login owner get from github service',
+      })
+
+
+    // save token and name owner in github user object
 
     const user = await User.findOne({_id:req.userId});
 
-    if (user == null) {
-      res.json({
+    if (user == null)
+      return res.json({
         status: false,
         error: 'User not found.',
-      });
-      return;
-    }
+      })
 
-    user.githubToken = data.access_token
+    user.github = {
+      token: dataOauth.access_token,
+      owner: dataUser.login
+    }
 
     await user.save();
 
-    res.send({status: true})
+    res.send({ status: true })
 
   } catch (err) {
     console.error(err);

@@ -1,4 +1,4 @@
-const axios = require("axios")
+const fetch = require("node-fetch")
 const { User } = require('../../../database');
 
 const userExample = async (req, res) => {
@@ -19,15 +19,17 @@ const userExample = async (req, res) => {
       });
     }
 
-    const { data } = await axios.get('https://api.github.com/user', {
+    const responseUser = await fetch('https://api.github.com/user', {
+      method: 'GET',
       headers: {
-        Authorization: `Bearer ${user.githubToken}`
+        'Authorization': `Bearer ${dataOauth.access_token}`
       }
-    });
+    })
+    const dataUser = await responseUser.json();
 
     res.send({
       status: true,
-      data
+      dataUser
     })
 
   } catch (err) {
