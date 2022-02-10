@@ -7,11 +7,8 @@ import {
   makeStyles,
   Theme,
   createStyles,
-  useTheme,
-  useMediaQuery,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import DrawerComponent from "./DrawerComponent";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,31 +37,22 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function Navbar() {
   const classes = useStyles();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
-    <AppBar position="static">
+    <AppBar>
       <CssBaseline />
       <Toolbar>
         <Typography variant="h4" className={classes.logo}>
           Navbar
         </Typography>
-        {isMobile ? (
-          <DrawerComponent />
-        ) : (
-          <div className={classes.navlinks}>
-            <Link to="/" className={classes.link}>
-              Home
-            </Link>
-            <Link to="/login" className={classes.link}>
-              Login
-            </Link>
-            <Link to="/register" className={classes.link}>
-              Register
-            </Link>
-          </div>
-        )}
+        <div className={classes.navlinks}>
+          <Link to="/home" className={classes.link}>
+            Home
+          </Link>
+          <Link to="/auth" className={classes.link}>
+            Authenticate
+          </Link>
+        </div>
       </Toolbar>
     </AppBar>
   );
