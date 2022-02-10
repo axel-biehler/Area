@@ -9,7 +9,6 @@ import {
 } from "@material-ui/core";
 import ModalAuth from "../components/ModalAuth";
 import Navbar from "../components/Navbar";
-import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

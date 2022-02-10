@@ -57,7 +57,7 @@ function RegisterForm(props: IFormProps) {
           props.setError(resBody.error);
           props.handleClose();
         } else {
-          navigate("/login");
+          navigate("/auth");
           props.handleClose();
         }
       })
