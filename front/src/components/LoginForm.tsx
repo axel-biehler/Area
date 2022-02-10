@@ -8,7 +8,7 @@ import {
   Theme,
 } from "@material-ui/core";
 import { setToken } from "../api/auth";
-import { IFormProps } from "./ModalAuth"
+import { IFormProps } from "./ModalAuth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,29 +37,31 @@ function LoginForm(props: IFormProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
+  const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     props.setError("");
 
     const data = {
       username: username,
-      password: password
-    }
+      password: password,
+    };
     fetch("http://localhost:8080/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
-    }).then(async function (response: any) {
-      const resBody = await response.json();
-      if (!resBody.status) {
-        props.setError(resBody.error);
-        props.handleClose();
-      } else {
-        setToken(resBody.token);
-        navigate("/home");
-        props.handleClose();
-      }
-    });
+    })
+      .then(async function (response: any) {
+        const resBody = await response.json();
+        if (!resBody.status) {
+          props.setError(resBody.error);
+          props.handleClose();
+        } else {
+          setToken(resBody.token);
+          navigate("/home");
+          props.handleClose();
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -79,7 +81,9 @@ function LoginForm(props: IFormProps) {
         onChange={(e) => setPassword(e.target.value)}
       />
       <div>
-        <Button variant="contained" onClick={props.handleClose}>Cancel</Button>
+        <Button variant="contained" onClick={props.handleClose}>
+          Cancel
+        </Button>
         <Button type="submit" variant="contained" color="primary">
           Signup
         </Button>

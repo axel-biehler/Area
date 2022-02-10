@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 import ModalAuth from "../components/ModalAuth";
 import Navbar from "../components/Navbar";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,6 +48,9 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: "row",
       justifyContent: "space-around",
     },
+    ErrorMsg: {
+      color: "red",
+    },
   })
 );
 
@@ -76,7 +80,9 @@ function AuthenticationPage() {
       <Navbar />
       <div className="App">
         <div className={classes.Container}>
-          <Typography variant="h4" gutterBottom={true}>Welcome to the AREA !</Typography>
+          <Typography variant="h4" gutterBottom={true}>
+            Welcome to the AREA !
+          </Typography>
           <div className={classes.LoginForm}>
             <Button variant="contained" color="primary" onClick={openLogin}>
               Login
@@ -85,8 +91,22 @@ function AuthenticationPage() {
               Register
             </Button>
           </div>
-          <ModalAuth open={open} handleClose={handleClose} isLogin={requestType} setError={setError} />
-          {error.length ? <Typography variant="h5" gutterBottom={false}> {error} </Typography> : null}
+          <ModalAuth
+            open={open}
+            handleClose={handleClose}
+            isLogin={requestType}
+            setError={setError}
+          />
+          {error.length ? (
+            <Typography
+              variant="h5"
+              gutterBottom={false}
+              className={classes.ErrorMsg}
+            >
+              {" "}
+              {error}{" "}
+            </Typography>
+          ) : null}
         </div>
       </div>
     </CssBaseline>

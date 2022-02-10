@@ -45,14 +45,14 @@ function Navbar() {
         <Typography variant="h4" className={classes.logo}>
           Navbar
         </Typography>
-          <div className={classes.navlinks}>
-            <Link to="/home" className={classes.link}>
-              Home
-            </Link>
-            <Link to="/auth" className={classes.link}>
-              Authenticate
-            </Link>
-          </div>
+        <div className={classes.navlinks}>
+          <Link to="/home" className={classes.link}>
+            Home
+          </Link>
+          <Link to="/auth" className={classes.link}>
+            Authenticate
+          </Link>
+        </div>
       </Toolbar>
     </AppBar>
   );

@@ -7,7 +7,7 @@ import {
   TextField,
   Theme,
 } from "@material-ui/core";
-import { IFormProps } from "./ModalAuth"
+import { IFormProps } from "./ModalAuth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,16 +50,18 @@ function RegisterForm(props: IFormProps) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
-    }).then(async function (response: any) {
-      const resBody = await response.json();
-      if (!resBody.status) {
-        props.setError(resBody.error);
-        props.handleClose();
-      } else {
-        navigate("/login");
-        props.handleClose();
-      }
-    });
+    })
+      .then(async function (response: any) {
+        const resBody = await response.json();
+        if (!resBody.status) {
+          props.setError(resBody.error);
+          props.handleClose();
+        } else {
+          navigate("/login");
+          props.handleClose();
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
