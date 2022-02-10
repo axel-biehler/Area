@@ -5,7 +5,8 @@
 Add these environement variables
 
 ```env
-GITHUB_CLIENT_ID=850c898e0d12275cd688
+
+GITHUB_CLIENT_ID=
 GITHUB_STATE=github_random_string
 
 ```
@@ -14,7 +15,7 @@ Example of code for github authentication
 
 ```js
 
-const GITHUB_SCOPE = 'admin:repo_hook'
+const GITHUB_SCOPE = 'repo'
 
 <a href={`https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&state=${process.env.GITHUB_STATE}&scope=${GITHUB_SCOPE}`}>
     github authentication
