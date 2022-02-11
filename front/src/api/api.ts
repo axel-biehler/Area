@@ -20,7 +20,6 @@ async function myFetch<T>(
   if (response.status === 401) {
     clearToken();
     window.location.replace('/auth');
-    // throw new Error("401 unauthorized");
   }
   return response.json().catch(() => ({}));
 }
