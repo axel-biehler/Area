@@ -47,10 +47,6 @@ function EmailValidationPage() {
       .catch((err) => console.error(err));
   }, []);
 
-  function componentDidMount() {
-    console.log("zebi");
-  }
-
   return (
     <CssBaseline>
       <Navbar />
