@@ -53,13 +53,11 @@ function RegisterForm(props: IFormProps) {
     })
       .then(async function (response: any) {
         const resBody = await response.json();
-        if (!resBody.status) {
-          props.setError(resBody.error);
-          props.handleClose();
-        } else {
+        props.setError(resBody.error);
+        if (resBody.status) {
           navigate("/auth");
-          props.handleClose();
         }
+        props.handleClose();
       })
       .catch((err) => console.error(err));
   };
