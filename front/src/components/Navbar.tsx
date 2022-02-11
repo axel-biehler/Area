@@ -46,7 +46,7 @@ function Navbar() {
           Navbar
         </Typography>
         <div className={classes.navlinks}>
-          <Link to="/home" className={classes.link}>
+          <Link to="/" className={classes.link}>
             Home
           </Link>
           <Link to="/auth" className={classes.link}>
