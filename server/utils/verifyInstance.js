@@ -60,23 +60,7 @@ const verifyReaction = (reaction) => {
   if (invalidParams) { throw Error('action invalid parameter'); }
 };
 
-const castParams = (params) => {
-  params.map((p) => {
-    let newParams = { ...p };
-    if (p.type === 'boolean') {
-      newParams = { value: Boolean(p.value) };
-    } else if (p.type === 'number') {
-      newParams = { value: Number(p.value) };
-    } else if (p.type === 'string') {
-      return p;
-    }
-    return newParams;
-  });
-  return params;
-};
-
 module.exports = {
   verifyAction,
   verifyReaction,
-  castParams,
 };
