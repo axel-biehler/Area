@@ -10,7 +10,10 @@ const UserSchema = new Schema({
   twitterAccess: String,
   twitterRefresh: String,
   twitterId: String,
-  githubToken: String,
+  github: {
+    token: String,
+    owner: String,
+  },
 });
 
 const User = model(TABLE_NAME, UserSchema);
