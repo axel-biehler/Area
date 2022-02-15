@@ -7,6 +7,9 @@ const get = async (req, res) => {
     res.json({
       username: user.username,
       email: user.email,
+      twitterLinked: user.twitterId != null,
+      githubLinked: user.github.token != null,
+      trelloLinked: user.trelloToken != null,
     });
   } catch (err) {
     console.error(err);

@@ -17,6 +17,9 @@ const Profile = () => {
   const [email, setEmail] = useState({ changes: false, val: '' });
   const [password, setPassword] = useState({ changes: false, val: '' });
   const [passwordConf, setPasswordConf] = useState('');
+  const [twitterLinked, setTwitterLinked] = useState(false);
+  const [githubLinked, setGithubLinked] = useState(false);
+  const [trelloLinked, setTrelloLinked] = useState(false);
 
   const anyChanges = username.changes || email.changes || password.changes;
 
@@ -39,6 +42,14 @@ const Profile = () => {
   };
 
   const linkTwitter = async () => {
+    if (twitterLinked) {
+      const res = await request('/services/twitter/unlink');
+      if (res.status) {
+        setTwitterLinked(false);
+      }
+      return;
+    }
+
     const res = await request('/services/twitter/connect', 'POST', {
       callback: 'http://localhost:8081/twitter/link',
     });
@@ -49,6 +60,14 @@ const Profile = () => {
   };
 
   const linkGithub = async () => {
+    if (githubLinked) {
+      const res = await request('/services/github/unlink');
+      if (res.status) {
+        setGithubLinked(false);
+      }
+      return;
+    }
+
     const res = await request('/services/github/env', 'GET');
 
     const { clientId, scope, state } = res;
@@ -59,6 +78,14 @@ const Profile = () => {
   };
 
   const linkTrello = async () => {
+    if (trelloLinked) {
+      const res = await request('/services/trello/unlink');
+      if (res.status) {
+        setTrelloLinked(false);
+      }
+      return;
+    }
+
     const res = await request('/services/trello/connect', 'POST', {
       callback: 'http://localhost:8081/trello/link',
     });
@@ -78,7 +105,10 @@ const Profile = () => {
           oauthToken,
           oauthVerifier,
         });
-        console.log(res);
+
+        if (res.status) {
+          setTwitterLinked(!twitterLinked);
+        }
       } else if (url.pathname === '/github/link') {
         const code = url.searchParams.get('code');
         const state = url.searchParams.get('state');
@@ -87,18 +117,22 @@ const Profile = () => {
           code,
           state,
         });
-        console.log(res);
+
+        if (res.status) {
+          setGithubLinked(!githubLinked);
+        }
       } else if (url.pathname === '/trello/link') {
         const oauthToken = url.searchParams.get('oauth_token');
         const oauthVerifier = url.searchParams.get('oauth_verifier');
-
-        console.log(oauthToken, oauthVerifier);
 
         const res = await request('/services/trello/link', 'POST', {
           oauthToken,
           oauthVerifier,
         });
-        console.log(res);
+
+        if (res.status) {
+          setTrelloLinked(!trelloLinked);
+        }
       }
     });
 
@@ -112,6 +146,9 @@ const Profile = () => {
       setIsFetching(true);
 
       const profile = await request('/profile');
+      setTwitterLinked(profile.twitterLinked);
+      setGithubLinked(profile.githubLinked);
+      setTrelloLinked(profile.trelloLinked);
       setOriginalUsername(profile.username);
       setUsername({ changes: false, val: profile.username });
       setEmail({ changes: false, val: profile.email });
@@ -180,15 +217,16 @@ const Profile = () => {
       <Button disabled={!anyChanges} onPress={updateProfile}>
         Confirm changes
       </Button>
-      <View style={styles.container}>
-        <Button mode="contained" onPress={linkTwitter}>
-          Link Twitter account
+      <View style={styles.buttonContainer}>
+        <Text>Link your accounts</Text>
+        <Button style={styles.button} icon="twitter" onPress={linkTwitter}>
+          {twitterLinked ? 'Unlink Twitter' : 'Link Twitter'}
         </Button>
-        <Button mode="contained" onPress={linkGithub}>
-          Link Github account
+        <Button style={styles.button} icon="github" onPress={linkGithub}>
+          {githubLinked ? 'Unlink GitHub' : 'Link GitHub'}
         </Button>
-        <Button mode="contained" onPress={linkTrello}>
-          Link Trello account
+        <Button style={styles.button} icon="trello" onPress={linkTrello}>
+          {trelloLinked ? 'Unlink Trello' : 'Link Trello'}
         </Button>
       </View>
     </View>
@@ -205,6 +243,12 @@ const styles = StyleSheet.create({
   errorText: {
     marginHorizontal: 6,
     marginVertical: 2,
+  },
+  buttonContainer: {
+    marginTop: 6,
+  },
+  button: {
+    margin: 2,
   },
 });
 
