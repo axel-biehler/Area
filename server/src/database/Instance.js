@@ -6,7 +6,7 @@ const Params = new Schema({
   name: String,
   type: String,
   value: String,
-});
+}, { _id: false });
 
 const WidgetSchema = new Schema({
   name: String,
@@ -14,7 +14,7 @@ const WidgetSchema = new Schema({
   displayName: String,
   webhookId: String,
   params: [Params],
-});
+}, { _id: false });
 
 const InstanceSchema = new Schema({
   name: String,
