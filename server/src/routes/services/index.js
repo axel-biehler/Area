@@ -9,5 +9,5 @@ router.get('/twitter/settings', require('./twitter/getSettingsExample'));
 
 router.post('/github/validate', require('./github/validate'));
 router.get('/github/user', require('./github/getUserExample'));
-
+router.get('/github/env', require('./github/env'));
 module.exports = router;
