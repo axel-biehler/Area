@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Linking } from 'react-native';
 import {
   Text,
   Button,
@@ -37,6 +37,36 @@ const Profile = () => {
       setError(res.error);
     }
   };
+
+  const linkTwitter = async () => {
+    const res = await request('/services/twitter/connect', 'POST', {
+      callback: 'http://localhost:8081/twitter/link',
+    });
+
+    Linking.openURL(
+      `https://api.twitter.com/oauth/authorize?oauth_token=${res.oauthToken}`,
+    );
+  };
+
+  useEffect(() => {
+    const linkingBind = Linking.addEventListener('url', async data => {
+      const url = new URL(data.url);
+
+      if (url.pathname === '/twitter/link') {
+        const oauthToken = url.searchParams.get('oauth_token');
+        const oauthVerifier = url.searchParams.get('oauth_verifier');
+
+        const res = await request('/services/twitter/link', 'POST', {
+          oauthToken,
+          oauthVerifier,
+        });
+      }
+    });
+
+    return () => {
+      linkingBind.remove();
+    };
+  });
 
   useEffect(() => {
     (async () => {
@@ -111,6 +141,11 @@ const Profile = () => {
       <Button disabled={!anyChanges} onPress={updateProfile}>
         Confirm changes
       </Button>
+      <View style={styles.container}>
+        <Button mode="contained" onPress={linkTwitter}>
+          Link Twitter account
+        </Button>
+      </View>
     </View>
   );
 };
