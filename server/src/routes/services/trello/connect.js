@@ -35,7 +35,7 @@ const connect = async (req, res) => {
       oauthSecrets[token] = tokenSecret;
       const redirectUrl = `${authorizeURL}?name=AREA&expiration=never&scope=read%2Cwrite&oauth_token=${token}&oauth_callback=${encodeURIComponent(callback)}`;
 
-      const u = await User.findOne(req.userId);
+      const u = await User.findOne({ userId: req.userId });
 
       if (u == null) {
         res.status(500).json({
