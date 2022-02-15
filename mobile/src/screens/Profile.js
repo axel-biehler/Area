@@ -60,9 +60,18 @@ const Profile = () => {
     );
   };
 
+  const linkTrello = async () => {
+    const res = await request('/services/trello/connect', 'POST', {
+      callback: 'http://localhost:8081/trello/link',
+    });
+
+    Linking.openURL(res.redirectUrl);
+  };
+
   useEffect(() => {
     const linkingBind = Linking.addEventListener('url', async data => {
       const url = new URL(data.url);
+      console.log(url);
 
       if (url.pathname === '/twitter/link') {
         const oauthToken = url.searchParams.get('oauth_token');
@@ -82,6 +91,17 @@ const Profile = () => {
           state,
         });
         console.log(res);
+      } else if (url.pathname === '/trello/link') {
+        const oauthToken = url.searchParams.get('oauth_token');
+        const oauthVerifier = url.searchParams.get('oauth_verifier');
+
+        console.log(oauthToken, oauthVerifier);
+
+        const res = await request('/services/trello/link', 'POST', {
+          oauthToken,
+          oauthVerifier,
+        });
+        console.log('ok', res);
       }
     });
 
@@ -169,6 +189,9 @@ const Profile = () => {
         </Button>
         <Button mode="contained" onPress={linkGithub}>
           Link Github account
+        </Button>
+        <Button mode="contained" onPress={linkTrello}>
+          Link Trello account
         </Button>
       </View>
     </View>

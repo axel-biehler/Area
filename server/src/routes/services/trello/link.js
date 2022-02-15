@@ -26,7 +26,7 @@ const link = async (req, res) => {
     return;
   }
 
-  const u = await User.findOne(req.userId);
+  const u = await User.findById(req.userId);
 
   if (u == null) {
     res.status(500).json({
