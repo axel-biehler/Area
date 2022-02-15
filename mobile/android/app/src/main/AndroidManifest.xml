@@ -25,6 +25,7 @@
           <category android:name="android.intent.category.DEFAULT" />
           <category android:name="android.intent.category.BROWSABLE" />
           <data android:scheme="http" android:host="localhost" android:port="8081" android:pathPrefix="/twitter/link"/>
+          <data android:scheme="http" android:host="localhost" android:port="8081" android:pathPrefix="/github/link"/>
       </intent-filter>
       </activity>
     </application>

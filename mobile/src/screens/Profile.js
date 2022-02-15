@@ -48,6 +48,18 @@ const Profile = () => {
     );
   };
 
+  const linkGithub = async () => {
+    const res = await request('/services/github/env', 'GET');
+
+    const { clientId } = res;
+    const scope = 'repo';
+    const state = 'github_random_string';
+
+    Linking.openURL(
+      `https://github.com/login/oauth/authorize?client_id=${clientId}&state=${state}&scope=${scope}`,
+    );
+  };
+
   useEffect(() => {
     const linkingBind = Linking.addEventListener('url', async data => {
       const url = new URL(data.url);
@@ -60,6 +72,16 @@ const Profile = () => {
           oauthToken,
           oauthVerifier,
         });
+        console.log(res);
+      } else if (url.pathname === '/github/link') {
+        const code = url.searchParams.get('code');
+        const state = url.searchParams.get('state');
+
+        const res = await request('/services/github/validate', 'POST', {
+          code,
+          state,
+        });
+        console.log(res);
       }
     });
 
@@ -144,6 +166,9 @@ const Profile = () => {
       <View style={styles.container}>
         <Button mode="contained" onPress={linkTwitter}>
           Link Twitter account
+        </Button>
+        <Button mode="contained" onPress={linkGithub}>
+          Link Github account
         </Button>
       </View>
     </View>
