@@ -51,9 +51,7 @@ const Profile = () => {
   const linkGithub = async () => {
     const res = await request('/services/github/env', 'GET');
 
-    const { clientId } = res;
-    const scope = 'repo';
-    const state = 'github_random_string';
+    const { clientId, scope, state } = res;
 
     Linking.openURL(
       `https://github.com/login/oauth/authorize?client_id=${clientId}&state=${state}&scope=${scope}`,
@@ -71,7 +69,6 @@ const Profile = () => {
   useEffect(() => {
     const linkingBind = Linking.addEventListener('url', async data => {
       const url = new URL(data.url);
-      console.log(url);
 
       if (url.pathname === '/twitter/link') {
         const oauthToken = url.searchParams.get('oauth_token');
@@ -101,7 +98,7 @@ const Profile = () => {
           oauthToken,
           oauthVerifier,
         });
-        console.log('ok', res);
+        console.log(res);
       }
     });
 

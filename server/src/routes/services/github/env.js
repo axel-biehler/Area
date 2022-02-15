@@ -2,9 +2,10 @@ const env = async (req, res) => {
   try {
     res.send({
       status: true,
+      scope: 'repo,user',
       clientId: process.env.GITHUB_CLIENT_ID,
-      state: process.env.GITHUB_RANDOM_STATE
-    })
+      state: process.env.GITHUB_STATE,
+    });
   } catch (err) {
     console.error(err);
 
