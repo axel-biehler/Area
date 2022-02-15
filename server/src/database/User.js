@@ -14,6 +14,8 @@ const UserSchema = new Schema({
     token: String,
     owner: String,
   },
+  trelloToken: String,
+  trelloTokenSecret: String,
 });
 
 const User = model(TABLE_NAME, UserSchema);
