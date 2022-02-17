@@ -1,37 +1,58 @@
 import React from "react";
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-} from "@material-ui/core";
+import { createStyles, makeStyles, Theme, Typography } from "@material-ui/core";
+import { IProfileData } from "../pages/ProfilePage";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      backgroundColor: "#f9f9f9",
-      fontFamily: "Roboto",
+    ServiceCard: {
+      height: "50px",
+      width: "100%",
+      maxWidth: "400px",
+      display: "flex",
+      flexDirection: "row",
+      margin: "20px 0",
+      justifyContent: "space-between",
+      backgroundColor: "lightgray",
+      border: "solid 1px gray",
+      borderRadius: "10px",
+      padding: "10px 20px",
+    },
+    ListContainer: {
       display: "flex",
       flexDirection: "column",
-      justifyContent: "center",
       alignItems: "center",
-      padding: theme.spacing(2),
-      "& .MuiTextField-root": {
-        margin: theme.spacing(1),
-        width: "300px",
-      },
-      "& .MuiButtonBase-root": {
-        margin: theme.spacing(2),
-      },
     },
   })
 );
 
-function ListServices() {
-  // const classes = useStyles();
+interface ServicesListProps {
+  infos: IProfileData;
+}
+
+function ListServices(props: ServicesListProps) {
+  const classes = useStyles();
 
   return (
     <div>
-      List Services
+      <Typography variant="h3">My services</Typography>
+      <div className={classes.ListContainer}>
+        <div className={classes.ServiceCard}>
+          <Typography variant="body1">Trello</Typography>
+          <Typography variant="body1">
+            {props.infos.trelloLinked ? "Connected" : "Not connected"}
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="body1">
+            GitHub : {props.infos.githubLinked ? "Connected" : "Not connected"}
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="body1">
+            Twitter : {props.infos.twitterLinked ? "Connected" : "Not connected"}
+          </Typography>
+        </div>
+      </div>
     </div>
   );
 }

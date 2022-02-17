@@ -24,6 +24,9 @@ const isAuthenticated = () => {
     return false;
   }
   const decoded = jsonwebtoken.decode(jwt);
+  if (decoded == null) {
+    return false;
+  }
   return Date.now() < decoded.exp * 1000;
 };
 
