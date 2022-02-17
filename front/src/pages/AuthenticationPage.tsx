@@ -111,8 +111,7 @@ function AuthenticationPage() {
               gutterBottom={false}
               className={classes.ErrorMsg}
             >
-              {" "}
-              {error}{" "}
+              {error}
             </Typography>
           ) : null}
         </div>
