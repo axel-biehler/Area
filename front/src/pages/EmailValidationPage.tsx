@@ -45,7 +45,7 @@ function EmailValidationPage() {
         }
       })
       .catch((err) => console.error(err));
-  }, []);
+  }, [navigate]);
 
   return (
     <CssBaseline>

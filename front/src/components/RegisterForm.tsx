@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Button,
   createStyles,
@@ -8,7 +7,7 @@ import {
   Theme,
 } from "@material-ui/core";
 import { IFormProps } from "./ModalAuth";
-import { AuthResponse, setToken } from "../api/auth";
+import { AuthResponse } from "../api/auth";
 import myFetch from "../api/api";
 
 const useStyles = makeStyles((theme: Theme) =>

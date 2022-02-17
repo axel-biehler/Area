@@ -49,6 +49,9 @@ function Navbar() {
           <Link to="/" className={classes.link}>
             Home
           </Link>
+          <Link to="/profile" className={classes.link}>
+            Account
+          </Link>
           <Link to="/auth" className={classes.link}>
             Authenticate
           </Link>
