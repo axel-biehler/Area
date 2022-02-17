@@ -1,7 +1,7 @@
-const jsonwebtoken = require('jsonwebtoken');
+const jsonwebtoken = require("jsonwebtoken");
 
-const LOCAL_TOKEN_KEY = 'jwt';
-const LOCAL_USERNAME_KEY = 'username';
+const LOCAL_TOKEN_KEY = "jwt";
+const LOCAL_USERNAME_KEY = "username";
 
 const setToken = (token: string) => {
   const decoded = jsonwebtoken.decode(token);
@@ -18,9 +18,19 @@ const getToken = () => localStorage.getItem(LOCAL_TOKEN_KEY);
 
 const getUsername = () => localStorage.getItem(LOCAL_USERNAME_KEY);
 
-export {
-  setToken,
-  clearToken,
-  getToken,
-  getUsername,
+const isAuthenticated = () => {
+  const jwt = localStorage.getItem(LOCAL_TOKEN_KEY);
+  if (jwt == null) {
+    return false;
+  }
+  const decoded = jsonwebtoken.decode(jwt);
+  return Date.now() < decoded.exp * 1000;
 };
+
+export interface AuthResponse {
+  status: boolean;
+  error?: string;
+  token?: string;
+}
+
+export { setToken, clearToken, getToken, getUsername, isAuthenticated };

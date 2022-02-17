@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   CssBaseline,
   makeStyles,
@@ -9,7 +10,7 @@ import {
 } from "@material-ui/core";
 import ModalAuth from "../components/ModalAuth";
 import Navbar from "../components/Navbar";
-import { red } from "@material-ui/core/colors";
+import { isAuthenticated } from "../api/auth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,6 +60,13 @@ function AuthenticationPage() {
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
   const [requestType, setRequestType] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const openLogin = () => {
     setRequestType(true);
