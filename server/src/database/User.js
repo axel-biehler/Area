@@ -10,6 +10,12 @@ const UserSchema = new Schema({
   twitterAccess: String,
   twitterRefresh: String,
   twitterId: String,
+  github: {
+    token: String,
+    owner: String,
+  },
+  trelloToken: String,
+  trelloTokenSecret: String,
 });
 
 const User = model(TABLE_NAME, UserSchema);

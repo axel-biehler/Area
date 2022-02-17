@@ -12,6 +12,7 @@ const main = async () => {
   app.use('/about.json', routes.about);
   app.use('/actions', routes.actions);
   app.use('/auth', routes.authentication);
+  app.use('/instances', routes.instances);
   app.use('/profile', routes.profile);
   app.use('/reactions', routes.reactions);
   app.use('/services', routes.services);

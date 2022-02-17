@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Linking } from 'react-native';
 import {
   Text,
   Button,
@@ -17,6 +17,9 @@ const Profile = () => {
   const [email, setEmail] = useState({ changes: false, val: '' });
   const [password, setPassword] = useState({ changes: false, val: '' });
   const [passwordConf, setPasswordConf] = useState('');
+  const [twitterLinked, setTwitterLinked] = useState(false);
+  const [githubLinked, setGithubLinked] = useState(false);
+  const [trelloLinked, setTrelloLinked] = useState(false);
 
   const anyChanges = username.changes || email.changes || password.changes;
 
@@ -38,11 +41,114 @@ const Profile = () => {
     }
   };
 
+  const linkTwitter = async () => {
+    if (twitterLinked) {
+      const res = await request('/services/twitter/unlink');
+      if (res.status) {
+        setTwitterLinked(false);
+      }
+      return;
+    }
+
+    const res = await request('/services/twitter/connect', 'POST', {
+      callback: 'http://localhost:8081/twitter/link',
+    });
+
+    Linking.openURL(
+      `https://api.twitter.com/oauth/authorize?oauth_token=${res.oauthToken}`,
+    );
+  };
+
+  const linkGithub = async () => {
+    if (githubLinked) {
+      const res = await request('/services/github/unlink');
+      if (res.status) {
+        setGithubLinked(false);
+      }
+      return;
+    }
+
+    const res = await request('/services/github/env', 'GET');
+
+    const { clientId, scope, state } = res;
+
+    Linking.openURL(
+      `https://github.com/login/oauth/authorize?client_id=${clientId}&state=${state}&scope=${scope}`,
+    );
+  };
+
+  const linkTrello = async () => {
+    if (trelloLinked) {
+      const res = await request('/services/trello/unlink');
+      if (res.status) {
+        setTrelloLinked(false);
+      }
+      return;
+    }
+
+    const res = await request('/services/trello/connect', 'POST', {
+      callback: 'http://localhost:8081/trello/link',
+    });
+
+    Linking.openURL(res.redirectUrl);
+  };
+
+  useEffect(() => {
+    const linkingBind = Linking.addEventListener('url', async data => {
+      const url = new URL(data.url);
+
+      if (url.pathname === '/twitter/link') {
+        const oauthToken = url.searchParams.get('oauth_token');
+        const oauthVerifier = url.searchParams.get('oauth_verifier');
+
+        const res = await request('/services/twitter/link', 'POST', {
+          oauthToken,
+          oauthVerifier,
+        });
+
+        if (res.status) {
+          setTwitterLinked(!twitterLinked);
+        }
+      } else if (url.pathname === '/github/link') {
+        const code = url.searchParams.get('code');
+        const state = url.searchParams.get('state');
+
+        const res = await request('/services/github/validate', 'POST', {
+          code,
+          state,
+        });
+
+        if (res.status) {
+          setGithubLinked(!githubLinked);
+        }
+      } else if (url.pathname === '/trello/link') {
+        const oauthToken = url.searchParams.get('oauth_token');
+        const oauthVerifier = url.searchParams.get('oauth_verifier');
+
+        const res = await request('/services/trello/link', 'POST', {
+          oauthToken,
+          oauthVerifier,
+        });
+
+        if (res.status) {
+          setTrelloLinked(!trelloLinked);
+        }
+      }
+    });
+
+    return () => {
+      linkingBind.remove();
+    };
+  });
+
   useEffect(() => {
     (async () => {
       setIsFetching(true);
 
       const profile = await request('/profile');
+      setTwitterLinked(profile.twitterLinked);
+      setGithubLinked(profile.githubLinked);
+      setTrelloLinked(profile.trelloLinked);
       setOriginalUsername(profile.username);
       setUsername({ changes: false, val: profile.username });
       setEmail({ changes: false, val: profile.email });
@@ -111,6 +217,18 @@ const Profile = () => {
       <Button disabled={!anyChanges} onPress={updateProfile}>
         Confirm changes
       </Button>
+      <View style={styles.buttonContainer}>
+        <Text>Link your accounts</Text>
+        <Button style={styles.button} icon="twitter" onPress={linkTwitter}>
+          {twitterLinked ? 'Unlink Twitter' : 'Link Twitter'}
+        </Button>
+        <Button style={styles.button} icon="github" onPress={linkGithub}>
+          {githubLinked ? 'Unlink GitHub' : 'Link GitHub'}
+        </Button>
+        <Button style={styles.button} icon="trello" onPress={linkTrello}>
+          {trelloLinked ? 'Unlink Trello' : 'Link Trello'}
+        </Button>
+      </View>
     </View>
   );
 };
@@ -125,6 +243,12 @@ const styles = StyleSheet.create({
   errorText: {
     marginHorizontal: 6,
     marginVertical: 2,
+  },
+  buttonContainer: {
+    marginTop: 6,
+  },
+  button: {
+    margin: 2,
   },
 });
 
