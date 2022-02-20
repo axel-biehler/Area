@@ -18,6 +18,8 @@ const createInstance = async (req, res) => {
       reaction,
     });
 
+    action.webhookId = action.params[0].value;
+
     verifyAction(instance.action);
     verifyReaction(instance.reaction);
 

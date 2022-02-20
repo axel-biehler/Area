@@ -5,6 +5,7 @@ const profile = require('./profile');
 const reactions = require('./reactions');
 const services = require('./services');
 const instances = require('./instances');
+const trello = require('./webhooks');
 
 module.exports = {
   about,
@@ -14,4 +15,5 @@ module.exports = {
   profile,
   reactions,
   services,
+  trello,
 };
