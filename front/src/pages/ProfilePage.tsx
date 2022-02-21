@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import Navbar from "../components/Navbar";
-import ListServices from "../components/ListServices";
+import ListServices from "../components/ListServices/ListServices";
 import myFetch from "../api/api";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     Separator: {
       height: "1px",
-      border: "1px solid lightgray",
+      border: "1px solid #3f51b5ff",
       width: "100%",
       margin: "10px 0",
     },
