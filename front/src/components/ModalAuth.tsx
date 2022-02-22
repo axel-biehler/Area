@@ -3,11 +3,6 @@ import Dialog from "@material-ui/core/Dialog";
 import RegisterForm from './RegisterForm';
 import LoginForm from './LoginForm';
 
-export interface IFormProps {
-  handleClose: any;
-  setError: React.Dispatch<React.SetStateAction<string>>;
-}
-
 class ModalAuth extends React.Component<{
   open: boolean;
   handleClose: any;

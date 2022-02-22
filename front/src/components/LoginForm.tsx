@@ -7,9 +7,9 @@ import {
   TextField,
   Theme,
 } from "@material-ui/core";
-import { AuthResponse, setToken } from "../api/auth";
-import { IFormProps } from "./ModalAuth";
+import { setToken } from "../api/auth";
 import myFetch from "../api/api";
+import { IAuthResponse, IFormProps } from "../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,7 +48,7 @@ function LoginForm(props: IFormProps) {
     };
 
     try {
-      const res: AuthResponse = await myFetch<AuthResponse>(
+      const res: IAuthResponse = await myFetch<IAuthResponse>(
         "/auth/login",
         "POST",
         JSON.stringify(data)

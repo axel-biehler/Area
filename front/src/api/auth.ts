@@ -30,10 +30,4 @@ const isAuthenticated = () => {
   return Date.now() < decoded.exp * 1000;
 };
 
-export interface AuthResponse {
-  status: boolean;
-  error?: string;
-  token?: string;
-}
-
 export { setToken, clearToken, getToken, getUsername, isAuthenticated };

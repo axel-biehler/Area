@@ -50,7 +50,7 @@ function Navbar() {
             Home
           </Link>
           <Link to="/profile" className={classes.link}>
-            Account
+            Profile
           </Link>
           <Link to="/auth" className={classes.link}>
             Authenticate

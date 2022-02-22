@@ -6,9 +6,8 @@ import {
   TextField,
   Theme,
 } from "@material-ui/core";
-import { IFormProps } from "./ModalAuth";
-import { AuthResponse } from "../api/auth";
 import myFetch from "../api/api";
+import { IAuthResponse, IFormProps } from "../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,7 +46,7 @@ function RegisterForm(props: IFormProps) {
         username: username,
         password: password,
       };
-      const res: AuthResponse = await myFetch<AuthResponse>(
+      const res: IAuthResponse = await myFetch<IAuthResponse>(
         "/auth/register",
         "POST",
         JSON.stringify(data)

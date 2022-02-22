@@ -3,17 +3,20 @@ import {
   Typography,
   Box,
   Card,
-  CardContent,
   CardMedia,
-  IconButton,
   makeStyles,
   Theme,
   createStyles,
   Button,
 } from "@material-ui/core";
 import "./ListServices.css";
-import { IProfileData } from "../../pages/ProfilePage";
 import GithubLogo from "../../assets/GithubLogo.png";
+import myFetch from "../../api/api";
+import {
+  IGithubEnv, IProfileData,
+  IServicesListProps,
+  IStatusResponse,
+} from "../../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,18 +37,34 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface ServicesListProps {
-  infos: IProfileData;
-}
-
-function ListServices(props: ServicesListProps) {
+function ListServices(props: IServicesListProps) {
   const classes = useStyles();
 
-  const githubOAuth = () => {
+  const githubOAuth = async () => {
     if (props.infos.githubLinked) {
-      console.log("revoke token");
+      const res: IStatusResponse = await myFetch<IStatusResponse>(
+        "/services/github/unlink",
+        "GET"
+      );
+      if (res.status) {
+        const newInfos: IProfileData = {
+          username: props.infos.username,
+          email: props.infos.email,
+          twitterLinked: props.infos.twitterLinked,
+          githubLinked: false,
+          trelloLinked: props.infos.trelloLinked,
+        };
+        props.setInfos(newInfos);
+      } else {
+        console.log("ERROR: ", res.error);
+      }
     } else {
-      console.log("link account");
+      const res: IGithubEnv = await myFetch<IGithubEnv>(
+        "/services/github/env",
+        "GET"
+      );
+      const url: string = `https://github.com/login/oauth/authorize?client_id=${res.clientId}&state=${res.state}&scope=${res.scope}`;
+      window.location.replace(url);
     }
   };
 
@@ -60,13 +79,18 @@ function ListServices(props: ServicesListProps) {
               flexDirection: "column",
               justifyContent: "center",
               width: "50%",
-              padding: "1%"
+              padding: "1%",
             }}
           >
             <Typography component="div" variant="h5">
               GitHub service
             </Typography>
-            <Button variant="contained" color="primary" size={"medium"} onClick={githubOAuth}>
+            <Button
+              variant="contained"
+              color="primary"
+              size={"medium"}
+              onClick={githubOAuth}
+            >
               {props.infos.githubLinked ? "Revoke access" : "Link account"}
             </Button>
           </Box>

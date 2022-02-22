@@ -4,7 +4,7 @@ services:
   front:
     build: ./front/
     ports:
-      - "3000:3000"
+      - "3000:8081"
 
   mobile:
     build:

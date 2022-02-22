@@ -9,6 +9,7 @@ import {
 import Navbar from "../components/Navbar";
 import ListServices from "../components/ListServices/ListServices";
 import myFetch from "../api/api";
+import { IProfileData } from "../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,14 +29,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-export interface IProfileData {
-  "username": string;
-  "email": string;
-  "twitterLinked": boolean;
-  "githubLinked": boolean;
-  "trelloLinked": boolean;
-}
 
 const init_values: IProfileData = {
   username: "",
@@ -77,7 +70,7 @@ function ProfilePage() {
             <Typography variant="h3">Account settings</Typography>
           </div>
           <div className={classes.Separator} />
-          <ListServices infos={infos}/>
+          <ListServices infos={infos} setInfos={setInfos}/>
         </div>
       </div>
     </CssBaseline>
