@@ -1,11 +1,13 @@
 const createIssue = require('./createIssue');
+const createRepository = require('./createRepository');
 
 const runReaction = {
-  github: createIssue,
+  createIssue,
+  createRepository,
 };
 
 const githubRunReaction = async (instance) => {
-  await runReaction[instance.reaction.serviceName](instance);
+  await runReaction[instance.reaction.name](instance);
 };
 
 module.exports = githubRunReaction;

@@ -4,7 +4,6 @@ const metadata = {
   name: path.basename(__dirname),
   displayName: 'Create a issue in a repository',
   description: 'An issue will be created every time this reaction is trigerred',
-  event: 'push',
   params: [
     {
       name: 'repository',

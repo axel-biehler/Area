@@ -1,5 +1,6 @@
 const Actions = require('../../../actions');
 const runInstance = require('../../instances/runInstance');
+const Instance = require('../../../database/Instance');
 
 const webhook = async (req, res) => {
   try {
@@ -24,7 +25,33 @@ const webhook = async (req, res) => {
       return;
     }
 
-    await runInstance(req.headers['x-github-hook-id']);
+    // Temporary filter for event that call api for multiple action
+
+    if (Object.prototype.hasOwnProperty.call(req.body, 'action') && req.body.action !== 'opened') {
+      console.log('action is not wanted');
+      res.status(200).json({ status: true });
+      return;
+    }
+
+    // Get all instances linked to this webhook
+
+    const webhookId = req.headers['x-github-hook-id'];
+    const instances = await Instance.find({ 'action.webhookId': webhookId });
+
+    if (!instances.length) {
+      throw Error('instance not found');
+    }
+
+    // verification of the integrety of the webhook id
+    await instances.forEach(async (instance) => {
+      // const params = instance.action.params.reduce((a, b) => ({ ...a, [b.name]: b.value }), {});
+
+      if (instance.action.webhookId.toString() !== webhookId) {
+        throw Error('not your instance');
+      }
+    });
+
+    await runInstance(instances);
 
     res.status(200).json({
       status: true,

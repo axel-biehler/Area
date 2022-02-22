@@ -2,9 +2,9 @@ const path = require('path');
 
 const metadata = {
   name: path.basename(__dirname),
-  displayName: 'New pull request on repository',
-  description: 'This trigger fires every time a pull request is open on the repository you specified',
-  event: 'pull_request',
+  displayName: 'New issue on repository',
+  description: 'This trigger fires every time an issue is created on the repository you specified',
+  event: 'issues',
   params: [
     {
       name: 'repository',
