@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   CssBaseline,
   makeStyles,
@@ -42,21 +42,20 @@ function ProfilePage() {
   const classes = useStyles();
   const [infos, setInfos] = useState<IProfileData>(init_values);
 
-  async function getInfos () {
+  async function getInfos() {
     try {
-      myFetch<IProfileData>(
-        "/profile",
-        "GET",
-      ).then(function (response: IProfileData) {
+      myFetch<IProfileData>("/profile", "GET").then(function (
+        response: IProfileData
+      ) {
         setInfos(response);
-      })
+      });
     } catch (e) {
       console.log(e);
     }
   }
 
   useEffect(() => {
-    getInfos()
+    getInfos();
   }, []);
 
   return (
@@ -70,7 +69,7 @@ function ProfilePage() {
             <Typography variant="h3">Account settings</Typography>
           </div>
           <div className={classes.Separator} />
-          <ListServices infos={infos} setInfos={setInfos}/>
+          <ListServices infos={infos} setInfos={setInfos} />
         </div>
       </div>
     </CssBaseline>

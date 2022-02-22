@@ -17,10 +17,10 @@ interface IServicesListProps {
 }
 
 interface IGithubEnv {
-  status: boolean,
-  scope: string,
-  clientId: string,
-  state: string,
+  status: boolean;
+  scope: string;
+  clientId: string;
+  state: string;
 }
 
 interface IFormProps {
@@ -29,16 +29,22 @@ interface IFormProps {
 }
 
 interface IProfileData {
-  "username": string;
-  "email": string;
-  "twitterLinked": boolean;
-  "githubLinked": boolean;
-  "trelloLinked": boolean;
+  username: string;
+  email: string;
+  twitterLinked: boolean;
+  githubLinked: boolean;
+  trelloLinked: boolean;
 }
 
-interface ITrelloAuth {
+interface ITrelloOAuth {
   status: boolean;
   redirectUrl?: string;
+  error?: string;
+}
+
+interface ITwitterOAuth {
+  status: boolean;
+  oauthToken?: string;
   error?: string;
 }
 
@@ -49,5 +55,6 @@ export type {
   IGithubEnv,
   IFormProps,
   IProfileData,
-  ITrelloAuth
+  ITrelloOAuth,
+  ITwitterOAuth,
 };

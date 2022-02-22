@@ -12,13 +12,15 @@ import {
 import "./ListServices.css";
 import GithubLogo from "../../assets/GithubLogo.png";
 import TrelloLogo from "../../assets/TrelloLogo.png";
+import TwitterLogo from "../../assets/TwitterLogo.png";
 import myFetch from "../../api/api";
 import {
   IGithubEnv,
   IProfileData,
   IServicesListProps,
   IStatusResponse,
-  ITrelloAuth,
+  ITrelloOAuth,
+  ITwitterOAuth,
 } from "../../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -92,7 +94,7 @@ function ListServices(props: IServicesListProps) {
         console.log("ERROR: ", res.error);
       }
     } else {
-      const res: ITrelloAuth = await myFetch<ITrelloAuth>(
+      const res: ITrelloOAuth = await myFetch<ITrelloOAuth>(
         "/services/trello/connect",
         "POST",
         JSON.stringify({ callback: "http://localhost:8081/trello/link" })
@@ -100,6 +102,43 @@ function ListServices(props: IServicesListProps) {
       if (res.status) {
         window.location.replace(res.redirectUrl!);
       } else {
+        console.log("ERROR: ", res.error);
+      }
+    }
+  };
+
+  const twitterOAuth = async () => {
+    if (props.infos.twitterLinked) {
+      const res: IStatusResponse = await myFetch<IStatusResponse>(
+        "/services/twitter/unlink",
+        "GET"
+      );
+      if (res.status) {
+        const newInfos: IProfileData = {
+          username: props.infos.username,
+          email: props.infos.email,
+          twitterLinked: false,
+          githubLinked: props.infos.githubLinked,
+          trelloLinked: props.infos.trelloLinked,
+        };
+        props.setInfos(newInfos);
+      } else {
+        console.log("ERROR: ", res.error);
+      }
+    } else {
+      console.log("ici");
+      const res: ITwitterOAuth = await myFetch<ITwitterOAuth>(
+        "/services/twitter/connect",
+        "POST",
+        JSON.stringify({ callback: "http://localhost:8081/twitter/link" })
+      );
+      console.log("ici2");
+      if (res.status) {
+        console.log("ici good");
+        const url = `https://api.twitter.com/oauth/authorize?oauth_token=${res.oauthToken}`;
+        window.location.replace(url);
+      } else {
+        console.log("ici caca");
         console.log("ERROR: ", res.error);
       }
     }
@@ -157,6 +196,32 @@ function ListServices(props: IServicesListProps) {
               onClick={trelloOAuth}
             >
               {props.infos.trelloLinked ? "Revoke access" : "Link account"}
+            </Button>
+          </Box>
+        </Card>
+
+        <Card className={classes.Card}>
+          <CardMedia
+            component={"img"}
+            className={classes.CardMedia}
+            src={TwitterLogo}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              width: "50%",
+              padding: "1%",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size={"medium"}
+              onClick={twitterOAuth}
+            >
+              {props.infos.twitterLinked ? "Revoke access" : "Link account"}
             </Button>
           </Box>
         </Card>
