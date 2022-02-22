@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function GithubLinking() {
+function GithubLinkingPage() {
   const classes = useStyles();
   const [status, setStatus] = useState("");
 
@@ -76,4 +76,4 @@ function GithubLinking() {
   );
 }
 
-export default GithubLinking;
+export default GithubLinkingPage;

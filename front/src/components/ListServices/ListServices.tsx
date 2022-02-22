@@ -11,11 +11,14 @@ import {
 } from "@material-ui/core";
 import "./ListServices.css";
 import GithubLogo from "../../assets/GithubLogo.png";
+import TrelloLogo from "../../assets/TrelloLogo.png";
 import myFetch from "../../api/api";
 import {
-  IGithubEnv, IProfileData,
+  IGithubEnv,
+  IProfileData,
   IServicesListProps,
   IStatusResponse,
+  ITrelloAuth,
 } from "../../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -24,8 +27,9 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "space-between",
       backgroundColor: "#4fc3f7ff",
-      maxWidth: "800px",
-      maxHeight: "200px",
+      width: "600px",
+      height: "110px",
+      marginBottom: "20px",
     },
     CardContent: {
       flex: "1 0 auto",
@@ -33,6 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
     CardMedia: {
       width: "50%",
       padding: "20px",
+      objectFit: "contain",
     },
   })
 );
@@ -68,11 +73,48 @@ function ListServices(props: IServicesListProps) {
     }
   };
 
+  const trelloOAuth = async () => {
+    if (props.infos.trelloLinked) {
+      const res: IStatusResponse = await myFetch<IStatusResponse>(
+        "/services/trello/unlink",
+        "GET"
+      );
+      if (res.status) {
+        const newInfos: IProfileData = {
+          username: props.infos.username,
+          email: props.infos.email,
+          twitterLinked: props.infos.twitterLinked,
+          githubLinked: props.infos.githubLinked,
+          trelloLinked: false,
+        };
+        props.setInfos(newInfos);
+      } else {
+        console.log("ERROR: ", res.error);
+      }
+    } else {
+      const res: ITrelloAuth = await myFetch<ITrelloAuth>(
+        "/services/trello/connect",
+        "POST",
+        JSON.stringify({ callback: "http://localhost:8081/trello/link" })
+      );
+      if (res.status) {
+        window.location.replace(res.redirectUrl!);
+      } else {
+        console.log("ERROR: ", res.error);
+      }
+    }
+  };
+
   return (
     <div>
       <Typography variant="h3">My services</Typography>
       <div className="ListContainer">
         <Card className={classes.Card}>
+          <CardMedia
+            component={"img"}
+            className={classes.CardMedia}
+            src={GithubLogo}
+          />
           <Box
             sx={{
               display: "flex",
@@ -82,9 +124,6 @@ function ListServices(props: IServicesListProps) {
               padding: "1%",
             }}
           >
-            <Typography component="div" variant="h5">
-              GitHub service
-            </Typography>
             <Button
               variant="contained"
               color="primary"
@@ -94,11 +133,32 @@ function ListServices(props: IServicesListProps) {
               {props.infos.githubLinked ? "Revoke access" : "Link account"}
             </Button>
           </Box>
+        </Card>
+
+        <Card className={classes.Card}>
           <CardMedia
             component={"img"}
             className={classes.CardMedia}
-            src={GithubLogo}
+            src={TrelloLogo}
           />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              width: "50%",
+              padding: "1%",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size={"medium"}
+              onClick={trelloOAuth}
+            >
+              {props.infos.trelloLinked ? "Revoke access" : "Link account"}
+            </Button>
+          </Box>
         </Card>
       </div>
     </div>

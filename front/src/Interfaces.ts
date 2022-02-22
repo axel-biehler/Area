@@ -36,11 +36,18 @@ interface IProfileData {
   "trelloLinked": boolean;
 }
 
+interface ITrelloAuth {
+  status: boolean;
+  redirectUrl?: string;
+  error?: string;
+}
+
 export type {
   IStatusResponse,
   IAuthResponse,
   IServicesListProps,
   IGithubEnv,
   IFormProps,
-  IProfileData
+  IProfileData,
+  ITrelloAuth
 };
