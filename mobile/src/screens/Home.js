@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import request from '../api/request';
 
 const Instance = ({ instance, refreshList }) => {
+  const navigation = useNavigation();
   const del = async () => {
     await request(`/instances/${instance._id}`, 'DELETE');
     await refreshList();
@@ -21,6 +22,14 @@ const Instance = ({ instance, refreshList }) => {
       />
       <Card.Title title={instance.reaction.displayName} />
       <Card.Actions>
+        <Button
+          onPress={() => navigation.navigate('Edit action', { instance })}>
+          Edit action
+        </Button>
+        <Button
+          onPress={() => navigation.navigate('Edit reaction', { instance })}>
+          Edit reaction
+        </Button>
         <Button onPress={del}>Delete</Button>
       </Card.Actions>
     </Card>

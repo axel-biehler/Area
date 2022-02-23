@@ -31,6 +31,7 @@ const booleanStyles = StyleSheet.create({
 const StringParam = ({ param, setValue }) => {
   return (
     <TextInput
+      defaultValue={param.value}
       label={param.name}
       onChangeText={text => {
         setValue(param.name, text);
@@ -43,6 +44,7 @@ const NumParam = ({ param, setValue }) => {
   return (
     <TextInput
       label={param.name}
+      defaultValue={param.value}
       type={'number'}
       keyboardType={'numeric'}
       onChangeText={text => {
@@ -65,8 +67,12 @@ const Param = ({ param, setValue }) => {
   }
 };
 
-const getDefaultValue = type => {
-  switch (type) {
+const getDefaultValue = param => {
+  if (param.value !== undefined) {
+    return param.value;
+  }
+
+  switch (param.type) {
     case 'boolean':
       return 'false';
     case 'string':
@@ -86,7 +92,7 @@ const Params = ({ params, confirm }) => {
   };
 
   const defaultParams = params.map(p => {
-    const defaultValue = getDefaultValue(p.type);
+    const defaultValue = getDefaultValue(p);
     return { ...p, value: defaultValue };
   });
 
