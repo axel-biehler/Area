@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     LogoutButton: {
       maxHeight: "40px",
+      color: "black",
     },
   })
 );
@@ -78,7 +79,6 @@ function Navbar() {
               }}
             >
               <p>Logout</p>
-              <img src="" alt="" />
             </Button>
           </div>
           : null
