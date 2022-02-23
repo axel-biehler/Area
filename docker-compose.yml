@@ -1,24 +1,28 @@
 version: "3"
 
 services:
-  front:
-    build: ./front/
+  nginx:
+    image: nginx
+    depends_on:
+      - front
+      - mobile
     ports:
-      - "8081:8081"
+      - 8081:80
+    volumes:
+      - "web:/usr/share/nginx/html:ro"
+
+  front:
+    build:
+      context: ./front
+    volumes:
+      - "web:/opt"
 
   mobile:
     build:
       context: ./mobile
     volumes:
       - "web:/opt"
-  nginx:
-    image: nginx
-    depends_on:
-      - mobile
-    ports:
-      - 8081:80
-    volumes:
-      - "web:/usr/share/nginx/html:ro"
+
   server:
     build: server
     ports:
@@ -29,6 +33,7 @@ services:
       - MONGO_URL=mongodb://area:SyA7Zr4cbcDwjD@mongo
     env_file:
     - "server/.env"
+
   mongo:
     image: mongo:5.0.4
     ports:
@@ -40,9 +45,11 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=area
       - MONGO_INITDB_ROOT_PASSWORD=SyA7Zr4cbcDwjD
+
 networks:
   backend:
     driver: bridge
+
 volumes:
   web:
   database:

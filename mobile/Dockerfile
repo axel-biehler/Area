@@ -9,8 +9,8 @@ WORKDIR /app/android
 RUN ./gradlew assembleRelease
 
 FROM busybox
-
 VOLUME "/opt"
-COPY --from=builder /app/android/app/build/outputs/apk/release/app-release.apk /opt/client.apk
-
-CMD [ "echo", "application built." ]
+WORKDIR /app
+COPY ./entrypoint.sh .
+COPY --from=builder /app/android/app/build/outputs/apk/release/app-release.apk /app/client.apk
+CMD [ "sh", "entrypoint.sh" ]
