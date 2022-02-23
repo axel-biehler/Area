@@ -2,8 +2,10 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/AuthenticationPage";
-import Home from "./pages/HomePage";
 import EmailValidation from "./pages/EmailValidationPage";
+import ServiceLinkingPage from "./pages/ServiceLinkingPage";
+import Home from "./pages/HomePage";
+import Profile from "./pages/ProfilePage";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
@@ -18,9 +20,19 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
         <Route path="/auth" element={<Login />} />
-        <Route path="/home" element={<Home />} />
         <Route path="/validate/*" element={<EmailValidation />} />
+        <Route path="/github/link/*" element={<ServiceLinkingPage />} />
+        <Route path="/trello/link/*" element={<ServiceLinkingPage />} />
+        <Route path="/twitter/link/*" element={<ServiceLinkingPage />} />
       </Routes>
     </Router>
   );

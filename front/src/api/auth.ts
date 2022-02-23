@@ -24,13 +24,10 @@ const isAuthenticated = () => {
     return false;
   }
   const decoded = jsonwebtoken.decode(jwt);
+  if (decoded == null) {
+    return false;
+  }
   return Date.now() < decoded.exp * 1000;
 };
-
-export interface AuthResponse {
-  status: boolean;
-  error?: string;
-  token?: string;
-}
 
 export { setToken, clearToken, getToken, getUsername, isAuthenticated };
