@@ -7,6 +7,7 @@ import Home from './screens/Home';
 import Profile from './screens/Profile';
 import ServerSettingsModal from './screens/ServerSettingsModal';
 import CustomNavigationBar from './components/CustomNavigationBar';
+import CreateInstance from './screens/CreateInstance/CreateInstance';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ const App = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="Create instance" component={CreateInstance} />
         <Stack.Group screenOptions={{ presentation: 'modal' }}>
           <Stack.Screen
             name="Server settings"
