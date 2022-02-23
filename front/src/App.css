@@ -6,7 +6,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--columbia-blue);
+  background-color: lightgray;
+  /*background-color: var(--columbia-blue);*/
 }
 
 .App-logo {

@@ -11,11 +11,6 @@ interface IAuthResponse {
   token?: string;
 }
 
-interface IServicesListProps {
-  infos: IProfileData;
-  setInfos: React.Dispatch<React.SetStateAction<IProfileData>>;
-}
-
 interface IGithubEnv {
   status: boolean;
   scope: string;
@@ -36,6 +31,11 @@ interface IProfileData {
   trelloLinked: boolean;
 }
 
+interface IProfileProps {
+  infos: IProfileData;
+  setInfos: React.Dispatch<React.SetStateAction<IProfileData>>;
+}
+
 interface ITrelloOAuth {
   status: boolean;
   redirectUrl?: string;
@@ -48,13 +48,20 @@ interface ITwitterOAuth {
   error?: string;
 }
 
+interface IAccountSettings {
+  username?: string;
+  password?: string;
+  email?: string;
+}
+
 export type {
   IStatusResponse,
   IAuthResponse,
-  IServicesListProps,
+  IProfileProps,
   IGithubEnv,
   IFormProps,
   IProfileData,
   ITrelloOAuth,
   ITwitterOAuth,
+  IAccountSettings,
 };

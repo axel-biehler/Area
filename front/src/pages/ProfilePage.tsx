@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import Navbar from "../components/Navbar";
 import ListServices from "../components/ListServices/ListServices";
+import AccountSettings from "../components/AccountSettings";
 import myFetch from "../api/api";
 import { IProfileData } from "../Interfaces";
 
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
     Container: {
       height: "100%",
       width: "50%",
-      margin: "auto",
+      margin: "100px auto auto auto",
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
@@ -66,7 +67,7 @@ function ProfilePage() {
           <Typography variant="h2">Profile</Typography>
           <div className={classes.Separator} />
           <div>
-            <Typography variant="h3">Account settings</Typography>
+            <AccountSettings infos={infos} setInfos={setInfos} />
           </div>
           <div className={classes.Separator} />
           <ListServices infos={infos} setInfos={setInfos} />

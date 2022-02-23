@@ -7,8 +7,10 @@ import {
   makeStyles,
   Theme,
   createStyles,
+  Button,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import {clearToken, isAuthenticated} from "../api/auth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,6 +34,13 @@ const useStyles = makeStyles((theme: Theme) =>
         color: "gray",
       },
     },
+    Logout: {
+      marginLeft: "auto",
+      padding: "1px 0",
+    },
+    LogoutButton: {
+      maxHeight: "40px",
+    },
   })
 );
 
@@ -43,7 +52,7 @@ function Navbar() {
       <CssBaseline />
       <Toolbar>
         <Typography variant="h4" className={classes.logo}>
-          Navbar
+          AREA
         </Typography>
         <div className={classes.navlinks}>
           <Link to="/" className={classes.link}>
@@ -56,6 +65,25 @@ function Navbar() {
             Authenticate
           </Link>
         </div>
+        { isAuthenticated() ?
+          <div className={classes.Logout}>
+            <Button
+              variant="contained"
+              color="secondary"
+              size={"small"}
+              className={classes.LogoutButton}
+              onClick={() => {
+                clearToken();
+                window.location.replace("/auth");
+              }}
+            >
+              <p>Logout</p>
+              <img src="" alt="" />
+            </Button>
+          </div>
+          : null
+        }
+
       </Toolbar>
     </AppBar>
   );

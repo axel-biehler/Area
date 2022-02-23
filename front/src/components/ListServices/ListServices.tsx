@@ -17,7 +17,7 @@ import myFetch from "../../api/api";
 import {
   IGithubEnv,
   IProfileData,
-  IServicesListProps,
+  IProfileProps,
   IStatusResponse,
   ITrelloOAuth,
   ITwitterOAuth,
@@ -25,10 +25,14 @@ import {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    Title: {
+      margin: "30px auto",
+    },
     Card: {
       display: "flex",
       justifyContent: "space-between",
-      backgroundColor: "#4fc3f7ff",
+      backgroundColor: "white",
+      // backgroundColor: "#4fc3f7ff",
       width: "600px",
       height: "110px",
       marginBottom: "20px",
@@ -44,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function ListServices(props: IServicesListProps) {
+function ListServices(props: IProfileProps) {
   const classes = useStyles();
 
   const githubOAuth = async () => {
@@ -146,7 +150,7 @@ function ListServices(props: IServicesListProps) {
 
   return (
     <div>
-      <Typography variant="h3">My services</Typography>
+      <Typography variant="h3" className={classes.Title}>My services</Typography>
       <div className="ListContainer">
         <Card className={classes.Card}>
           <CardMedia
