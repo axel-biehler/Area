@@ -29,6 +29,7 @@ function HomePage() {
       <div className="App">
         <div className={classes.Container}>
           <h1>Home Page</h1>
+          <h1>Trigger a reaction to various actions.</h1>
         </div>
       </div>
     </CssBaseline>
