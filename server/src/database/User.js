@@ -16,6 +16,8 @@ const UserSchema = new Schema({
   },
   trelloToken: String,
   trelloTokenSecret: String,
+  redditAccessToken: String,
+  redditRefreshToken: String,
 });
 
 const User = model(TABLE_NAME, UserSchema);

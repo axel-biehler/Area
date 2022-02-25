@@ -5,6 +5,8 @@ import Login from "./pages/AuthenticationPage";
 import Home from "./pages/HomePage";
 import EmailValidation from "./pages/EmailValidationPage";
 import PrivateRoute from "./components/PrivateRoute";
+import Test from "./testAPI/test"
+import Redirect from "./testAPI/redditAuth"
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/auth" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/validate/*" element={<EmailValidation />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="/reddit_auth" element={<Redirect />} />
       </Routes>
     </Router>
   );

@@ -17,4 +17,10 @@ router.post('/github/validate', require('./github/validate'));
 router.get('/github/user', require('./github/getUserExample'));
 router.get('/github/env', require('./github/env'));
 router.get('/github/unlink', require('./github/unlink'));
+
+router.get('/reddit/connect', require('./reddit/connect'));
+router.post('/reddit/link', require('./reddit/link'));
+router.get('/reddit/getProfile', require('./reddit/getProfile'));
+router.get('/reddit/unlink', require('./reddit/unlink'));
+
 module.exports = router;
