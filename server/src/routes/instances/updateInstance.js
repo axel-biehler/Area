@@ -1,5 +1,11 @@
+/* eslint-disable max-len */
 const Instance = require('../../database/Instance');
 const { verifyAction, verifyReaction } = require('../../../utils/verifyInstance');
+const updateGithubAction = require('../services/github/actions/update');
+
+const updateAction = {
+  github: updateGithubAction,
+};
 
 const updateInstance = async (req, res) => {
   const { id } = req.params;
@@ -23,8 +29,13 @@ const updateInstance = async (req, res) => {
     }
 
     if (action != null) {
+      // Do a deep copy of the action, any less disgusting alternative is welcome
+      const oldAction = JSON.parse(JSON.stringify(instance.action));
+
       instance.action.params = action;
       verifyAction(instance.action);
+
+      instance.action.webhookId = await updateAction[instance.action.serviceName](req.userId, oldAction, instance.action);
     }
 
     if (reaction != null) {

@@ -1,4 +1,9 @@
 const Instance = require('../../database/Instance');
+const deleteGithubAction = require('../services/github/actions/delete');
+
+const deleteAction = {
+  github: deleteGithubAction,
+};
 
 const removeInstance = async (req, res) => {
   const { id } = req.params;
@@ -20,6 +25,8 @@ const removeInstance = async (req, res) => {
       });
       return;
     }
+
+    await deleteAction[instance.action.serviceName](req.userId, instance.action);
 
     await instance.remove();
 
