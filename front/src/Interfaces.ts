@@ -54,6 +54,73 @@ interface IAccountSettings {
   email?: string;
 }
 
+interface IParameter {
+  name: string;
+  type: string;
+  placeholder?: string;
+  value?: any;
+}
+
+interface IWidget {
+  name: string;
+  displayName: string;
+  description: string;
+  params: IParameter[];
+}
+
+interface IAction {
+  name: string;
+  displayName: string;
+  description: string;
+  needsOauth: string;
+  widgets: IWidget[];
+}
+
+interface IServiceListItem {
+  value: string;
+  label: string;
+  description: string;
+  widgets: IWidget[];
+  isDisabled?: boolean;
+}
+
+interface IEventListItem {
+  value: string;
+  label: string;
+  description: string;
+  parameters: IParameter[];
+}
+
+interface IListParamsProps {
+  event: IEventListItem;
+  editParams: (edit: IParameter, value: any) => void;
+}
+
+interface IParameterProps {
+  index: number;
+  element: IParameter;
+  editParams: (edit: IParameter, value: any) => void;
+}
+
+interface IInstanceConfig {
+  name: string;
+  serviceName: string;
+  displayName: string;
+  webhookId?: string;
+  params: IParameter[];
+}
+
+interface IInstance {
+  action?: IInstanceConfig;
+  reaction?: IInstanceConfig;
+}
+
+interface IServiceChoiceProps {
+  servicesList: IServiceListItem[];
+  editInstance: (type: string, config: IInstanceConfig) => void;
+  type: string;
+}
+
 export type {
   IStatusResponse,
   IAuthResponse,
@@ -64,4 +131,14 @@ export type {
   ITrelloOAuth,
   ITwitterOAuth,
   IAccountSettings,
+  IParameter,
+  IWidget,
+  IAction,
+  IServiceListItem,
+  IEventListItem,
+  IListParamsProps,
+  IParameterProps,
+  IInstanceConfig,
+  IInstance,
+  IServiceChoiceProps
 };

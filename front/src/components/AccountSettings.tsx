@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     SaveButton: {
       minWidth: "100px",
       maxWidth: "200px",
-    }
+    },
   })
 );
 
