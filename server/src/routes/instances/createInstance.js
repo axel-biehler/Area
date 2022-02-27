@@ -1,5 +1,11 @@
+/* eslint-disable max-len */
 const Instance = require('../../database/Instance');
 const { verifyAction, verifyReaction } = require('../../../utils/verifyInstance');
+const createGithubAction = require('../services/github/actions/create');
+
+const createAction = {
+  github: createGithubAction,
+};
 
 const createInstance = async (req, res) => {
   const { action, reaction } = req.body;
@@ -15,11 +21,15 @@ const createInstance = async (req, res) => {
     verifyAction(instance.action);
     verifyReaction(instance.reaction);
 
+    // essayer avec un nom indisponible
+    instance.action.webhookId = await createAction[instance.action.serviceName](userId, instance.action);
+
     await instance.save();
   } catch (err) {
     console.error(err);
+
     res.status(500).json({
-      statsu: false,
+      status: false,
       error: 'internal error',
     });
     return;

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Button,
   createStyles,
@@ -7,7 +6,8 @@ import {
   TextField,
   Theme,
 } from "@material-ui/core";
-import { IFormProps } from "./ModalAuth";
+import myFetch from "../api/api";
+import { IAuthResponse, IFormProps } from "../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,37 +31,31 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function RegisterForm(props: IFormProps) {
-  const navigate = useNavigate();
   const classes = useStyles();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     props.setError("");
 
-    const data = {
-      email: email,
-      username: username,
-      password: password,
-    };
-    fetch("http://localhost:8080/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
-      .then(async function (response: any) {
-        const resBody = await response.json();
-        if (!resBody.status) {
-          props.setError(resBody.error);
-          props.handleClose();
-        } else {
-          navigate("/login");
-          props.handleClose();
-        }
-      })
-      .catch((err) => console.error(err));
+    try {
+      const data = {
+        email: email,
+        username: username,
+        password: password,
+      };
+      const res: IAuthResponse = await myFetch<IAuthResponse>(
+        "/auth/register",
+        "POST",
+        JSON.stringify(data)
+      );
+      props.handleClose();
+      props.setError(res.error!);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

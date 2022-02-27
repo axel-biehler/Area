@@ -8,7 +8,8 @@ import {
   Theme,
 } from "@material-ui/core";
 import { setToken } from "../api/auth";
-import { IFormProps } from "./ModalAuth";
+import myFetch from "../api/api";
+import { IAuthResponse, IFormProps } from "../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +38,7 @@ function LoginForm(props: IFormProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     props.setError("");
 
@@ -45,23 +46,24 @@ function LoginForm(props: IFormProps) {
       username: username,
       password: password,
     };
-    fetch("http://localhost:8080/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
-      .then(async function (response: any) {
-        const resBody = await response.json();
-        if (!resBody.status) {
-          props.setError(resBody.error);
-          props.handleClose();
-        } else {
-          setToken(resBody.token);
-          navigate("/home");
-          props.handleClose();
-        }
-      })
-      .catch((err) => console.error(err));
+
+    try {
+      const res: IAuthResponse = await myFetch<IAuthResponse>(
+        "/auth/login",
+        "POST",
+        JSON.stringify(data)
+      );
+      if (!res.status) {
+        props.setError(res.error!);
+        props.handleClose();
+      } else {
+        setToken(res.token!);
+        navigate("/");
+        props.handleClose();
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
