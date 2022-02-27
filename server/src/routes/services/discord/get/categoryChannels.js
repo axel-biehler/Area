@@ -36,11 +36,11 @@ const getCategoryChannels = async (req, res) => {
     // filter array got by discord api and add empty option
 
     const dataFilter = data.filter((el) => el.type === 4);
-    const dataEnd = dataFilter.map((el) => ({ name: el.name, value: el.id }));
+    const dataEnd = dataFilter.map((el) => ({ name: el.name, value: el.id, type: 'string' }));
 
     // add option of inside no one
 
-    dataEnd.push({ name: 'root', value: '0' });
+    dataEnd.push({ name: 'root', value: '0', type: 'string' });
 
     res.send(dataEnd);
   } catch (err) {

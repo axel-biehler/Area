@@ -13,18 +13,21 @@ const metadata = {
     {
       name: 'type',
       type: 'dropdown',
-      field: 'name',
       options: [{
         name: 'text channel',
         value: 0,
+        type: 'number',
       }, {
         name: 'voice channel',
         value: 2,
+        type: 'number',
       }, {
         name: 'category channel',
         value: 4,
+        type: 'number',
       }],
       placeholder: 'channel type',
+      isOptional: true,
     },
     {
       name: 'topic',
@@ -35,8 +38,8 @@ const metadata = {
       name: 'place',
       type: 'get',
       route: '/services/discord/get/channels',
-      field: 'name',
       placeholder: 'Choose a category channel to put in',
+      isOptional: true,
     },
   ],
 };

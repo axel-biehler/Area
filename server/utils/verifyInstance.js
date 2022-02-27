@@ -52,7 +52,16 @@ const verifyReaction = (reaction) => {
 
   const invalidParams = widgetMetadata.params.some((p) => {
     const params = reaction.params.find((par) => par.name === p.name);
+
+    console.log(p.isOptional);
+    // temporary code
+    if (p.isOptional) {
+      return false;
+    }
+
+    console.log(p.type, params.value);
     if (params === undefined || params.type !== p.type || !validateType(params.value, p.type)) {
+      console.log('here');
       return true;
     }
     return false;
