@@ -10,6 +10,7 @@ const get = async (req, res) => {
       twitterLinked: user.twitterId != null,
       githubLinked: user.github.token != null,
       trelloLinked: user.trelloToken != null,
+      discordLinked: user.discordToken != null,
     });
   } catch (err) {
     console.error(err);

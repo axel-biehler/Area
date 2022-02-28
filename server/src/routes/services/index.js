@@ -20,5 +20,11 @@ router.post('/github/link', require('./github/link'));
 router.get('/github/unlink', require('./github/unlink'));
 router.get('/github/user', require('./github/getUserExample'));
 router.get('/github/env', require('./github/env'));
+router.get('/github/unlink', require('./github/unlink'));
+
+router.post('/discord/link', require('./discord/link'));
+router.get('/discord/unlink', require('./discord/unlink'));
+router.get('/discord/env', require('./discord/env'));
+router.get('/discord/get/channels/:type', require('./discord/get/channels'));
 
 module.exports = router;
