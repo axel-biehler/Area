@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 import {
   useNavigation,
   useRoute,
@@ -92,6 +92,32 @@ const Login = () => {
       }
     })();
   }, [navigateToHome]);
+
+  useEffect(() => {
+    const linkingBind = Linking.addEventListener('url', async data => {
+      const url = new URL(data.url);
+
+      const prefix = '/validate/';
+      if (!url.pathname.startsWith(prefix)) {
+        return;
+      }
+
+      const emailToken = url.pathname.substring(prefix.length);
+      const result = await request(`/auth/verifyEmail/${emailToken}`);
+
+      await token.set(result.token);
+
+      const payload = JSON.parse(decode(result.token.split('.')[1]));
+      await usernameStorage.set(payload.username);
+      await exp.set(payload.exp.toString());
+
+      navigateToHome();
+    });
+
+    return () => {
+      linkingBind.remove();
+    };
+  });
 
   return (
     <View>

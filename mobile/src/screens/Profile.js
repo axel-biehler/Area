@@ -161,7 +161,7 @@ const Profile = () => {
           guildId,
           permissions,
         });
-        console.log(res);
+
         if (res.status) {
           setDiscordLinked(!discordLinked);
         }
