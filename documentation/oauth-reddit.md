@@ -15,8 +15,8 @@ This request will send you the oauth url in plain text
 ## Redirect to Redit
 Redirect the user to this url
 
-Upon successful authentication, the callback url set in reddit dev dashbord (here : `localhost:8080/reddit_auth`)
-will receive a request containing the `token`.
+Upon successful authentication, the callback url set in reddit dev dashbord (here : `localhost:8081/reddit/link`)
+will receive a request containing the `code`.
 
 ## Send Token to Backend
 POST - {{url}}/services/reddit/link
