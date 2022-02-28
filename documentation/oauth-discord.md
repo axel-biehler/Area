@@ -19,6 +19,7 @@ Do a `GET` request to http://localhost:8080/services/discord/env and get:
 {
 	"status": true,
 	"clientId": "{{clientId}}",
+	"scope": "{{scope}}",
 }
 ```
 
@@ -29,7 +30,7 @@ Implement the authentication
 Example:
 ```js
 
-<a href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&permissions=8&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fdiscord%2Flink&response_type=code&scope=identify%20bot%20applications.commands`}>
+<a href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&permissions=8&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fdiscord%2Flink&response_type=code&scope=${process.env.DISCORD_SCOPE}`}>
     discord authentication
 </a>
 ```

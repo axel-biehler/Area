@@ -3,6 +3,7 @@ const env = async (req, res) => {
     res.send({
       status: true,
       clientId: process.env.DISCORD_CLIENT_ID,
+      scope: 'identify%20bot%20applications.commands',
     });
   } catch (err) {
     console.error(err);

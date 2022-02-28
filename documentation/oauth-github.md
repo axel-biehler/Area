@@ -27,7 +27,7 @@ The `redirect uri` is http://localhost:8081/
 
 Upon successful authentication, your `redirect_uri` would receive a request containing the `code` and `state` parameters
 
-You will then only have to make a `POST` request to http://localhost:8080/services/github/validate and put in body:
+You will then only have to make a `POST` request to http://localhost:8080/services/github/link and put in body:
 
 ```json
 {
