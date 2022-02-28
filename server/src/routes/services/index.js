@@ -25,6 +25,6 @@ router.get('/github/unlink', require('./github/unlink'));
 router.post('/discord/link', require('./discord/link'));
 router.get('/discord/unlink', require('./discord/unlink'));
 router.get('/discord/env', require('./discord/env'));
-router.get('/discord/get/categoryChannels', require('./discord/get/categoryChannels'));
+router.get('/discord/get/channels/:type', require('./discord/get/channels'));
 
 module.exports = router;

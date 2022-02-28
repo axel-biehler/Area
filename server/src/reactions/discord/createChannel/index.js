@@ -3,7 +3,7 @@ const path = require('path');
 const metadata = {
   name: path.basename(__dirname),
   displayName: 'Create a channel',
-  description: 'This trigger will send create a channel in a "server"',
+  description: 'This trigger will create a channel in a "server"',
   params: [
     {
       name: 'name',
@@ -37,7 +37,7 @@ const metadata = {
     {
       name: 'place',
       type: 'get',
-      route: '/services/discord/get/channels',
+      route: '/services/discord/get/channels/4',
       placeholder: 'Choose a category channel to put in',
       isOptional: true,
     },

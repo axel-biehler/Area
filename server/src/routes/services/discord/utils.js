@@ -61,7 +61,32 @@ const verifUserLinkDiscord = async (userId) => {
   return user;
 };
 
+const getChannels = async (user) => {
+  // get channel
+
+  const response = await fetch(`https://discordapp.com/api/guilds/${user.discord.guildId}/channels`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+    },
+  });
+
+  // console.log('\n\nresponse begin\n\n', response, '\n\nresponse end\n\n');
+
+  const data = await response.json();
+
+  // console.log('\n\ndata begin\n\n', data, '\n\ndata end\n\n');
+
+  if (response.status >= 300) {
+    console.error(data);
+    throw Error(`An error append when fetching channels in ${user.guildNname} guild`);
+  }
+
+  return data;
+};
+
 module.exports = {
   verifUserLinkDiscord,
   getToken,
+  getChannels,
 };
