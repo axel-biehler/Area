@@ -113,7 +113,7 @@ const Profile = () => {
         const code = url.searchParams.get('code');
         const state = url.searchParams.get('state');
 
-        const res = await request('/services/github/validate', 'POST', {
+        const res = await request('/services/github/link', 'POST', {
           code,
           state,
         });
