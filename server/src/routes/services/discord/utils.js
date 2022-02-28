@@ -4,7 +4,7 @@ const { User } = require('../../../database');
 const getToken = async (userId) => {
   // Retrieve user
 
-  const user = await User.findOne({ _id: userId });
+  const user = await User.findById(userId);
 
   if (!user) {
     throw Error('User not found.');
@@ -48,7 +48,7 @@ const getToken = async (userId) => {
 const verifUserLinkDiscord = async (userId) => {
   // Delete weebhook link to a repository
 
-  const user = await User.findOne({ _id: userId });
+  const user = await User.findById(userId);
 
   if (!user) {
     throw Error('User not found.');

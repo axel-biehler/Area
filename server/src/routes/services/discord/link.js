@@ -53,7 +53,7 @@ const link = async (req, res) => {
 
     // save token and name owner in discord user object
 
-    const user = await User.findOne({ _id: req.userId });
+    const user = await User.findById(req.userId);
 
     if (user == null) {
       res.json({
