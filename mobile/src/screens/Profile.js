@@ -20,6 +20,7 @@ const Profile = () => {
   const [twitterLinked, setTwitterLinked] = useState(false);
   const [githubLinked, setGithubLinked] = useState(false);
   const [trelloLinked, setTrelloLinked] = useState(false);
+  const [discordLinked, setDiscordLinked] = useState(false);
 
   const anyChanges = username.changes || email.changes || password.changes;
 
@@ -93,6 +94,23 @@ const Profile = () => {
     Linking.openURL(res.redirectUrl);
   };
 
+  const linkDiscord = async () => {
+    if (discordLinked) {
+      const res = await request('/services/discord/unlink');
+      if (res.status) {
+        setDiscordLinked(false);
+      }
+      return;
+    }
+
+    const res = await request('/services/discord/env', 'GET');
+    const { clientId, scope } = res;
+
+    Linking.openURL(
+      `https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=8&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fdiscord%2Flink&response_type=code&scope=${scope}`,
+    );
+  };
+
   useEffect(() => {
     const linkingBind = Linking.addEventListener('url', async data => {
       const url = new URL(data.url);
@@ -113,7 +131,7 @@ const Profile = () => {
         const code = url.searchParams.get('code');
         const state = url.searchParams.get('state');
 
-        const res = await request('/services/github/validate', 'POST', {
+        const res = await request('/services/github/link', 'POST', {
           code,
           state,
         });
@@ -133,6 +151,20 @@ const Profile = () => {
         if (res.status) {
           setTrelloLinked(!trelloLinked);
         }
+      } else if (url.pathname === '/discord/link') {
+        const code = url.searchParams.get('code');
+        const guildId = url.searchParams.get('guild_id');
+        const permissions = parseInt(url.searchParams.get('permissions'), 10);
+
+        const res = await request('/services/discord/link', 'POST', {
+          code,
+          guildId,
+          permissions,
+        });
+        console.log(res);
+        if (res.status) {
+          setDiscordLinked(!discordLinked);
+        }
       }
     });
 
@@ -149,6 +181,7 @@ const Profile = () => {
       setTwitterLinked(profile.twitterLinked);
       setGithubLinked(profile.githubLinked);
       setTrelloLinked(profile.trelloLinked);
+      setDiscordLinked(profile.discordLinked);
       setOriginalUsername(profile.username);
       setUsername({ changes: false, val: profile.username });
       setEmail({ changes: false, val: profile.email });
@@ -227,6 +260,9 @@ const Profile = () => {
         </Button>
         <Button style={styles.button} icon="trello" onPress={linkTrello}>
           {trelloLinked ? 'Unlink Trello' : 'Link Trello'}
+        </Button>
+        <Button style={styles.button} icon="discord" onPress={linkDiscord}>
+          {discordLinked ? 'Unlink Discord' : 'Link Discord'}
         </Button>
       </View>
     </View>

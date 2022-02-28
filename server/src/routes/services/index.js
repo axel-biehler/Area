@@ -22,9 +22,15 @@ router.get('/github/user', require('./github/getUserExample'));
 router.get('/github/env', require('./github/env'));
 router.get('/github/unlink', require('./github/unlink'));
 
+
 router.get('/reddit/connect', require('./reddit/connect'));
 router.post('/reddit/link', require('./reddit/link'));
 router.get('/reddit/getProfile', require('./reddit/getProfile'));
 router.get('/reddit/unlink', require('./reddit/unlink'));
+
+router.post('/discord/link', require('./discord/link'));
+router.get('/discord/unlink', require('./discord/unlink'));
+router.get('/discord/env', require('./discord/env'));
+router.get('/discord/get/channels/:type', require('./discord/get/channels'));
 
 module.exports = router;

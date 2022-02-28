@@ -14,6 +14,13 @@ const UserSchema = new Schema({
     token: String,
     owner: String,
   },
+  discord: {
+    token: String,
+    refreshToken: String,
+    expireAt: String,
+    guildId: String,
+    guildName: String,
+  },
   trelloToken: String,
   trelloTokenSecret: String,
   redditAccessToken: String,

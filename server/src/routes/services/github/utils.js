@@ -3,7 +3,7 @@ const { User } = require('../../../database');
 const verifUserLinkGithub = async (userId) => {
   // Delete weebhook link to a repository
 
-  const user = await User.findOne({ _id: userId });
+  const user = await User.findById(userId);
 
   if (!user) {
     throw Error('User not found.');

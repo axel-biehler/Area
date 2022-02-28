@@ -3,7 +3,7 @@ const { User } = require('../../../database');
 
 const userExample = async (req, res) => {
   try {
-    const user = await User.findOne({ _id: req.userId });
+    const user = await User.findById(req.userId);
 
     if (user == null) {
       return res.json({
