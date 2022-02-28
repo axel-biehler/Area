@@ -14,6 +14,14 @@ const webhook = async (req, res) => {
       return;
     }
 
+    // Filters the createBranch action
+
+    if (req.headers['x-github-event'] === 'create' && req.body.ref_type === 'tag') {
+      console.log('\n\nGOOD REDIRECTION OF CREATE TAG\n\n');
+      res.status(200).json({ status: true });
+      return;
+    }
+
     const service = Actions.find((svc) => svc.name === 'github');
     const action = service.widgets.find(({ event }) => event === req.headers['x-github-event']);
 
