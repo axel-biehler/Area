@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const { User } = require('../../../database');
 
-const redirectUrl = 'http://localhost:3000/reddit_auth';
+const redirectUrl = 'http://localhost:8081/reddit/link';
 
 const clientId = process.env.REDDIT_ID;
 
