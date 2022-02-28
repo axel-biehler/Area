@@ -29,6 +29,7 @@
           <data android:scheme="http" android:host="localhost" android:port="8081" android:pathPrefix="/github/link"/>
           <data android:scheme="http" android:host="localhost" android:port="8081" android:pathPrefix="/trello/link"/>
           <data android:scheme="http" android:host="localhost" android:port="8081" android:pathPrefix="/discord/link"/>
+          <data android:scheme="http" android:host="localhost" android:port="8081" android:pathPrefix="/reddit/link"/>
       </intent-filter>
       </activity>
     </application>
