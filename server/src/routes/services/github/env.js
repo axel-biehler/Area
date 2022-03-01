@@ -2,7 +2,7 @@ const env = async (req, res) => {
   try {
     res.send({
       status: true,
-      scope: 'repo,user',
+      scope: 'repo,user,gist',
       clientId: process.env.GITHUB_CLIENT_ID,
       state: process.env.GITHUB_STATE,
     });
