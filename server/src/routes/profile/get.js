@@ -11,6 +11,7 @@ const get = async (req, res) => {
       githubLinked: user.github.token != null,
       trelloLinked: user.trelloToken != null,
       discordLinked: user.discordToken != null,
+      todoistLinked: user.todoistAccessToken != null,
     });
   } catch (err) {
     console.error(err);
