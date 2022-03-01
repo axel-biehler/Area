@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Linking } from 'react-native';
+import { StyleSheet, View, Linking, ScrollView } from 'react-native';
 import {
   Text,
   Button,
@@ -22,6 +22,7 @@ const Profile = () => {
   const [trelloLinked, setTrelloLinked] = useState(false);
   const [discordLinked, setDiscordLinked] = useState(false);
   const [redditLinked, setRedditLinked] = useState(false);
+  const [todoistLinked, setTodoistLinked] = useState(false);
 
   const anyChanges = username.changes || email.changes || password.changes;
 
@@ -127,6 +128,21 @@ const Profile = () => {
     Linking.openURL(url);
   };
 
+  const linkTodoist = async () => {
+    if (todoistLinked) {
+      const res = await request('/services/todoist/unlink');
+      if (res.status) {
+        setTodoistLinked(false);
+      }
+      return;
+    }
+
+    const res = await request('/services/todoist/connect', 'GET');
+    const { url } = res;
+
+    Linking.openURL(url);
+  };
+
   useEffect(() => {
     const linkingBind = Linking.addEventListener('url', async data => {
       const url = new URL(data.url);
@@ -189,6 +205,14 @@ const Profile = () => {
         if (res) {
           setRedditLinked(!redditLinked);
         }
+      } else if (url.pathname === '/todoist/link') {
+        const token = url.searchParams.get('code');
+        const res = await request('/services/todoist/link', 'POST', {
+          token,
+        });
+        if (res) {
+          setTodoistLinked(!todoistLinked);
+        }
       }
     });
 
@@ -207,6 +231,7 @@ const Profile = () => {
       setTrelloLinked(profile.trelloLinked);
       setDiscordLinked(profile.discordLinked);
       setRedditLinked(profile.redditLinked);
+      setTodoistLinked(profile.todoistLinked);
       setOriginalUsername(profile.username);
       setUsername({ changes: false, val: profile.username });
       setEmail({ changes: false, val: profile.email });
@@ -226,7 +251,7 @@ const Profile = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Headline>Hi {originalUsername}!</Headline>
       <Text>Edit your profile</Text>
       <TextInput
@@ -292,8 +317,11 @@ const Profile = () => {
         <Button style={styles.button} icon="reddit" onPress={linkReddit}>
           {redditLinked ? 'Unlink Reddit' : 'Link Reddit'}
         </Button>
+        <Button style={styles.button} icon="view-list" onPress={linkTodoist}>
+          {todoistLinked ? 'Unlink Todoist' : 'Link Todoist'}
+        </Button>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
