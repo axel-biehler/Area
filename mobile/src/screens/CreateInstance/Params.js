@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Checkbox, Subheading, TextInput } from 'react-native-paper';
+import DropDown from 'react-native-paper-dropdown';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+import request from '../../api/request';
 
 const BooleanParam = ({ param, setValue }) => {
   const [rand, setRand] = useState(0);
@@ -54,6 +57,85 @@ const NumParam = ({ param, setValue }) => {
   );
 };
 
+const GetParam = ({ param, setValue }) => {
+  const [shown, setShown] = useState(false);
+  const [values, setValues] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await request(param.route);
+      setValues(
+        res.map(r => ({
+          ...r,
+          label: r.name,
+        })),
+      );
+    })();
+  }, [param.route]);
+
+  return (
+    <DropDown
+      label={param.name}
+      mode="outlined"
+      visible={shown}
+      showDropDown={() => setShown(true)}
+      onDismiss={() => setShown(false)}
+      list={values}
+      setValue={v => setValue(param.name, v)}
+      value={param.value}
+    />
+  );
+};
+
+const DropdownParam = ({ param, setValue }) => {
+  const [shown, setShown] = useState(false);
+  const values = param.options.map(r => ({
+    ...r,
+    label: r.name,
+  }));
+
+  return (
+    <DropDown
+      label={param.name}
+      mode="outlined"
+      visible={shown}
+      showDropDown={() => setShown(true)}
+      onDismiss={() => setShown(false)}
+      list={values}
+      setValue={v => setValue(param.name, v)}
+      value={param.value}
+    />
+  );
+};
+
+const TimeParam = ({ param, setValue }) => {
+  const [shown, setShown] = useState(false);
+  const input = param.value;
+  const parts = input.split(':');
+  const minutes = parts[0] * 60 + parts[1];
+  const inputDate = new Date(minutes * 60 * 1000);
+
+  if (shown) {
+    return (
+      <RNDateTimePicker
+        value={inputDate}
+        mode="time"
+        display="clock"
+        onChange={(_, date) => {
+          const m = date.getMinutes();
+          setValue(param.name, `${date.getHours()}:${m}${m < 10 ? '0' : ''}`);
+          setShown(false);
+        }}
+      />
+    );
+  }
+  return (
+    <Button mode="contained" onPress={() => setShown(true)}>
+      Set {param.name}: {param.value}
+    </Button>
+  );
+};
+
 const Param = ({ param, setValue }) => {
   switch (param.type) {
     case 'boolean':
@@ -62,6 +144,12 @@ const Param = ({ param, setValue }) => {
       return <StringParam param={param} setValue={setValue} />;
     case 'number':
       return <NumParam param={param} setValue={setValue} />;
+    case 'get':
+      return <GetParam param={param} setValue={setValue} />;
+    case 'dropdown':
+      return <DropdownParam param={param} setValue={setValue} />;
+    case 'time':
+      return <TimeParam param={param} setValue={setValue} />;
     default:
       return null;
   }
@@ -79,6 +167,12 @@ const getDefaultValue = param => {
       return '';
     case 'number':
       return 0;
+    case 'get':
+      return '';
+    case 'dropdown':
+      return '';
+    case 'time':
+      return '00:00';
     default:
       return undefined;
   }
