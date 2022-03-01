@@ -9,7 +9,7 @@ const clientSecret = process.env.REDDIT_SECRET;
 
 const link = async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.userId });
+    const user = await User.findById(req.userId);
     const { token } = req.body;
     console.log('token : ');
     console.log(token);
@@ -44,7 +44,6 @@ const link = async (req, res) => {
     console.log(dataOauth);
     if (!dataOauth.access_token) {
       console.log(dataOauth);
-      console.log('caca');
       return res.json({
         status: false,
         error: 'no access token get from reddit service',

@@ -21,6 +21,7 @@ const Profile = () => {
   const [githubLinked, setGithubLinked] = useState(false);
   const [trelloLinked, setTrelloLinked] = useState(false);
   const [discordLinked, setDiscordLinked] = useState(false);
+  const [redditLinked, setRedditLinked] = useState(false);
 
   const anyChanges = username.changes || email.changes || password.changes;
 
@@ -111,6 +112,21 @@ const Profile = () => {
     );
   };
 
+  const linkReddit = async () => {
+    if (redditLinked) {
+      const res = await request('/services/reddit/unlink');
+      if (res.status) {
+        setRedditLinked(false);
+      }
+      return;
+    }
+
+    const res = await request('/services/reddit/connect', 'GET');
+    const { url } = res;
+
+    Linking.openURL(url);
+  };
+
   useEffect(() => {
     const linkingBind = Linking.addEventListener('url', async data => {
       const url = new URL(data.url);
@@ -165,6 +181,14 @@ const Profile = () => {
         if (res.status) {
           setDiscordLinked(!discordLinked);
         }
+      } else if (url.pathname === '/reddit/link') {
+        const token = url.searchParams.get('code');
+        const res = await request('/services/reddit/link', 'POST', {
+          token,
+        });
+        if (res) {
+          setRedditLinked(!redditLinked);
+        }
       }
     });
 
@@ -182,6 +206,7 @@ const Profile = () => {
       setGithubLinked(profile.githubLinked);
       setTrelloLinked(profile.trelloLinked);
       setDiscordLinked(profile.discordLinked);
+      setRedditLinked(profile.redditLinked);
       setOriginalUsername(profile.username);
       setUsername({ changes: false, val: profile.username });
       setEmail({ changes: false, val: profile.email });
@@ -263,6 +288,9 @@ const Profile = () => {
         </Button>
         <Button style={styles.button} icon="discord" onPress={linkDiscord}>
           {discordLinked ? 'Unlink Discord' : 'Link Discord'}
+        </Button>
+        <Button style={styles.button} icon="reddit" onPress={linkReddit}>
+          {redditLinked ? 'Unlink Reddit' : 'Link Reddit'}
         </Button>
       </View>
     </View>
