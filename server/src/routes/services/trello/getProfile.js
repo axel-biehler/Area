@@ -11,7 +11,7 @@ const getProfileTest = async (req, res) => {
     '1.0A', null, 'HMAC-SHA1',
   );
 
-  const u = await User.findOne(req.userId);
+  const u = await User.findById(req.userId);
 
   if (u == null) {
     res.status(500).json({

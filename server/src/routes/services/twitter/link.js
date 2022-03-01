@@ -29,7 +29,7 @@ const link = async (req, res) => {
     const oauthTokenSecret = params.get('oauth_token_secret');
     const userId = params.get('user_id');
 
-    const u = await User.findOne({ id: req.userId });
+    const u = await User.findById(req.userId);
 
     if (u == null) {
       res.json({

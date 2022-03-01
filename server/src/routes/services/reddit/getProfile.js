@@ -2,7 +2,7 @@ const { User } = require('../../../database');
 
 const getProfile = async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.userId });
+    const user = await User.findById(req.userId);
 
     const config = {
       headers: { 'User-Agent': 'school project', Authorization: `Bearer ${user.redditAccessToken}` },

@@ -3,7 +3,7 @@ const { promisify } = require('util');
 const { User } = require('../../../database');
 
 const getProfileTest = async (req, res) => {
-  const u = await User.findOne(req.userId);
+  const u = await User.findById(req.userId);
 
   const oauth = new OAuth.OAuth(
     'https://api.twitter.com/oauth/request_token',
