@@ -6,7 +6,7 @@ import {
   createStyles,
   Checkbox,
 } from "@material-ui/core";
-import { IParameterProps } from "../../../Interfaces";
+import {IParameter, IParameterProps} from "../../../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,9 +22,19 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+function getBoolValue(param: IParameter) {
+  if (param.value === "true") {
+    return true;
+  } else if (param.value === "false") {
+    return false;
+  } else {
+    return false;
+  }
+}
+
 function DynamicBoolean(props: IParameterProps) {
   const classes = useStyles();
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(getBoolValue(props.element));
 
   return (
     <div key={props.index} className={classes.Input}>

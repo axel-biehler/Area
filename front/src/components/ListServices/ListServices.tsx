@@ -130,19 +130,15 @@ function ListServices(props: IProfileProps) {
         console.log("ERROR: ", res.error);
       }
     } else {
-      console.log("ici");
       const res: ITwitterOAuth = await myFetch<ITwitterOAuth>(
         "/services/twitter/connect",
         "POST",
         JSON.stringify({ callback: "http://localhost:8081/twitter/link" })
       );
-      console.log("ici2");
       if (res.status) {
-        console.log("ici good");
         const url = `https://api.twitter.com/oauth/authorize?oauth_token=${res.oauthToken}`;
         window.location.replace(url);
       } else {
-        console.log("ici caca");
         console.log("ERROR: ", res.error);
       }
     }

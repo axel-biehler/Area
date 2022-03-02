@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "600px",
       maxWidth: "80%",
       marginBottom: "20px",
+      overflow: "visible",
     },
     Select: {
       maxHeight: "50%",
@@ -131,7 +132,6 @@ function ServiceChoice(props: IServiceChoiceProps) {
             }}
             name="color"
             options={props.servicesList}
-            menuPortalTarget={document.querySelector("body")}
           />
           <Select
             placeholder="Select an Action"
@@ -149,7 +149,6 @@ function ServiceChoice(props: IServiceChoiceProps) {
             }}
             name="color"
             options={events}
-            menuPortalTarget={document.querySelector("body")}
           />
           {chosenEvent !== undefined ? (
             <ListParams event={chosenEvent} editParams={editActionParams} />

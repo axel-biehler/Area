@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function DynamicString(props: IParameterProps) {
   const classes = useStyles();
-  const [str, setStr] = useState("");
+  const [str, setStr] = useState(props.element.value !== undefined ? props.element.value : "");
 
   return (
     <div key={props.index} className={classes.Input}>

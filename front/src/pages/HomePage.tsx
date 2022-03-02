@@ -6,6 +6,8 @@ import {
   createStyles,
   Typography,
   Button,
+  Grid,
+  GridSpacing,
 } from "@material-ui/core";
 import Navbar from "../components/Navbar";
 import myFetch from "../api/api";
@@ -15,28 +17,53 @@ import {
   IInstance,
   IInstanceConfig,
   IStatusResponse,
+  IInstanceRequest,
 } from "../Interfaces";
-import ServiceChoice from "../components/Instances/ServiceChoice";
+import ModalInstance from "../components/Instances/ModalInstance";
+import InstanceEditor from "../components/Instances/InstanceEditor";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    Container: {
-      height: "100%",
-      width: "100%",
-      margin: "auto",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
+    FixedButton: {
+      margin: 0,
+      top: 100,
+      bottom: "auto",
+      left: 50,
+      right: "auto",
+      position: "fixed",
     },
+    GridContainer: {
+      width: "100%",
+      padding: "0 50px",
+    },
+    Grid: {},
   })
 );
 
 function HomePage() {
   const classes = useStyles();
+  const [open, setOpen] = useState<boolean>(false);
+  const [instances, setInstances] = useState<IInstance[] | undefined>(
+    undefined
+  );
   const [actionServices, setActionServices] = useState<IServiceListItem[]>([]);
-  const [reactionServices, setReactionServices] = useState<IServiceListItem[]>([]);
-  const [newInstance, setNewInstance] = useState<IInstance>({action: undefined, reaction: undefined});
+  const [reactionServices, setReactionServices] = useState<IServiceListItem[]>(
+    []
+  );
+  const [newInstance, setNewInstance] = useState<IInstance>({
+    action: undefined,
+    reaction: undefined,
+  });
+
+  const getInstances = async () => {
+    const instancesList: IInstanceRequest = await myFetch<IInstanceRequest>(
+      "/instances",
+      "GET"
+    );
+    if (instancesList.status) {
+      setInstances(instancesList.instances);
+    }
+  };
 
   const initialize = async () => {
     const actions: IAction[] = await myFetch<IAction[]>("/actions", "GET");
@@ -46,7 +73,6 @@ function HomePage() {
         label: x.displayName,
         description: x.description,
         widgets: x.widgets,
-        isDisabled: false,
       };
     });
     setActionServices(actionList);
@@ -62,11 +88,34 @@ function HomePage() {
       };
     });
     setReactionServices(reactionList);
+    const instancesList: IInstanceRequest = await myFetch<IInstanceRequest>(
+      "/instances",
+      "GET"
+    );
+    if (instancesList.status) {
+      setInstances(instancesList.instances);
+    }
   };
 
   useEffect(() => {
     initialize();
   }, []);
+
+  const createInstance = async () => {
+    console.log(JSON.stringify(newInstance));
+    const res: IStatusResponse = await myFetch<IStatusResponse>(
+      "/instances",
+      "POST",
+      JSON.stringify(newInstance)
+    );
+    if (res.status) {
+      handleClose();
+      setNewInstance({ action: undefined, reaction: undefined });
+      getInstances();
+    } else {
+      console.log(res.error);
+    }
+  };
 
   const editInstance = (type: string, config: IInstanceConfig) => {
     if (type === "action") {
@@ -88,49 +137,102 @@ function HomePage() {
     }
   };
 
-  const createInstance = async () => {
-    console.log(JSON.stringify(newInstance));
+  const editExistingInstance = (config: IInstance) => {
+    if (!instances) return;
+    const newList: IInstance[] = Array.from(instances, (x: IInstance) => {
+      if (x._id === config._id) {
+        return config;
+      }
+      return x;
+    });
+    setInstances(newList);
+  };
+
+  const deleteInstance = async (toRemove: IInstance) => {
     const res: IStatusResponse = await myFetch<IStatusResponse>(
-      "/instances",
-      "POST",
-      JSON.stringify(newInstance)
+      `/instances/${toRemove._id}`,
+      "DELETE"
     );
+    if (res.status) {
+      const newList = instances?.filter(
+        (instance) => instance._id !== toRemove._id
+      );
+      setInstances(newList);
+    } else {
+      console.log(res.error);
+    }
+  };
+
+  const saveInstance = async (id: string) => {
+    const toSave: IInstance | undefined = instances?.find(x => x._id === id);
+    if (toSave === undefined) {
+      return;
+    }
+    console.log(JSON.stringify(toSave));
+    JSON.stringify({reaction: toSave.reaction});
+    const res: IStatusResponse = await myFetch<IStatusResponse>(`/instances/${toSave._id}`, "POST", JSON.stringify({reaction: toSave.reaction}));
     if (!res.status) {
       console.log(res.error);
-    } else {
-      setNewInstance({action: undefined, reaction: undefined});
     }
+    getInstances();
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
     <CssBaseline>
       <Navbar />
       <div className="App">
-        <Typography variant="h2">
+        <Typography variant="h2" gutterBottom={true}>
           Trigger reactions to various actions.
         </Typography>
-        <div className={classes.Container}>
-          <ServiceChoice
-            editInstance={editInstance}
-            type={"action"}
-            servicesList={actionServices}
-          />
-          <ServiceChoice
-            editInstance={editInstance}
-            type={"reaction"}
-            servicesList={reactionServices}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            size={"medium"}
-            onClick={() => {
-              createInstance();
-            }}
-          >
-            Create instance
-          </Button>
-        </div>
+
+        <ModalInstance
+          open={open}
+          handleClose={handleClose}
+          createInstance={createInstance}
+          editInstance={editInstance}
+          actionServices={actionServices}
+          reactionServices={reactionServices}
+        />
+
+        <Button
+          variant="contained"
+          color="primary"
+          size={"medium"}
+          className={classes.FixedButton}
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          Create an instance
+        </Button>
+
+        <Grid
+          container
+          spacing={4}
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+          className={classes.Grid}
+        >
+          {instances?.map((element: IInstance, index: number) => {
+            return (
+              <Grid item xs={6} md={3} key={index}>
+                {" "}
+                <InstanceEditor
+                  instance={element}
+                  editInstance={editExistingInstance}
+                  saveInstance={saveInstance}
+                  deleteInstance={deleteInstance}
+                  key={index}
+                />{" "}
+              </Grid>
+            );
+          })}
+        </Grid>
       </div>
     </CssBaseline>
   );

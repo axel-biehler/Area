@@ -7,7 +7,7 @@ import DynamicString from "./DynamicParameters/DynamicString";
 function ListParams(props: IListParamsProps) {
   return (
     <div>
-      <Typography variant="h5">Event parameters</Typography>
+      <Typography variant="body1" style={{ textAlign: "center" }}>Event parameters</Typography>
       {props.event.parameters.map((element: IParameter, index: number) => {
         if (element.type === "boolean") {
           return (
