@@ -71,12 +71,8 @@ function ServiceLinkingPage() {
         return;
       }
       const data = getData(service);
-      const url =
-        service === "github"
-          ? `/services/${service}/validate`
-          : `/services/${service}/link`;
       const res: IStatusResponse = await myFetch<IStatusResponse>(
-        url,
+        `/services/${service}/link`,
         "POST",
         JSON.stringify(data)
       );

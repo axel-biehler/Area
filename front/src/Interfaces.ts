@@ -111,14 +111,37 @@ interface IInstanceConfig {
 }
 
 interface IInstance {
+  _id?: string,
+  userId?: string,
   action?: IInstanceConfig;
   reaction?: IInstanceConfig;
+}
+
+interface IInstanceRequest {
+  status: boolean,
+  instances: IInstance[]
 }
 
 interface IServiceChoiceProps {
   servicesList: IServiceListItem[];
   editInstance: (type: string, config: IInstanceConfig) => void;
   type: string;
+}
+
+interface IModalInstanceProps {
+  open: boolean;
+  handleClose: () => void;
+  createInstance: () => void;
+  editInstance: (type: string, config: IInstanceConfig) => void;
+  actionServices: IServiceListItem[];
+  reactionServices: IServiceListItem[];
+}
+
+interface IInstanceEditorProps {
+  instance: IInstance;
+  editInstance: (config: IInstance) => void;
+  saveInstance: (id: string) => void;
+  deleteInstance: (instance: IInstance) => void;
 }
 
 export type {
@@ -140,5 +163,8 @@ export type {
   IParameterProps,
   IInstanceConfig,
   IInstance,
-  IServiceChoiceProps
+  IServiceChoiceProps,
+  IModalInstanceProps,
+  IInstanceRequest,
+  IInstanceEditorProps
 };
