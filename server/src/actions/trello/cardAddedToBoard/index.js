@@ -7,13 +7,15 @@ const metadata = {
   params: [
     {
       name: 'workspace',
-      type: 'string',
-      placeholder: 'Please Select',
+      type: 'get',
+      route: 'tkt bro',
+      placeholder: 'Please select',
     },
     {
       name: 'board',
-      type: 'string',
-      placeholder: '',
+      type: 'get',
+      route: 'tkt bro 2',
+      placeholder: 'Please select',
     },
   ],
 };

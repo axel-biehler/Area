@@ -15,6 +15,8 @@ router.post('/trello/connect', require('./trello/connect'));
 router.post('/trello/link', require('./trello/link'));
 router.get('/trello/getProfile', require('./trello/getProfile'));
 router.get('/trello/unlink', require('./trello/unlink'));
+router.get('/trello/boards', require('./trello/getBoardList'));
+router.post('/trello', require('./trello/webhook').webhook);
 
 router.post('/github/link', require('./github/link'));
 router.get('/github/unlink', require('./github/unlink'));

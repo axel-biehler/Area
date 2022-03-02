@@ -16,7 +16,6 @@ const main = async () => {
   app.use('/profile', routes.profile);
   app.use('/reactions', routes.reactions);
   app.use('/services', routes.services);
-  app.use('/', routes.trello);
 
   await database.database.connectToDatabase();
   app.listen(port, () => {

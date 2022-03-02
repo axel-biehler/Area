@@ -8,12 +8,12 @@ const metadata = {
     {
       name: 'workspace',
       type: 'string',
-      placeholder: 'Please Select',
+      placeholder: 'Please select',
     },
     {
       name: 'board',
       type: 'string',
-      placeholder: '',
+      placeholder: 'Please select',
     },
   ],
 };
