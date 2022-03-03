@@ -39,6 +39,7 @@ const init_values: IProfileData = {
   trelloLinked: false,
   redditLinked: false,
   todoistLinked: false,
+  discordLinked: false,
 };
 
 function ProfilePage() {

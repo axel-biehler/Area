@@ -38,6 +38,8 @@ function getServiceName() {
     return "todoist";
   } else if (window.location.toString().indexOf("reddit") !== -1) {
     return "reddit";
+  } else if (window.location.toString().indexOf("discord") !== -1) {
+    return "discord";
   } else {
     return undefined;
   }
@@ -64,6 +66,12 @@ function getData(service: string) {
   } else if (service === "reddit" || service === "todoist") {
     return {
       token: params.get("code"),
+    };
+  } else if (service === "discord") {
+    return {
+      code: params.get("code"),
+      guildId: params.get("guild_id"),
+      permissions: parseInt(params.get("permissions")!),
     };
   }
 }

@@ -31,6 +31,7 @@ interface IProfileData {
   trelloLinked: boolean;
   redditLinked: boolean;
   todoistLinked: boolean;
+  discordLinked: boolean;
 }
 
 interface IProfileProps {
@@ -49,6 +50,13 @@ interface ITwitterOAuth {
   oauthToken?: string;
   error?: string;
 }
+
+interface IDiscordOAuth {
+  status: boolean;
+  clientId: string;
+  scope: string;
+}
+
 
 interface IAccountSettings {
   username?: string;
@@ -155,6 +163,7 @@ export type {
   IProfileData,
   IRedirectOAuth,
   ITwitterOAuth,
+  IDiscordOAuth,
   IAccountSettings,
   IParameter,
   IWidget,

@@ -15,6 +15,7 @@ import TrelloLogo from "../../assets/TrelloLogo.png";
 import TwitterLogo from "../../assets/TwitterLogo.png";
 import RedditLogo from "../../assets/RedditLogo.png";
 import TodoistLogo from "../../assets/TodoistLogo.png";
+import DiscordLogo from "../../assets/DiscordLogo.png";
 import myFetch from "../../api/api";
 import {
   IGithubEnv,
@@ -22,7 +23,7 @@ import {
   IProfileProps,
   IStatusResponse,
   IRedirectOAuth,
-  ITwitterOAuth,
+  ITwitterOAuth, IDiscordOAuth,
 } from "../../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -185,6 +186,32 @@ function ListServices(props: IProfileProps) {
     }
   };
 
+  const discordOAuth = async () => {
+    if (props.infos.discordLinked) {
+      const res: IStatusResponse = await myFetch<IStatusResponse>(
+        "/services/discord/unlink",
+        "GET"
+      );
+      if (res.status) {
+        const newInfos: IProfileData = {
+          ...props.infos,
+          discordLinked: false,
+        };
+        props.setInfos(newInfos);
+      } else {
+        console.log("ERROR: ", res.error);
+      }
+    } else {
+      const res: IDiscordOAuth = await myFetch<IDiscordOAuth>(
+        "/services/discord/env",
+        "GET",
+      );
+      if (res.status) {
+        window.location.replace(`https://discord.com/api/oauth2/authorize?client_id=${res.clientId}&permissions=8&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fdiscord%2Flink&response_type=code&scope=${res.scope}`);
+      }
+    }
+  };
+
   return (
     <div>
       <Typography variant="h3" className={classes.Title}>My services</Typography>
@@ -315,6 +342,32 @@ function ListServices(props: IProfileProps) {
               onClick={todoistOAuth}
             >
               {props.infos.todoistLinked ? "Revoke access" : "Link account"}
+            </Button>
+          </Box>
+        </Card>
+
+        <Card className={classes.Card}>
+          <CardMedia
+            component={"img"}
+            className={classes.CardMedia}
+            src={DiscordLogo}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              width: "50%",
+              padding: "1%",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size={"medium"}
+              onClick={discordOAuth}
+            >
+              {props.infos.discordLinked ? "Revoke access" : "Link account"}
             </Button>
           </Box>
         </Card>

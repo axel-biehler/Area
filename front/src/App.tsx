@@ -35,6 +35,7 @@ function App() {
         <Route path="/twitter/link/*" element={<ServiceLinkingPage />} />
         <Route path="/reddit/link/*" element={<ServiceLinkingPage />} />
         <Route path="/todoist/link/*" element={<ServiceLinkingPage />} />
+        <Route path="/discord/link/*" element={<ServiceLinkingPage />} />
       </Routes>
     </Router>
   );
