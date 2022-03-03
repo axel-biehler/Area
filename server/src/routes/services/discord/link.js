@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const { User } = require('../../../database');
-// https://discord.com/api/oauth2/authorize?client_id=939140702124802068&permissions=8&scope=bot&guild_id=839811280385605633&disable_guild_select=true
+
 const link = async (req, res) => {
   try {
     const { code, guildId, permissions } = req.body;
@@ -35,13 +35,11 @@ const link = async (req, res) => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
 
-    console.log('\n\nresponseOauth begin\n\n', responseOauth, '\n\nresponseOauth end\n\n');
+    // console.log('\n\nresponseOauth begin\n\n', responseOauth, '\n\nresponseOauth end\n\n');
 
     const dataOauth = await responseOauth.json();
 
-    console.log('\n\ndataOauth begin\n\n', dataOauth, '\n\ndataOauth end\n\n');
-
-    // console.log(!dataOauth.guild.id !== guildId);
+    // console.log('\n\ndataOauth begin\n\n', dataOauth, '\n\ndataOauth end\n\n');
 
     if (!dataOauth.access_token || !dataOauth.guild || dataOauth.guild.id !== guildId) {
       res.json({

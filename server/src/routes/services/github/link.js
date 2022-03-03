@@ -27,8 +27,11 @@ const link = async (req, res) => {
         Accept: 'application/json',
       },
     });
+
+    // console.log('\n\nresponseOauth begin\n\n', responseOauth, '\n\nresponseOauth end\n\n');
     const dataOauth = await responseOauth.json();
 
+    // console.log('\n\ndataOauth begin\n\n', dataOauth, '\n\ndataOauth end\n\n');
     if (!dataOauth.access_token) {
       res.json({
         status: false,
