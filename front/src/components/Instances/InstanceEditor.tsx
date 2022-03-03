@@ -168,16 +168,6 @@ function InstanceEditor(props: IInstanceEditorProps) {
             >
               Save
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              size={"medium"}
-              onClick={() => {
-                console.log(JSON.stringify(props.instance));
-              }}
-            >
-              Test
-            </Button>
           </div>
         ) : null}
 

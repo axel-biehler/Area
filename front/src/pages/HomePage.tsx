@@ -101,7 +101,7 @@ function HomePage() {
   }, []);
 
   const createInstance = async () => {
-    console.log(JSON.stringify(newInstance));
+    console.log("new instance = ", JSON.stringify(newInstance));
     const res: IStatusResponse = await myFetch<IStatusResponse>(
       "/instances",
       "POST",
