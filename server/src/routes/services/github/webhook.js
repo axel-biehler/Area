@@ -5,8 +5,8 @@ const { User } = require('../../../database');
 
 const webhook = async (req, res) => {
   try {
-    console.log('\n\n\nheader begin:\n\n', req.headers, '\n\nheader end\n\n');
-    console.log('\n\n\nbody begin:\n\n', req.body, '\n\nbody end\n\n');
+    // console.log('\n\n\nheader begin:\n\n', req.headers, '\n\nheader end\n\n');
+    // console.log('\n\n\nbody begin:\n\n', req.body, '\n\nbody end\n\n');
 
     let filter = { 'action.webhookId': req.headers['x-github-hook-id'] };
 
@@ -95,7 +95,7 @@ const webhook = async (req, res) => {
     const webhookId = req.headers['x-github-hook-id'];
     const instances = await Instance.find(filter);
 
-    console.log('\n\ninstances begin\n\n', instances, '\n\ninstances end\n\n');
+    // console.log('\n\ninstances begin\n\n', instances, '\n\ninstances end\n\n');
 
     if (!instances.length) {
       throw Error('instance not found');

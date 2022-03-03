@@ -12,7 +12,7 @@ const createChannel = async (instance) => {
 
   const user = await verifUserLinkDiscord(instance.userId);
 
-  console.log('\n\nparams begin\n\n', params, '\n\nparams end\n\n');
+  // console.log('\n\nparams begin\n\n', params, '\n\nparams end\n\n');
 
   // Handle the fact no channel reference in the object
 
