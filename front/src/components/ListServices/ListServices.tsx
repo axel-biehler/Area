@@ -13,13 +13,15 @@ import "./ListServices.css";
 import GithubLogo from "../../assets/GithubLogo.png";
 import TrelloLogo from "../../assets/TrelloLogo.png";
 import TwitterLogo from "../../assets/TwitterLogo.png";
+import RedditLogo from "../../assets/RedditLogo.png";
+import TodoistLogo from "../../assets/TodoistLogo.png";
 import myFetch from "../../api/api";
 import {
   IGithubEnv,
   IProfileData,
   IProfileProps,
   IStatusResponse,
-  ITrelloOAuth,
+  IRedirectOAuth,
   ITwitterOAuth,
 } from "../../Interfaces";
 
@@ -59,11 +61,8 @@ function ListServices(props: IProfileProps) {
       );
       if (res.status) {
         const newInfos: IProfileData = {
-          username: props.infos.username,
-          email: props.infos.email,
-          twitterLinked: props.infos.twitterLinked,
+          ...props.infos,
           githubLinked: false,
-          trelloLinked: props.infos.trelloLinked,
         };
         props.setInfos(newInfos);
       } else {
@@ -87,10 +86,7 @@ function ListServices(props: IProfileProps) {
       );
       if (res.status) {
         const newInfos: IProfileData = {
-          username: props.infos.username,
-          email: props.infos.email,
-          twitterLinked: props.infos.twitterLinked,
-          githubLinked: props.infos.githubLinked,
+          ...props.infos,
           trelloLinked: false,
         };
         props.setInfos(newInfos);
@@ -98,7 +94,7 @@ function ListServices(props: IProfileProps) {
         console.log("ERROR: ", res.error);
       }
     } else {
-      const res: ITrelloOAuth = await myFetch<ITrelloOAuth>(
+      const res: IRedirectOAuth = await myFetch<IRedirectOAuth>(
         "/services/trello/connect",
         "POST",
         JSON.stringify({ callback: "http://localhost:8081/trello/link" })
@@ -119,11 +115,8 @@ function ListServices(props: IProfileProps) {
       );
       if (res.status) {
         const newInfos: IProfileData = {
-          username: props.infos.username,
-          email: props.infos.email,
+          ...props.infos,
           twitterLinked: false,
-          githubLinked: props.infos.githubLinked,
-          trelloLinked: props.infos.trelloLinked,
         };
         props.setInfos(newInfos);
       } else {
@@ -141,6 +134,54 @@ function ListServices(props: IProfileProps) {
       } else {
         console.log("ERROR: ", res.error);
       }
+    }
+  };
+
+  const redditOAuth = async () => {
+    if (props.infos.redditLinked) {
+      const res: IStatusResponse = await myFetch<IStatusResponse>(
+        "/services/reddit/unlink",
+        "GET"
+      );
+      if (res.status) {
+        const newInfos: IProfileData = {
+          ...props.infos,
+          redditLinked: false,
+        };
+        props.setInfos(newInfos);
+      } else {
+        console.log("ERROR: ", res.error);
+      }
+    } else {
+      const res: any = await myFetch<any>(
+        "/services/reddit/connect",
+        "GET",
+      );
+      window.location.replace(res["url"]);
+    }
+  };
+
+  const todoistOAuth = async () => {
+    if (props.infos.todoistLinked) {
+      const res: IStatusResponse = await myFetch<IStatusResponse>(
+        "/services/todoist/unlink",
+        "GET"
+      );
+      if (res.status) {
+        const newInfos: IProfileData = {
+          ...props.infos,
+          todoistLinked: false,
+        };
+        props.setInfos(newInfos);
+      } else {
+        console.log("ERROR: ", res.error);
+      }
+    } else {
+      const res: any = await myFetch<any>(
+        "/services/todoist/connect",
+        "GET",
+      );
+      window.location.replace(res["url"]);
     }
   };
 
@@ -222,6 +263,58 @@ function ListServices(props: IProfileProps) {
               onClick={twitterOAuth}
             >
               {props.infos.twitterLinked ? "Revoke access" : "Link account"}
+            </Button>
+          </Box>
+        </Card>
+
+        <Card className={classes.Card}>
+          <CardMedia
+            component={"img"}
+            className={classes.CardMedia}
+            src={RedditLogo}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              width: "50%",
+              padding: "1%",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size={"medium"}
+              onClick={redditOAuth}
+            >
+              {props.infos.redditLinked ? "Revoke access" : "Link account"}
+            </Button>
+          </Box>
+        </Card>
+
+        <Card className={classes.Card}>
+          <CardMedia
+            component={"img"}
+            className={classes.CardMedia}
+            src={TodoistLogo}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              width: "50%",
+              padding: "1%",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size={"medium"}
+              onClick={todoistOAuth}
+            >
+              {props.infos.todoistLinked ? "Revoke access" : "Link account"}
             </Button>
           </Box>
         </Card>

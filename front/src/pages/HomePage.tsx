@@ -7,7 +7,6 @@ import {
   Typography,
   Button,
   Grid,
-  GridSpacing,
 } from "@material-ui/core";
 import Navbar from "../components/Navbar";
 import myFetch from "../api/api";

@@ -29,6 +29,8 @@ interface IProfileData {
   twitterLinked: boolean;
   githubLinked: boolean;
   trelloLinked: boolean;
+  redditLinked: boolean;
+  todoistLinked: boolean;
 }
 
 interface IProfileProps {
@@ -36,7 +38,7 @@ interface IProfileProps {
   setInfos: React.Dispatch<React.SetStateAction<IProfileData>>;
 }
 
-interface ITrelloOAuth {
+interface IRedirectOAuth {
   status: boolean;
   redirectUrl?: string;
   error?: string;
@@ -151,7 +153,7 @@ export type {
   IGithubEnv,
   IFormProps,
   IProfileData,
-  ITrelloOAuth,
+  IRedirectOAuth,
   ITwitterOAuth,
   IAccountSettings,
   IParameter,

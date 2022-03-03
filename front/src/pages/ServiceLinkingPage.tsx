@@ -34,6 +34,10 @@ function getServiceName() {
     return "trello";
   } else if (window.location.toString().indexOf("github") !== -1) {
     return "github";
+  } else if (window.location.toString().indexOf("todoist") !== -1) {
+    return "todoist";
+  } else if (window.location.toString().indexOf("reddit") !== -1) {
+    return "reddit";
   } else {
     return undefined;
   }
@@ -57,6 +61,10 @@ function getData(service: string) {
       code: params.get("code"),
       state: params.get("state"),
     };
+  } else if (service === "reddit" || service === "todoist") {
+    return {
+      token: params.get("code"),
+    };
   }
 }
 
@@ -77,11 +85,7 @@ function ServiceLinkingPage() {
         JSON.stringify(data)
       );
       if (res.status) {
-        setStatus(
-          `${capitalizeFirstLetter(
-            service
-          )} account successfully linked, redirection in 3s.`
-        );
+        setStatus(`${capitalizeFirstLetter(service)} account successfully linked, redirection in 3s.`);
         setTimeout(function () {
           window.location.replace("/profile");
         }, 3000);
