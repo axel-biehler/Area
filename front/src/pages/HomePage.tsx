@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
 function HomePage() {
   const classes = useStyles();
   const [open, setOpen] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
   const [instances, setInstances] = useState<IInstance[] | undefined>(
     undefined
   );
@@ -53,6 +54,13 @@ function HomePage() {
     action: undefined,
     reaction: undefined,
   });
+
+  const emitError = (error: string) => {
+    setError(error);
+    setTimeout( () => {
+      setError("");
+    }, 5000);
+  }
 
   const getInstances = async () => {
     const instancesList: IInstanceRequest = await myFetch<IInstanceRequest>(
@@ -101,19 +109,18 @@ function HomePage() {
   }, []);
 
   const createInstance = async () => {
-    console.log("new instance = ", JSON.stringify(newInstance));
     const res: IStatusResponse = await myFetch<IStatusResponse>(
       "/instances",
       "POST",
       JSON.stringify(newInstance)
     );
     if (res.status) {
-      handleClose();
-      setNewInstance({ action: undefined, reaction: undefined });
       getInstances();
     } else {
-      console.log(res.error);
+      emitError(res.error!);
     }
+    setNewInstance({ action: undefined, reaction: undefined });
+    handleClose();
   };
 
   const editInstance = (type: string, config: IInstanceConfig) => {
@@ -158,7 +165,7 @@ function HomePage() {
       );
       setInstances(newList);
     } else {
-      console.log(res.error);
+      emitError(res.error!);
     }
   };
 
@@ -167,11 +174,11 @@ function HomePage() {
     if (toSave === undefined) {
       return;
     }
-    console.log(JSON.stringify(toSave));
-    JSON.stringify({reaction: toSave.reaction});
     const res: IStatusResponse = await myFetch<IStatusResponse>(`/instances/${toSave._id}`, "POST", JSON.stringify({reaction: toSave.reaction}));
     if (!res.status) {
       console.log(res.error);
+    } else {
+      emitError(res.error!);
     }
     getInstances();
   };
@@ -208,6 +215,10 @@ function HomePage() {
         >
           Create an instance
         </Button>
+
+        <Typography variant="h4" gutterBottom={true} color={"secondary"}>
+          { error ? error : null}
+        </Typography>
 
         <Grid
           container
