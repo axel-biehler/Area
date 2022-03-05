@@ -5,6 +5,8 @@ import DynamicBoolean from "./DynamicParameters/DynamicBoolean";
 import DynamicString from "./DynamicParameters/DynamicString";
 import DynamicNumber from "./DynamicParameters/DynamicNumber";
 import DynamicTime from "./DynamicParameters/DynamicTime";
+import DynamicDropdown from "./DynamicParameters/DynamicDropdown";
+import DynamicOptions from "./DynamicParameters/DynamicOptions";
 
 function ListParams(props: IListParamsProps) {
   return (
@@ -41,6 +43,24 @@ function ListParams(props: IListParamsProps) {
         } else if (element.type === "time") {
           return (
             <DynamicTime
+              key={index}
+              index={index}
+              element={element}
+              editParams={props.editParams}
+            />
+          );
+        } else if (element.type === "dropdown") {
+          return (
+            <DynamicDropdown
+              key={index}
+              index={index}
+              element={element}
+              editParams={props.editParams}
+            />
+          );
+        } else if (element.type === "get") {
+          return (
+            <DynamicOptions
               key={index}
               index={index}
               element={element}

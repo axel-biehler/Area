@@ -34,7 +34,7 @@ function DynamicNumber(props: IParameterProps) {
         inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
         fullWidth={true}
         className={classes.Field}
-        placeholder={props.element.name + (props.element.isOptional !== true ? " *" : null)}
+        placeholder={props.element.name + (props.element.isOptional !== true ? " *" : "")}
         label={props.element.placeholder}
         variant="standard"
         value={number}

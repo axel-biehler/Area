@@ -38,7 +38,7 @@ function DynamicBoolean(props: IParameterProps) {
 
   return (
     <div key={props.index} className={classes.Input}>
-      <Typography variant="body1">{props.element.name} {props.element.isOptional !== true ? "*" : null}</Typography>
+      <Typography variant="body1">{props.element.name} {props.element.isOptional !== true ? " *" : ""}</Typography>
       <Checkbox
         checked={checked}
         onChange={() => {

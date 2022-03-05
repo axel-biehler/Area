@@ -163,7 +163,7 @@ function ServiceChoice(props: IServiceChoiceProps) {
                 props
               );
             }}
-            name="color"
+            name="action"
             options={events}
           />
           {chosenEvent !== undefined ? (

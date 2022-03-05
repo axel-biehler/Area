@@ -33,8 +33,8 @@ function DynamicString(props: IParameterProps) {
       <TextField
         className={classes.Field}
         fullWidth={true}
-        placeholder={props.element.name + (props.element.isOptional !== true ? " *" : null)}
-        label={props.element.placeholder}
+        placeholder={props.element.name}
+        label={props.element.placeholder + (props.element.isOptional !== true ? " *" : "")}
         variant="standard"
         value={str}
         onChange={(e) => {

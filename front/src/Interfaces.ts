@@ -69,7 +69,8 @@ interface IParameter {
   type: string;
   placeholder?: string;
   value?: any;
-  options?: [IParameter];
+  options?: IParameter[];
+  route?: string;
   isOptional?: boolean;
 }
 
@@ -101,6 +102,13 @@ interface IEventListItem {
   label: string;
   description: string;
   parameters: IParameter[];
+}
+
+interface IDropdownListItem {
+  name: string;
+  label: string;
+  value: any;
+  type: string;
 }
 
 interface IListParamsProps {
@@ -178,5 +186,6 @@ export type {
   IServiceChoiceProps,
   IModalInstanceProps,
   IInstanceRequest,
-  IInstanceEditorProps
+  IInstanceEditorProps,
+  IDropdownListItem
 };

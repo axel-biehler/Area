@@ -54,8 +54,8 @@ function DynamicTime(props: IParameterProps) {
         fullWidth={true}
         color={error ? "secondary" : "primary"}
         className={classes.Field}
-        placeholder={props.element.name + (props.element.isOptional !== true ? " *" : null)}
-        label={props.element.placeholder + "(hours)"}
+        placeholder={props.element.name}
+        label={props.element.placeholder + "(hours)" + (props.element.isOptional !== true ? " *" : "")}
         variant="standard"
         value={hours}
         onChange={(e) => {
@@ -67,8 +67,8 @@ function DynamicTime(props: IParameterProps) {
         fullWidth={true}
         color={error ? "secondary" : "primary"}
         className={classes.Field}
-        placeholder={props.element.name + (props.element.isOptional !== true ? " *" : null)}
-        label={props.element.placeholder + "(minutes)"}
+        placeholder={props.element.name}
+        label={props.element.placeholder + "(minutes)" + (props.element.isOptional !== true ? " *" : "")}
         variant="standard"
         value={minutes}
         onChange={(e) => {
