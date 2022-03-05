@@ -6,7 +6,7 @@ import {
   createStyles,
   Checkbox,
 } from "@material-ui/core";
-import {IParameter, IParameterProps} from "../../../Interfaces";
+import { IParameter, IParameterProps } from "../../../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,7 +38,7 @@ function DynamicBoolean(props: IParameterProps) {
 
   return (
     <div key={props.index} className={classes.Input}>
-      <Typography variant="body1">{props.element.name}</Typography>
+      <Typography variant="body1">{props.element.name} {props.element.isOptional !== true ? "*" : null}</Typography>
       <Checkbox
         checked={checked}
         onChange={() => {

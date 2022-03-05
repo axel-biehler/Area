@@ -69,6 +69,8 @@ interface IParameter {
   type: string;
   placeholder?: string;
   value?: any;
+  options?: [IParameter];
+  isOptional?: boolean;
 }
 
 interface IWidget {
@@ -135,16 +137,15 @@ interface IInstanceRequest {
 interface IServiceChoiceProps {
   servicesList: IServiceListItem[];
   editInstance: (type: string, config: IInstanceConfig) => void;
+  setRequired: (type: string, config: IInstanceConfig) => void;
   type: string;
 }
 
 interface IModalInstanceProps {
   open: boolean;
   handleClose: () => void;
-  createInstance: () => void;
-  editInstance: (type: string, config: IInstanceConfig) => void;
-  actionServices: IServiceListItem[];
-  reactionServices: IServiceListItem[];
+  refreshInstances: () => void;
+  emitError: (error: string) => void;
 }
 
 interface IInstanceEditorProps {

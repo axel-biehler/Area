@@ -11,10 +11,7 @@ import {
 import Navbar from "../components/Navbar";
 import myFetch from "../api/api";
 import {
-  IAction,
-  IServiceListItem,
   IInstance,
-  IInstanceConfig,
   IStatusResponse,
   IInstanceRequest,
 } from "../Interfaces";
@@ -46,14 +43,6 @@ function HomePage() {
   const [instances, setInstances] = useState<IInstance[] | undefined>(
     undefined
   );
-  const [actionServices, setActionServices] = useState<IServiceListItem[]>([]);
-  const [reactionServices, setReactionServices] = useState<IServiceListItem[]>(
-    []
-  );
-  const [newInstance, setNewInstance] = useState<IInstance>({
-    action: undefined,
-    reaction: undefined,
-  });
 
   const emitError = (error: string) => {
     setError(error);
@@ -62,7 +51,7 @@ function HomePage() {
     }, 5000);
   }
 
-  const getInstances = async () => {
+  const refreshInstances = async () => {
     const instancesList: IInstanceRequest = await myFetch<IInstanceRequest>(
       "/instances",
       "GET"
@@ -73,28 +62,6 @@ function HomePage() {
   };
 
   const initialize = async () => {
-    const actions: IAction[] = await myFetch<IAction[]>("/actions", "GET");
-    const actionList = Array.from(actions, (x: IAction) => {
-      return {
-        value: x.name,
-        label: x.displayName,
-        description: x.description,
-        widgets: x.widgets,
-      };
-    });
-    setActionServices(actionList);
-
-    const reactions: IAction[] = await myFetch<IAction[]>("/reactions", "GET");
-    const reactionList = Array.from(reactions, (x: IAction) => {
-      return {
-        value: x.name,
-        label: x.displayName,
-        description: x.description,
-        widgets: x.widgets,
-        isDisabled: false,
-      };
-    });
-    setReactionServices(reactionList);
     const instancesList: IInstanceRequest = await myFetch<IInstanceRequest>(
       "/instances",
       "GET"
@@ -108,40 +75,6 @@ function HomePage() {
     initialize();
   }, []);
 
-  const createInstance = async () => {
-    const res: IStatusResponse = await myFetch<IStatusResponse>(
-      "/instances",
-      "POST",
-      JSON.stringify(newInstance)
-    );
-    if (res.status) {
-      getInstances();
-    } else {
-      emitError(res.error!);
-    }
-    setNewInstance({ action: undefined, reaction: undefined });
-    handleClose();
-  };
-
-  const editInstance = (type: string, config: IInstanceConfig) => {
-    if (type === "action") {
-      const modifiedInstance: IInstance = {
-        action: config,
-        reaction: {
-          ...newInstance!.reaction!,
-        },
-      };
-      setNewInstance(modifiedInstance);
-    } else if (type === "reaction") {
-      const modifiedInstance: IInstance = {
-        action: {
-          ...newInstance!.action!,
-        },
-        reaction: config,
-      };
-      setNewInstance(modifiedInstance);
-    }
-  };
 
   const editExistingInstance = (config: IInstance) => {
     if (!instances) return;
@@ -180,7 +113,7 @@ function HomePage() {
     } else {
       emitError(res.error!);
     }
-    getInstances();
+    refreshInstances();
   };
 
   const handleClose = () => {
@@ -198,10 +131,8 @@ function HomePage() {
         <ModalInstance
           open={open}
           handleClose={handleClose}
-          createInstance={createInstance}
-          editInstance={editInstance}
-          actionServices={actionServices}
-          reactionServices={reactionServices}
+          refreshInstances={refreshInstances}
+          emitError={emitError}
         />
 
         <Button

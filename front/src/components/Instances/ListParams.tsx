@@ -3,6 +3,8 @@ import { Typography } from "@material-ui/core";
 import { IListParamsProps, IParameter } from "../../Interfaces";
 import DynamicBoolean from "./DynamicParameters/DynamicBoolean";
 import DynamicString from "./DynamicParameters/DynamicString";
+import DynamicNumber from "./DynamicParameters/DynamicNumber";
+import DynamicTime from "./DynamicParameters/DynamicTime";
 
 function ListParams(props: IListParamsProps) {
   return (
@@ -21,6 +23,24 @@ function ListParams(props: IListParamsProps) {
         } else if (element.type === "string") {
           return (
             <DynamicString
+              key={index}
+              index={index}
+              element={element}
+              editParams={props.editParams}
+            />
+          );
+        } else if (element.type === "number") {
+          return (
+            <DynamicNumber
+              key={index}
+              index={index}
+              element={element}
+              editParams={props.editParams}
+            />
+          );
+        } else if (element.type === "time") {
+          return (
+            <DynamicTime
               key={index}
               index={index}
               element={element}

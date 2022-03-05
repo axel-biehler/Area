@@ -24,26 +24,27 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function DynamicString(props: IParameterProps) {
+function DynamicNumber(props: IParameterProps) {
   const classes = useStyles();
-  const [str, setStr] = useState(props.element.value !== undefined ? props.element.value : "");
+  const [number, setNumber] = useState(props.element.value !== undefined ? props.element.value : 3);
 
   return (
     <div key={props.index} className={classes.Input}>
       <TextField
-        className={classes.Field}
+        inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
         fullWidth={true}
+        className={classes.Field}
         placeholder={props.element.name + (props.element.isOptional !== true ? " *" : null)}
         label={props.element.placeholder}
         variant="standard"
-        value={str}
+        value={number}
         onChange={(e) => {
           props.editParams(props.element, e.target.value);
-          setStr(e.target.value);
+          setNumber(e.target.value);
         }}
       />
     </div>
   );
 }
 
-export default DynamicString;
+export default DynamicNumber;

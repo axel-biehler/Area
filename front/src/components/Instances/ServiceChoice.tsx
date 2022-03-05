@@ -45,7 +45,7 @@ function getDefaultValue(type: string) {
   }
 }
 
-function setEventChoice(
+function setEventChoice (
   choice: IEventListItem,
   setConfig: React.Dispatch<React.SetStateAction<IInstanceConfig | undefined>>,
   setChosenEvent: React.Dispatch<React.SetStateAction<IEventListItem | undefined>>,
@@ -53,23 +53,26 @@ function setEventChoice(
   props: IServiceChoiceProps,
 ) {
   setChosenEvent(choice);
+  const config: IInstanceConfig = {
+    name: choice.value,
+    serviceName: chosenService!.value,
+    displayName: choice.label,
+    webhookId: props.type === "action" ? "default" : undefined,
+    params: [],
+  };
+  setConfig(config);
+  props.editInstance(props.type, config);
+
   const actionParams = Array.from(choice.parameters, (x: IParameter) => {
     return {
       name: x.name,
       type: x.type,
       value: getDefaultValue(x.type),
+      options: x.options,
+      isOptional: x.isOptional,
     };
   });
-
-  const config: IInstanceConfig = {
-    name: choice.value,
-    serviceName: chosenService!.value,
-    displayName: choice.label,
-    webhookId: props.type === "action" ? "ffefefef" : undefined,
-    params: actionParams,
-  };
-  setConfig(config);
-  props.editInstance(props.type, config);
+  props.setRequired(props.type, {...config, params: actionParams,});
 }
 
 function ServiceChoice(props: IServiceChoiceProps) {
@@ -97,7 +100,8 @@ function ServiceChoice(props: IServiceChoiceProps) {
   };
 
   const editActionParams = (edit: IParameter, value: any) => {
-    const modifiedConfig: IInstanceConfig = {
+    if (config?.params.find(x => x.name === edit.name)) {
+      const modifiedConfig: IInstanceConfig = {
         ...config!,
         params: Array.from((config!).params, (x: IParameter) => {
           return {
@@ -105,9 +109,21 @@ function ServiceChoice(props: IServiceChoiceProps) {
             value: x.name === edit.name ? value : x.value,
           };
         }),
-    };
-    props.editInstance(props.type, modifiedConfig);
-    setConfig(modifiedConfig);
+      };
+      props.editInstance(props.type, modifiedConfig);
+      setConfig(modifiedConfig);
+    } else {
+      const modifiedConfig: IInstanceConfig = {
+        ...config!,
+        params: config!.params.concat({
+          name: edit.name,
+          type: edit.type,
+          value: value,
+        }),
+      };
+      props.editInstance(props.type, modifiedConfig);
+      setConfig(modifiedConfig);
+    }
   };
 
   return (
