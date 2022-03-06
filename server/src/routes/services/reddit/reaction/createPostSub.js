@@ -12,14 +12,6 @@ const createPostSub = async (instance) => {
 
     const user = await verifUserLinkReddit(instance.userId);
 
-    const config = {
-      headers: {
-        'User-Agent': 'school project',
-        Authorization: `Bearer ${user.redditAccessToken}`,
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-      },
-    };
-
     const details = {
       title: params.title,
       text: params.description,
@@ -37,8 +29,12 @@ const createPostSub = async (instance) => {
 
     const response = await fetch('https://oauth.reddit.com/api/submit', {
       method: 'POST',
-      headers: config,
       body: formBody,
+      headers: {
+        'User-Agent': 'school project',
+        Authorization: `Bearer ${user.redditAccessToken}`,
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+      },
     });
 
     const data = await response.json();
