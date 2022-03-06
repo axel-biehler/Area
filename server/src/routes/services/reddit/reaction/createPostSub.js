@@ -13,7 +13,11 @@ const createPostSub = async (instance) => {
     const user = await verifUserLinkReddit(instance.userId);
 
     const config = {
-      headers: { 'User-Agent': 'school project', Authorization: `Bearer ${user.redditAccessToken}` },
+      headers: {
+        'User-Agent': 'school project',
+        Authorization: `Bearer ${user.redditAccessToken}`,
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+      },
     };
 
     const details = {
