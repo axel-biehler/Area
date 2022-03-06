@@ -25,8 +25,8 @@ const getProfileTest = async (req, res) => {
 
   try {
     let body = await getProfile('https://api.trello.com/1/members/me',
-      u.trelloToken,
-      u.trelloTokenSecret);
+      u.trello.trelloToken,
+      u.trello.trelloTokenSecret);
 
     body = JSON.parse(body);
 

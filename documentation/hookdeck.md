@@ -13,6 +13,8 @@ Download this one if your on ubuntu: `hookdeck_0.4.4_linux_amd64.deb`
 
 And finally run `dpkg -i hookdeck_0.4.4_linux_amd64.deb`
 
+Then install `expect`. (Ubuntu: `sudo apt install expect`)
+
 ## Run
 
 ### First time
