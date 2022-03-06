@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     SaveButton: {
       minWidth: "100px",
       maxWidth: "200px",
-    }
+    },
   })
 );
 
@@ -80,14 +80,9 @@ async function saveUsername(
     );
     if (res.status) {
       const newInfos: IProfileData = {
-        username:
-          newUsername !== props.infos.username
-            ? newUsername
-            : props.infos.username,
+        ...props.infos,
+        username: newUsername !== props.infos.username ? newUsername : props.infos.username,
         email: props.infos.email !== newEmail ? newEmail : props.infos.email,
-        twitterLinked: props.infos.twitterLinked,
-        githubLinked: props.infos.githubLinked,
-        trelloLinked: props.infos.trelloLinked,
       };
       props.setInfos(newInfos);
     } else {

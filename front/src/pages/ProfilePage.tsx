@@ -37,6 +37,9 @@ const init_values: IProfileData = {
   twitterLinked: false,
   githubLinked: false,
   trelloLinked: false,
+  redditLinked: false,
+  todoistLinked: false,
+  discordLinked: false,
 };
 
 function ProfilePage() {
