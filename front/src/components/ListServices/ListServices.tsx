@@ -13,14 +13,17 @@ import "./ListServices.css";
 import GithubLogo from "../../assets/GithubLogo.png";
 import TrelloLogo from "../../assets/TrelloLogo.png";
 import TwitterLogo from "../../assets/TwitterLogo.png";
+import RedditLogo from "../../assets/RedditLogo.png";
+import TodoistLogo from "../../assets/TodoistLogo.png";
+import DiscordLogo from "../../assets/DiscordLogo.png";
 import myFetch from "../../api/api";
 import {
   IGithubEnv,
   IProfileData,
   IProfileProps,
   IStatusResponse,
-  ITrelloOAuth,
-  ITwitterOAuth,
+  IRedirectOAuth,
+  ITwitterOAuth, IDiscordOAuth,
 } from "../../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -59,11 +62,8 @@ function ListServices(props: IProfileProps) {
       );
       if (res.status) {
         const newInfos: IProfileData = {
-          username: props.infos.username,
-          email: props.infos.email,
-          twitterLinked: props.infos.twitterLinked,
+          ...props.infos,
           githubLinked: false,
-          trelloLinked: props.infos.trelloLinked,
         };
         props.setInfos(newInfos);
       } else {
@@ -87,10 +87,7 @@ function ListServices(props: IProfileProps) {
       );
       if (res.status) {
         const newInfos: IProfileData = {
-          username: props.infos.username,
-          email: props.infos.email,
-          twitterLinked: props.infos.twitterLinked,
-          githubLinked: props.infos.githubLinked,
+          ...props.infos,
           trelloLinked: false,
         };
         props.setInfos(newInfos);
@@ -98,7 +95,7 @@ function ListServices(props: IProfileProps) {
         console.log("ERROR: ", res.error);
       }
     } else {
-      const res: ITrelloOAuth = await myFetch<ITrelloOAuth>(
+      const res: IRedirectOAuth = await myFetch<IRedirectOAuth>(
         "/services/trello/connect",
         "POST",
         JSON.stringify({ callback: "http://localhost:8081/trello/link" })
@@ -119,31 +116,98 @@ function ListServices(props: IProfileProps) {
       );
       if (res.status) {
         const newInfos: IProfileData = {
-          username: props.infos.username,
-          email: props.infos.email,
+          ...props.infos,
           twitterLinked: false,
-          githubLinked: props.infos.githubLinked,
-          trelloLinked: props.infos.trelloLinked,
         };
         props.setInfos(newInfos);
       } else {
         console.log("ERROR: ", res.error);
       }
     } else {
-      console.log("ici");
       const res: ITwitterOAuth = await myFetch<ITwitterOAuth>(
         "/services/twitter/connect",
         "POST",
         JSON.stringify({ callback: "http://localhost:8081/twitter/link" })
       );
-      console.log("ici2");
       if (res.status) {
-        console.log("ici good");
         const url = `https://api.twitter.com/oauth/authorize?oauth_token=${res.oauthToken}`;
         window.location.replace(url);
       } else {
-        console.log("ici caca");
         console.log("ERROR: ", res.error);
+      }
+    }
+  };
+
+  const redditOAuth = async () => {
+    if (props.infos.redditLinked) {
+      const res: IStatusResponse = await myFetch<IStatusResponse>(
+        "/services/reddit/unlink",
+        "GET"
+      );
+      if (res.status) {
+        const newInfos: IProfileData = {
+          ...props.infos,
+          redditLinked: false,
+        };
+        props.setInfos(newInfos);
+      } else {
+        console.log("ERROR: ", res.error);
+      }
+    } else {
+      const res: any = await myFetch<any>(
+        "/services/reddit/connect",
+        "GET",
+      );
+      window.location.replace(res["url"]);
+    }
+  };
+
+  const todoistOAuth = async () => {
+    if (props.infos.todoistLinked) {
+      const res: IStatusResponse = await myFetch<IStatusResponse>(
+        "/services/todoist/unlink",
+        "GET"
+      );
+      if (res.status) {
+        const newInfos: IProfileData = {
+          ...props.infos,
+          todoistLinked: false,
+        };
+        props.setInfos(newInfos);
+      } else {
+        console.log("ERROR: ", res.error);
+      }
+    } else {
+      const res: any = await myFetch<any>(
+        "/services/todoist/connect",
+        "GET",
+      );
+      window.location.replace(res["url"]);
+    }
+  };
+
+  const discordOAuth = async () => {
+    if (props.infos.discordLinked) {
+      const res: IStatusResponse = await myFetch<IStatusResponse>(
+        "/services/discord/unlink",
+        "GET"
+      );
+      if (res.status) {
+        const newInfos: IProfileData = {
+          ...props.infos,
+          discordLinked: false,
+        };
+        props.setInfos(newInfos);
+      } else {
+        console.log("ERROR: ", res.error);
+      }
+    } else {
+      const res: IDiscordOAuth = await myFetch<IDiscordOAuth>(
+        "/services/discord/env",
+        "GET",
+      );
+      if (res.status) {
+        window.location.replace(`https://discord.com/api/oauth2/authorize?client_id=${res.clientId}&permissions=8&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fdiscord%2Flink&response_type=code&scope=${res.scope}`);
       }
     }
   };
@@ -226,6 +290,84 @@ function ListServices(props: IProfileProps) {
               onClick={twitterOAuth}
             >
               {props.infos.twitterLinked ? "Revoke access" : "Link account"}
+            </Button>
+          </Box>
+        </Card>
+
+        <Card className={classes.Card}>
+          <CardMedia
+            component={"img"}
+            className={classes.CardMedia}
+            src={RedditLogo}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              width: "50%",
+              padding: "1%",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size={"medium"}
+              onClick={redditOAuth}
+            >
+              {props.infos.redditLinked ? "Revoke access" : "Link account"}
+            </Button>
+          </Box>
+        </Card>
+
+        <Card className={classes.Card}>
+          <CardMedia
+            component={"img"}
+            className={classes.CardMedia}
+            src={TodoistLogo}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              width: "50%",
+              padding: "1%",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size={"medium"}
+              onClick={todoistOAuth}
+            >
+              {props.infos.todoistLinked ? "Revoke access" : "Link account"}
+            </Button>
+          </Box>
+        </Card>
+
+        <Card className={classes.Card}>
+          <CardMedia
+            component={"img"}
+            className={classes.CardMedia}
+            src={DiscordLogo}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              width: "50%",
+              padding: "1%",
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size={"medium"}
+              onClick={discordOAuth}
+            >
+              {props.infos.discordLinked ? "Revoke access" : "Link account"}
             </Button>
           </Box>
         </Card>

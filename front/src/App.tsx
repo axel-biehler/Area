@@ -7,10 +7,6 @@ import ServiceLinkingPage from "./pages/ServiceLinkingPage";
 import Home from "./pages/HomePage";
 import Profile from "./pages/ProfilePage";
 import PrivateRoute from "./components/PrivateRoute";
-import Test from "./testAPI/test"
-import Redirect from "./testAPI/redditAuth"
-import TestTodo from "./testAPI/testTodo"
-import RedirectTodo from "./testAPI/todoAuth"
 
 function App() {
   return (
@@ -34,13 +30,12 @@ function App() {
         />
         <Route path="/auth" element={<Login />} />
         <Route path="/validate/*" element={<EmailValidation />} />
-        <Route path="/test" element={<Test />} />
-        <Route path="/reddit_auth" element={<Redirect />} />
-        <Route path="/testTodo" element={<TestTodo />} />
-        <Route path="/todoist/link" element={<RedirectTodo />} />
         <Route path="/github/link/*" element={<ServiceLinkingPage />} />
         <Route path="/trello/link/*" element={<ServiceLinkingPage />} />
         <Route path="/twitter/link/*" element={<ServiceLinkingPage />} />
+        <Route path="/reddit/link/*" element={<ServiceLinkingPage />} />
+        <Route path="/todoist/link/*" element={<ServiceLinkingPage />} />
+        <Route path="/discord/link/*" element={<ServiceLinkingPage />} />
       </Routes>
     </Router>
   );

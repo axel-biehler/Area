@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
     LogoutButton: {
       maxHeight: "40px",
       color: "black",
+      backgroundColor: "orange",
     },
   })
 );
@@ -70,7 +71,6 @@ function Navbar() {
           <div className={classes.Logout}>
             <Button
               variant="contained"
-              color="secondary"
               size={"small"}
               className={classes.LogoutButton}
               onClick={() => {

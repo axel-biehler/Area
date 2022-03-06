@@ -32,14 +32,14 @@ const updateInstance = async (req, res) => {
       // Do a deep copy of the action, any less disgusting alternative is welcome
       const oldAction = JSON.parse(JSON.stringify(instance.action));
 
-      instance.action.params = action;
+      instance.action.params = action.params;
       verifyAction(instance.action);
 
       instance.action.webhookId = await updateAction[instance.action.serviceName](req.userId, oldAction, instance.action);
     }
 
     if (reaction != null) {
-      instance.reaction.params = reaction;
+      instance.reaction.params = reaction.params;
       verifyReaction(instance.reaction);
     }
 

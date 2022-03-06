@@ -52,7 +52,7 @@ const link = async (req, res) => {
     user.redditAccessToken = dataOauth.access_token;
     user.redditRefreshToken = dataOauth.refresh_token;
     user.save();
-    return res.json('true');
+    return res.json({ status: true });
   } catch (err) {
     console.error(err);
 
