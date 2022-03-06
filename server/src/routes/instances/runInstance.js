@@ -1,10 +1,14 @@
 const githubRunReaction = require('../services/github/reactions');
 const discordRunReaction = require('../services/discord/reactions');
+const todoistRunReaction = require('../services/todoist/reaction');
+const redditRunReaction = require('../services/reddit/reaction');
 const trelloRunReaction = require('../services/trello/reactions');
 
 const runReaction = {
   github: githubRunReaction,
   discord: discordRunReaction,
+  todoist: todoistRunReaction,
+  reddit: redditRunReaction,
   trello: trelloRunReaction,
 };
 
