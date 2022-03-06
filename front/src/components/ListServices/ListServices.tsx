@@ -60,6 +60,10 @@ function ListServices(props: IProfileProps) {
         "/services/github/unlink",
         "GET"
       );
+      myFetch<IStatusResponse>(
+        `/instances/delete/github`,
+        "DELETE"
+      );
       if (res.status) {
         const newInfos: IProfileData = {
           ...props.infos,
@@ -84,6 +88,10 @@ function ListServices(props: IProfileProps) {
       const res: IStatusResponse = await myFetch<IStatusResponse>(
         "/services/trello/unlink",
         "GET"
+      );
+      myFetch<IStatusResponse>(
+        `/instances/delete/trello`,
+        "DELETE"
       );
       if (res.status) {
         const newInfos: IProfileData = {
@@ -113,6 +121,10 @@ function ListServices(props: IProfileProps) {
       const res: IStatusResponse = await myFetch<IStatusResponse>(
         "/services/twitter/unlink",
         "GET"
+      );
+      myFetch<IStatusResponse>(
+        `/instances/delete/github`,
+        "DELETE"
       );
       if (res.status) {
         const newInfos: IProfileData = {
@@ -144,6 +156,10 @@ function ListServices(props: IProfileProps) {
         "/services/reddit/unlink",
         "GET"
       );
+      myFetch<IStatusResponse>(
+        `/instances/delete/github`,
+        "DELETE"
+      );
       if (res.status) {
         const newInfos: IProfileData = {
           ...props.infos,
@@ -168,6 +184,10 @@ function ListServices(props: IProfileProps) {
         "/services/todoist/unlink",
         "GET"
       );
+      myFetch<IStatusResponse>(
+        `/instances/delete/github`,
+        "DELETE"
+      );
       if (res.status) {
         const newInfos: IProfileData = {
           ...props.infos,
@@ -191,6 +211,10 @@ function ListServices(props: IProfileProps) {
       const res: IStatusResponse = await myFetch<IStatusResponse>(
         "/services/discord/unlink",
         "GET"
+      );
+      myFetch<IStatusResponse>(
+        `/instances/delete/github`,
+        "DELETE"
       );
       if (res.status) {
         const newInfos: IProfileData = {
