@@ -14,7 +14,6 @@ const getProjects = async (req, res) => {
 
     const request = await fetch('https://api.todoist.com/rest/v1/projects', {
       method: 'GET',
-      body: undefined,
       headers: { Authorization: `Bearer ${user.todoistAccessToken}` },
     });
     const data = await request.json();
@@ -23,11 +22,9 @@ const getProjects = async (req, res) => {
 
     data.forEach((element) => {
       const info = { name: element.name, value: String(element.id), type: 'string' };
-      console.log(info);
       response = response.concat(info);
     });
 
-    console.log(response);
     return res.json(response);
   } catch (err) {
     console.error(err);

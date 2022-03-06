@@ -8,7 +8,7 @@ const deleteProject = async (instance) => {
 
     const params = instance.reaction.params.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.value }), {});
 
-    // Verify if user is subscribe to github
+    // Verify if user is subscribe to tdoist
 
     const user = await verifUserLinkTodoist(instance.userId);
 

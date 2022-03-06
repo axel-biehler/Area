@@ -23,11 +23,9 @@ const getTasks = async (req, res) => {
 
     data.forEach((element) => {
       const info = { name: element.content, value: String(element.id), type: 'string' };
-      console.log(info);
       response = response.concat(info);
     });
 
-    console.log(response);
     return res.json(response);
   } catch (err) {
     console.error(err);

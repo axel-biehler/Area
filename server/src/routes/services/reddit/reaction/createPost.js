@@ -8,7 +8,7 @@ const createPost = async (instance) => {
 
     const params = instance.reaction.params.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.value }), {});
 
-    // Verify if user is subscribe to github
+    // Verify if user is subscribe to reddit
 
     const user = await verifUserLinkReddit(instance.userId);
 
