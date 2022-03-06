@@ -53,54 +53,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-// function getParamType(instance: IInstance, edit: IParameter) {
-//   for (var _i = 0; _i < instance.action?.params.length!; _i++) {
-//     if (instance.action?.params[_i].name === edit.name) return "action";
-//   }
-//   return "reaction";
-// }
-//
-// const editParams = (edit: IParameter, value: any) => {
-//   if (getParamType(props.instance, edit) === "reaction") {
-//     const modifiedInstance: IInstance = {
-//       ...props.instance,
-//       action: props.instance.action,
-//       reaction: {
-//         ...props.instance.reaction!,
-//         params: Array.from(
-//           props.instance.reaction?.params!,
-//           (x: IParameter) => {
-//             return {
-//               ...x,
-//               value: x.name === edit.name ? value : x.value,
-//             };
-//           }
-//         ),
-//       },
-//     };
-//     props.editInstance(modifiedInstance);
-//   } else {
-//     const modifiedInstance: IInstance = {
-//       ...props.instance,
-//       action: {
-//         ...props.instance.action!,
-//         params: Array.from(
-//           props.instance.action?.params!,
-//           (x: IParameter) => {
-//             return {
-//               ...x,
-//               value: x.name === edit.name ? value : x.value,
-//             };
-//           }
-//         ),
-//       },
-//       reaction: props.instance.reaction,
-//     };
-//     props.editInstance(modifiedInstance);
-//   }
-// };
-//
-
 // function to get missing parameters and information such as placeholder or dropdown options
 
 async function getConfig(config: IInstanceConfig, type: string) {
