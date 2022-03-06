@@ -12,7 +12,7 @@ const connect = async (req, res) => {
         error: 'Reddit id token missing',
       });
     }
-    const url = `https://www.reddit.com/api/v1/authorize.compact?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${redirectUrl}&duration=permanent&scope=identity`;
+    const url = `https://www.reddit.com/api/v1/authorize.compact?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${redirectUrl}&duration=permanent&scope=identity,submit`;
     console.log(url);
     const retObject = { url };
     return res.json(retObject);

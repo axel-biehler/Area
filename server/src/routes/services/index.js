@@ -35,5 +35,7 @@ router.get('/discord/get/channels/:type', require('./discord/get/channels'));
 router.get('/todoist/connect', require('./todoist/connect'));
 router.post('/todoist/link', require('./todoist/link'));
 router.get('/todoist/unlink', require('./todoist/unlink'));
+router.get('/todoist/get/projects', require('./todoist/get/getProjects'));
+router.get('/todoist/get/tasks', require('./todoist/get/getTasks'));
 
 module.exports = router;
