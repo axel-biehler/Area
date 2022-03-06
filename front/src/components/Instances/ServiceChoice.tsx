@@ -119,6 +119,7 @@ function ServiceChoice(props: IServiceChoiceProps) {
           name: edit.name,
           type: edit.type,
           value: value,
+          options: edit.options,
         }),
       };
       props.editInstance(props.type, modifiedConfig);

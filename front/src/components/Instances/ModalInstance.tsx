@@ -52,7 +52,6 @@ function checkMissingParams(instance: IInstance, required: IInstance) {
     const ref = instance.reaction?.params?.find(x => x.name === param.name);
     return !(ref === undefined && param.isOptional === undefined);
   });
-
 }
 
 function ModalInstance(props: IModalInstanceProps) {

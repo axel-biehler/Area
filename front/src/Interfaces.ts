@@ -158,8 +158,7 @@ interface IModalInstanceProps {
 
 interface IInstanceEditorProps {
   instance: IInstance;
-  editInstance: (config: IInstance) => void;
-  saveInstance: (id: string) => void;
+  saveInstance: (id: string, instance: IInstance) => void;
   deleteInstance: (instance: IInstance) => void;
 }
 

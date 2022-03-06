@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { makeStyles, Theme, createStyles, TextField } from "@material-ui/core";
+import { makeStyles, Theme, createStyles } from "@material-ui/core";
 import {
   IDropdownListItem,
-  IEventListItem,
   IParameter,
   IParameterProps,
-  IWidget,
 } from "../../../Interfaces";
 import Select, { SingleValue } from "react-select";
 
@@ -30,6 +28,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+function getValue(list: IDropdownListItem[], value: any) {
+  // eslint-disable-next-line eqeqeq
+  return list.find((x: IDropdownListItem) => x.value == value);
+}
+
 function DynamicDropdown(props: IParameterProps) {
   const classes = useStyles();
   const options: IDropdownListItem[] = Array.from(
@@ -43,6 +46,7 @@ function DynamicDropdown(props: IParameterProps) {
       };
     }
   );
+  const [value, setValue] = useState<IDropdownListItem | undefined>(getValue(options, props.element.value));
 
   return (
     <div key={props.index} className={classes.Input}>
@@ -53,14 +57,16 @@ function DynamicDropdown(props: IParameterProps) {
         }
         className={classes.Select}
         isSearchable={true}
+        value={value}
         onChange={(choice: SingleValue<IDropdownListItem>) => {
           if (choice === null) {
             return;
           }
           props.editParams(
-            { name: choice.name, type: choice.type },
+            { name: choice.name, type: choice.type},
             choice.value
           );
+          setValue(choice);
         }}
         name="color"
         options={options}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   makeStyles,
   Theme,
@@ -10,13 +10,17 @@ import {
   Button,
 } from "@material-ui/core";
 import {
+  IAction,
   IEventListItem,
   IInstance,
+  IInstanceConfig,
   IInstanceEditorProps,
   IParameter,
+  IWidget,
 } from "../../Interfaces";
 import { DeleteOutlineTwoTone, Settings } from "@material-ui/icons";
 import ListParams from "./ListParams";
+import myFetch from "../../api/api";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: "100%",
       height: "100%",
       padding: "15px 5px",
+      overflow: "visible",
     },
     Collapsible: {
       display: "flex",
@@ -41,92 +46,182 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-evenly",
-      height: "150px",
+      height: "280px",
       transition: "all 0.5s ease",
+      borderRadius: "0.25rem",
     },
   })
 );
 
-function getParamType(instance: IInstance, edit: IParameter) {
-  for (var _i = 0; _i < instance.action?.params.length!; _i++) {
-    if (instance.action?.params[_i].name === edit.name) return "action";
+// function getParamType(instance: IInstance, edit: IParameter) {
+//   for (var _i = 0; _i < instance.action?.params.length!; _i++) {
+//     if (instance.action?.params[_i].name === edit.name) return "action";
+//   }
+//   return "reaction";
+// }
+//
+// const editParams = (edit: IParameter, value: any) => {
+//   if (getParamType(props.instance, edit) === "reaction") {
+//     const modifiedInstance: IInstance = {
+//       ...props.instance,
+//       action: props.instance.action,
+//       reaction: {
+//         ...props.instance.reaction!,
+//         params: Array.from(
+//           props.instance.reaction?.params!,
+//           (x: IParameter) => {
+//             return {
+//               ...x,
+//               value: x.name === edit.name ? value : x.value,
+//             };
+//           }
+//         ),
+//       },
+//     };
+//     props.editInstance(modifiedInstance);
+//   } else {
+//     const modifiedInstance: IInstance = {
+//       ...props.instance,
+//       action: {
+//         ...props.instance.action!,
+//         params: Array.from(
+//           props.instance.action?.params!,
+//           (x: IParameter) => {
+//             return {
+//               ...x,
+//               value: x.name === edit.name ? value : x.value,
+//             };
+//           }
+//         ),
+//       },
+//       reaction: props.instance.reaction,
+//     };
+//     props.editInstance(modifiedInstance);
+//   }
+// };
+//
+
+// function to get missing parameters and information such as placeholder or dropdown options
+
+async function getConfig(config: IInstanceConfig, type: string) {
+  const actList: IAction[] = await myFetch<IAction[]>(`/${type}`, "GET");
+  const correspondingService = actList.find((x: IAction) => {
+    return x.name === config.serviceName;
+  });
+  if (correspondingService) {
+    const correspondingAction = correspondingService.widgets.find(
+      (x: IWidget) => {
+        return x.name === config.name;
+      }
+    );
+    return {
+      ...config,
+      params: correspondingAction!.params.map((param: IParameter) => {
+        const correspondingParam = config.params.find(
+          (x) => x.name === param.name
+        );
+        if (correspondingParam) {
+          return { ...param, value: correspondingParam.value };
+        } else {
+          return param;
+        }
+      }),
+    };
   }
-  return "reaction";
+  return config;
+}
+
+async function getMissingInfos(oldInstance: IInstance): Promise<IInstance> {
+  const action = await getConfig(oldInstance.action!, "actions");
+  const reaction = await getConfig(oldInstance.reaction!, "reactions");
+
+  return {
+    ...oldInstance,
+    action: action,
+    reaction: reaction,
+  };
 }
 
 function InstanceEditor(props: IInstanceEditorProps) {
   const classes = useStyles();
   const [open, setOpen] = useState<boolean>(false);
-  const [actionParams, setActionParameters] = useState<
-    IEventListItem | undefined
-  >(undefined);
-  const [reactionParams, setReactionParameters] = useState<
-    IEventListItem | undefined
-  >(undefined);
+  const [instance, setInstance] = useState<IInstance | undefined>(undefined);
+  const [actionParams, setActionParameters] = useState<IEventListItem | undefined>(undefined);
+  const [reactionParams, setReactionParameters] = useState<IEventListItem | undefined>(undefined);
 
-  const initialize = async (myProps: IInstanceEditorProps) => {
+  const initialize = useCallback(async () => {
+    const newInstance = await getMissingInfos(props.instance);
+    setInstance(newInstance);
     const tmpAct: IEventListItem = {
-      value: myProps.instance.action?.name!,
-      label: myProps.instance.action?.displayName!,
-      description: myProps.instance.action?.displayName!,
-      parameters: myProps.instance.action?.params!,
+      value: newInstance.action?.name!,
+      label: newInstance.action?.displayName!,
+      description: newInstance.action?.displayName!,
+      parameters: newInstance.action?.params!,
     };
     setActionParameters(tmpAct);
     const tmpReact: IEventListItem = {
-      value: myProps.instance.reaction?.name!,
-      label: myProps.instance.reaction?.displayName!,
-      description: myProps.instance.reaction?.displayName!,
-      parameters: myProps.instance.reaction?.params!,
+      value: newInstance.reaction?.name!,
+      label: newInstance.reaction?.displayName!,
+      description: newInstance.reaction?.displayName!,
+      parameters: newInstance.reaction?.params!,
     };
     setReactionParameters(tmpReact);
-  };
+  }, [props]);
 
   useEffect(() => {
-    initialize(props);
-  }, [props]);
+    initialize();
+  }, [initialize]);
 
   const toggleSettings = () => {
     setOpen(!open);
   };
 
-  const editParams = (edit: IParameter, value: any) => {
-    if (getParamType(props.instance, edit) === "reaction") {
-      const modifiedInstance: IInstance = {
-        ...props.instance,
-        action: props.instance.action,
-        reaction: {
-          ...props.instance.reaction!,
-          params: Array.from(
-            props.instance.reaction?.params!,
-            (x: IParameter) => {
-              return {
-                ...x,
-                value: x.name === edit.name ? value : x.value,
-              };
+  const editActionParams = (edit: IParameter, value: any) => {
+    const modifiedInstance: IInstance = {
+      ...instance,
+      action: {
+        ...instance!.action!,
+        params: Array.from(instance!.action?.params!, (x: IParameter) => {
+          if ((x.type === "get" || x.type === "dropdown") && x.name === edit.name) {
+            return {
+              name: x.name,
+              type: edit.type,
+              value: value,
             }
-          ),
-        },
-      };
-      props.editInstance(modifiedInstance);
-    } else {
-      const modifiedInstance: IInstance = {
-        ...props.instance,
-        action: {
-          ...props.instance.action!,
-          params: Array.from(
-            props.instance.action?.params!,
-            (x: IParameter) => {
-              return {
-                ...x,
-                value: x.name === edit.name ? value : x.value,
-              };
+          } else {
+            return {
+              ...x,
+              value: x.name === edit.name ? value : x.value,
+            };
+          }
+        }),
+      },
+    };
+    setInstance(modifiedInstance);
+  };
+
+  const editReactionParams = (edit: IParameter, value: any) => {
+    const modifiedInstance: IInstance = {
+      ...instance,
+      reaction: {
+        ...instance!.reaction!,
+        params: Array.from(instance!.reaction?.params!, (x: IParameter) => {
+          if ((x.type === "get" || x.type === "dropdown") && x.name === edit.name) {
+            return {
+              name: x.name,
+              type: edit.type,
+              value: value,
             }
-          ),
-        },
-        reaction: props.instance.reaction,
-      };
-      props.editInstance(modifiedInstance);
-    }
+          } else {
+            return {
+              ...x,
+              value: x.name === edit.name ? value : x.value,
+            };
+          }
+        }),
+      },
+    };
+    setInstance(modifiedInstance);
   };
 
   return (
@@ -141,35 +236,25 @@ function InstanceEditor(props: IInstanceEditorProps) {
         }}
       >
         <Typography variant="h6" gutterBottom={true}>
-          When {props.instance.action?.displayName} on{" "}
-          {props.instance.action?.serviceName}
-          <br />
-          {props.instance.reaction?.displayName}
+          {instance ? (
+            <div>
+              When {instance.action?.displayName} on {instance.action?.serviceName}
+              <br />{instance.reaction?.displayName}
+            </div>
+          ) : null}
         </Typography>
 
         <div className={open ? classes.CollapsibleActive : classes.Collapsible}>
           {actionParams ? (
-            <ListParams event={actionParams} editParams={editParams} />
+            <ListParams event={actionParams} editParams={editActionParams} />
           ) : null}
           {reactionParams ? (
-            <ListParams event={reactionParams} editParams={editParams} />
+            <ListParams
+              event={reactionParams}
+              editParams={editReactionParams}
+            />
           ) : null}
         </div>
-
-        {open ? (
-          <div >
-            <Button
-              variant="contained"
-              color="primary"
-              size={"medium"}
-              onClick={() => {
-                props.saveInstance(props.instance._id!);
-              }}
-            >
-              Save
-            </Button>
-          </div>
-        ) : null}
 
         <div>
           <label htmlFor="icon-button-file">
@@ -188,12 +273,28 @@ function InstanceEditor(props: IInstanceEditorProps) {
               aria-label="upload picture"
               component="span"
               onClick={() => {
-                props.deleteInstance(props.instance);
+                if (instance) {
+                  props.deleteInstance(instance);
+                }
               }}
             >
               <DeleteOutlineTwoTone color="primary" />
             </IconButton>
           </label>
+          {open ? (
+          <Button
+            variant="contained"
+            color="primary"
+            size={"medium"}
+            onClick={() => {
+              if (instance) {
+                props.saveInstance(instance._id!, instance);
+              }
+            }}
+          >
+            Save
+          </Button>
+        ) : null}
         </div>
       </Box>
     </Card>

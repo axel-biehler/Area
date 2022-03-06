@@ -75,18 +75,6 @@ function HomePage() {
     initialize();
   }, []);
 
-
-  const editExistingInstance = (config: IInstance) => {
-    if (!instances) return;
-    const newList: IInstance[] = Array.from(instances, (x: IInstance) => {
-      if (x._id === config._id) {
-        return config;
-      }
-      return x;
-    });
-    setInstances(newList);
-  };
-
   const deleteInstance = async (toRemove: IInstance) => {
     const res: IStatusResponse = await myFetch<IStatusResponse>(
       `/instances/${toRemove._id}`,
@@ -102,12 +90,8 @@ function HomePage() {
     }
   };
 
-  const saveInstance = async (id: string) => {
-    const toSave: IInstance | undefined = instances?.find(x => x._id === id);
-    if (toSave === undefined) {
-      return;
-    }
-    const res: IStatusResponse = await myFetch<IStatusResponse>(`/instances/${toSave._id}`, "POST", JSON.stringify({reaction: toSave.reaction}));
+  const saveInstance = async (id: string, instance: IInstance) => {
+    const res: IStatusResponse = await myFetch<IStatusResponse>(`/instances/${instance._id}`, "POST", JSON.stringify({action: instance.action, reaction: instance.reaction}));
     if (!res.status) {
       console.log(res.error);
     } else {
@@ -162,14 +146,12 @@ function HomePage() {
           {instances?.map((element: IInstance, index: number) => {
             return (
               <Grid item xs={6} md={3} key={index}>
-                {" "}
                 <InstanceEditor
                   instance={element}
-                  editInstance={editExistingInstance}
                   saveInstance={saveInstance}
                   deleteInstance={deleteInstance}
                   key={index}
-                />{" "}
+                />
               </Grid>
             );
           })}
