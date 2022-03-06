@@ -43,8 +43,10 @@ const connect = async (req, res) => {
           error: 'user not found',
         });
       }
-      u.trelloToken = token;
-      u.trelloTokenSecret = tokenSecret;
+      u.trello = {
+        trelloToken: token,
+        trelloTokenSecret: tokenSecret,
+      };
       u.save();
 
       res.json({

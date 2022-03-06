@@ -1,4 +1,5 @@
 const OAuth = require('oauth');
+const fetch = require('node-fetch');
 const { User } = require('../../../database');
 
 const link = async (req, res) => {
@@ -37,11 +38,25 @@ const link = async (req, res) => {
   }
 
   try {
-    oauth.getOAuthAccessToken(u.trelloToken, u.trelloTokenSecret, oauthVerifier,
-      (error, accessToken, accessTokenSecret) => {
-        u.trelloToken = accessToken;
-        u.trelloTokenSecret = accessTokenSecret;
-        u.save();
+    oauth.getOAuthAccessToken(u.trello.trelloToken, u.trello.trelloTokenSecret, oauthVerifier,
+      async (error, accessToken, accessTokenSecret) => {
+        fetch('https://api.trello.com/1/members/me', {
+          headers: {
+            Accept: 'application/json',
+            Authorization: `OAuth oauth_consumer_key="${process.env.TRELLO_API_KEY}", oauth_token="${accessToken}"`,
+          },
+        })
+          .then((response) => response.text())
+          .then(async (body) => {
+            const jsonBody = JSON.parse(body);
+            u.trello = {
+              trelloToken: accessToken,
+              trelloTokenSecret: accessTokenSecret,
+              trelloId: jsonBody.id,
+            };
+            await u.save();
+          })
+          .catch((err) => console.error(err));
       });
 
     res.json({
