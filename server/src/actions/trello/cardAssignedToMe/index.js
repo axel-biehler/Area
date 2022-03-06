@@ -4,15 +4,12 @@ const metadata = {
   name: path.basename(__dirname),
   displayName: 'Card assigned to me',
   description: 'his Trigger fires every time a card is assigned to you.',
+  event: 'action_member_joined_card',
   params: [
     {
-      name: 'workspace',
-      type: 'string',
-      placeholder: 'Please select',
-    },
-    {
       name: 'board',
-      type: 'string',
+      type: 'get',
+      rotue: '/services/trello/boards',
       placeholder: 'Please select',
     },
   ],

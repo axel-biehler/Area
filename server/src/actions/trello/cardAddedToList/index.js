@@ -4,21 +4,19 @@ const metadata = {
   name: path.basename(__dirname),
   displayName: 'Card added to list',
   description: 'This trigger fires every time a card is added to specified list',
+  event: 'action_create_card',
   params: [
     {
-      name: 'workspace',
-      type: 'string',
-      placeholder: 'Please Select',
-    },
-    {
       name: 'board',
-      type: 'string',
-      placeholder: '',
+      type: 'get',
+      route: '/services/trello/boards',
+      placeholder: 'Please select',
     },
     {
       name: 'list',
-      type: 'string',
-      placeholder: '',
+      type: 'get',
+      route: '/services/trello/listsOnBoard',
+      placeholder: 'Please select',
     },
   ],
 };

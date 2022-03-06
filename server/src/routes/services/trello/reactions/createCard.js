@@ -1,6 +1,49 @@
 const fetch = require('node-fetch');
 const User = require('../../../../database/User');
 
+const createNewList = async (idBoard, name, u) => {
+  const res = await fetch(`https://api.trello.com/1/boards/${idBoard}/lists?name=${name}`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `OAuth oauth_consumer_key="${process.env.TRELLO_API_KEY}", oauth_token="${u.trello.trelloToken}"`,
+    },
+  })
+    .then((response) => {
+      if (response.status !== 200) {
+        console.error(response.statusText);
+        throw Error('List not created');
+      }
+      return response.text();
+    })
+    .then((body) => JSON.parse(body))
+    .catch((err) => console.error(err));
+
+  return res.body;
+};
+
+const getListsOnBoard = async (idBoard, u) => {
+  const res = await fetch(`https://api.trello.com/1/boards/${idBoard}/lists`, {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `OAuth oauth_consumer_key="${process.env.TRELLO_API_KEY}", oauth_token="${u.trello.trelloToken}"`,
+    },
+  })
+    .then((response) => {
+      if (response.status !== 200) {
+        throw Error('error while getting lists');
+      }
+      return response.text();
+    })
+    .then((body) => JSON.parse(body))
+    .catch((err) => {
+      console.error(err);
+      throw Error(err);
+    });
+
+  return res;
+};
+
 const createCard = async (instance) => {
   const u = await User.findById(instance.userId);
 
@@ -9,23 +52,32 @@ const createCard = async (instance) => {
   }
   const params = instance.reaction.params.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.value }),
     {});
-  const paramsSend = new URLSearchParams();
 
-  paramsSend.append('title', params.title);
-  paramsSend.append('desc', params.description);
-  paramsSend.append('idList', params.listName);
+  let lists = await getListsOnBoard(params.board, u);
 
-  fetch('https://api.trello.com/1/cards',
+  let id = '';
+
+  let listToAdd = lists.find((x) => x.name === params.listName);
+
+  if (!listToAdd) {
+    await createNewList(params.board, params.listName, u);
+
+    lists = await getListsOnBoard(params.board, u);
+    listToAdd = lists.find((x) => x.name === params.listName);
+  }
+  id = listToAdd.id;
+
+  await fetch(`https://api.trello.com/1/cards?idList=${id}&name=${params.title.replace(' ', '+')}&desc=${params.description.replace(' ', '+')}`,
     {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         Authorization: `OAuth oauth_consumer_key="${process.env.TRELLO_API_KEY}", oauth_token="${u.trello.trelloToken}"`,
       },
-      body: { params },
     })
-    .then((text) => {
-      if (text.statusCode !== 200) {
+    .then((response) => {
+      if (response.status !== 200) {
+        console.error(response.statusText);
         throw Error('card not created');
       }
     })
