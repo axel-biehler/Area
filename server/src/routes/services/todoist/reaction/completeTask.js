@@ -19,10 +19,7 @@ const completeTask = async (instance) => {
       },
     });
 
-    const data = await response.json();
-
     if (response.status >= 300) {
-      console.error(data);
       throw Error('An error append when completing a task');
     }
   } catch (err) {

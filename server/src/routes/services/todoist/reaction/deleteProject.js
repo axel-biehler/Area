@@ -19,10 +19,10 @@ const deleteProject = async (instance) => {
       },
     });
 
-    const data = await response.json();
+    // const data = await response.json();
 
     if (response.status >= 300) {
-      console.error(data);
+      // console.error(data);
       throw Error('An error append when deleting a project');
     }
   } catch (err) {

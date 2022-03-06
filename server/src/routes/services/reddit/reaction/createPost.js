@@ -12,27 +12,15 @@ const createPost = async (instance) => {
 
     const user = await verifUserLinkReddit(instance.userId);
 
-    const config = {
+    const getProfileInfo = await fetch('https://oauth.reddit.com/api/v1/me', {
+      method: 'GET',
       headers: {
         'User-Agent': 'school project',
         Authorization: `Bearer ${user.redditAccessToken}`,
       },
-    };
-
-    const getProfileInfo = await fetch('https://oauth.reddit.com/api/v1/me', {
-      method: 'GET',
-      headers: config,
     });
 
     const dataUser = await getProfileInfo.json();
-
-    const config2 = {
-      headers: {
-        'User-Agent': 'school project',
-        Authorization: `Bearer ${user.redditAccessToken}`,
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-      },
-    };
 
     const details = {
       title: params.title,
@@ -51,8 +39,12 @@ const createPost = async (instance) => {
 
     const response = await fetch('https://oauth.reddit.com/api/submit', {
       method: 'POST',
-      headers: config2,
       body: formBody,
+      headers: {
+        'User-Agent': 'school project',
+        Authorization: `Bearer ${user.redditAccessToken}`,
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+      },
     });
 
     const data = await response.json();
