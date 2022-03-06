@@ -34,10 +34,9 @@ const getBoardList = async (req, res) => {
         return newVal;
       });
 
-      res.json({
-        status: true,
+      res.json(
         params,
-      });
+      );
     })
     .catch((err) => {
       console.error(err);

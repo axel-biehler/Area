@@ -7,7 +7,8 @@ const metadata = {
   params: [
     {
       name: 'board',
-      type: 'string',
+      type: 'get',
+      route: '/services/trello/boards',
       placeholder: 'Please select',
     },
     {

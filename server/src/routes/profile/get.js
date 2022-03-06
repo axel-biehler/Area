@@ -9,7 +9,7 @@ const get = async (req, res) => {
       email: user.email,
       twitterLinked: user.twitterId != null,
       githubLinked: user.github.token != null,
-      trelloLinked: user.trelloToken != null,
+      trelloLinked: user.trello.trelloToken != null,
       discordLinked: user.discord.token != null,
       redditLinked: user.redditAccessToken != null,
       todoistLinked: user.todoistAccessToken != null,

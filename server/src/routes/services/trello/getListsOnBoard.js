@@ -28,7 +28,7 @@ const getListsOnBoard = async (req, res) => {
   })
     .then((response) => {
       if (response.status !== 200) {
-        throw Error('card not created');
+        console.error('card not created');
       }
       return response.text();
     })
@@ -50,7 +50,6 @@ const getListsOnBoard = async (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      throw Error(err);
     });
 };
 
