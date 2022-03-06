@@ -2,12 +2,14 @@ const githubRunReaction = require('../services/github/reactions');
 const discordRunReaction = require('../services/discord/reactions');
 const todoistRunReaction = require('../services/todoist/reaction');
 const redditRunReaction = require('../services/reddit/reaction');
+const trelloRunReaction = require('../services/trello/reactions');
 
 const runReaction = {
   github: githubRunReaction,
   discord: discordRunReaction,
   todoist: todoistRunReaction,
   reddit: redditRunReaction,
+  trello: trelloRunReaction,
 };
 
 const runInstance = async (instances) => {
@@ -17,7 +19,7 @@ const runInstance = async (instances) => {
     try {
       await runReaction[instance.reaction.serviceName](instance);
     } catch (err) {
-      console.error(`An error append while executing this reaction: ${instance.reaction.name}`);
+      console.error(`An error append while executing this reaction: ${instance.reaction.name},\n\n ${err}`);
     }
   });
 };

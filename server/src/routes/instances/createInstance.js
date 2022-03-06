@@ -2,9 +2,11 @@
 const Instance = require('../../database/Instance');
 const { verifyAction, verifyReaction } = require('../../../utils/verifyInstance');
 const createGithubAction = require('../services/github/actions/create');
+const trello = require('../services/trello/webhook');
 
 const createAction = {
   github: createGithubAction,
+  trello: trello.create,
 };
 
 const createInstance = async (req, res) => {
@@ -18,11 +20,11 @@ const createInstance = async (req, res) => {
       reaction,
     });
 
-    verifyAction(instance.action);
-    verifyReaction(instance.reaction);
-
     // essayer avec un nom indisponible
     instance.action.webhookId = await createAction[instance.action.serviceName](userId, instance.action);
+
+    verifyAction(instance.action);
+    verifyReaction(instance.reaction);
 
     await instance.save();
   } catch (err) {

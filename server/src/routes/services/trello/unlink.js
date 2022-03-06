@@ -11,8 +11,8 @@ const unlink = async (req, res) => {
       });
     }
 
-    user.trelloToken = undefined;
-    user.trelloTokenSecret = undefined;
+    user.trello.trelloToken = undefined;
+    user.trello.trelloTokenSecret = undefined;
 
     await user.save();
 

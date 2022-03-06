@@ -21,8 +21,11 @@ const UserSchema = new Schema({
     guildId: String,
     guildName: String,
   },
-  trelloToken: String,
-  trelloTokenSecret: String,
+  trello: {
+    trelloToken: String,
+    trelloTokenSecret: String,
+    trelloId: String,
+  },
   redditAccessToken: String,
   redditRefreshToken: String,
   todoistAccessToken: String,

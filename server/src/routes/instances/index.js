@@ -8,5 +8,6 @@ router.post('/', require('./createInstance'));
 router.get('/', require('./getListInstances'));
 router.delete('/:id', require('./removeInstance'));
 router.post('/:id', require('./updateInstance'));
+router.delete('/delete/:service', require('./deleteInstances'));
 
 module.exports = router;
