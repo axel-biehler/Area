@@ -11,7 +11,7 @@ const metadata = {
       placeholder: 'text...',
     },
     {
-      name: 'Body',
+      name: 'body',
       type: 'string',
       placeholder: 'text...',
     },
