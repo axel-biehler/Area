@@ -132,8 +132,13 @@ const webhook = async (req, res) => {
   instances.forEach((i) => {
     const params = i.action.params.reduce((a, c) => ({ ...a, [c.name]: c.value }), {});
 
-    if (params.board === modelId && action.name === i.action.name) {
+    if ((params.board === modelId && action.name === i.action.name)) {
       finalInstances.push(i);
+    }
+    if (i.action.name === 'cardAddedToList') {
+      if (params.list === req.body.action.data.list.id) {
+        finalInstances.push(i);
+      }
     }
   });
 
