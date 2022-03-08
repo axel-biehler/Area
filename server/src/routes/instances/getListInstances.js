@@ -2,7 +2,7 @@ const Instance = require('../../database/Instance');
 
 const getInstanceByUser = async (req, res) => {
   try {
-    const instances = await Instance.findById(req.userId);
+    const instances = await Instance.find({ userId: req.userId }).exec();
 
     res.json({
       status: true,
