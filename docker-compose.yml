@@ -2,7 +2,7 @@ version: "3"
 
 services:
   nginx:
-    image: nginx
+    build: nginx  
     depends_on:
       - front
       - mobile
