@@ -2,7 +2,6 @@ const fetch = require('node-fetch');
 const User = require('../../../../database/User');
 
 const createNewList = async (idBoard, name, u) => {
-  console.log(name);
   const res = await fetch(`https://api.trello.com/1/boards/${idBoard}/lists?name=${name}`, {
     method: 'POST',
     headers: {
@@ -61,7 +60,6 @@ const createCard = async (instance) => {
   let id = '';
 
   if (!listToAdd) {
-    console.log(params);
     const newList = await createNewList(params.board, params.listName, u);
     id = newList.id;
   } else {
