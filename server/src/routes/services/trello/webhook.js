@@ -154,6 +154,25 @@ const webhook = async (req, res) => {
   });
 };
 
+const updateTrelloAction = async (userId, oldAction, newAction) => {
+  const instances = await Instance.find({ 'action.webhookId': oldAction.webhookId });
+
+  if (instances < 2) {
+    await deleteWebhook(userId, instances.webhookId);
+  }
+
+  const id = create(userId, newAction);
+  return id;
+};
+
+const deleteTrelloAction = async (userId, delAction) => {
+  const instances = await Instance.find({ 'action.webhookId': delAction.webhookId });
+
+  if (instances.length < 2) {
+    await deleteWebhook(userId, delAction.webhookId);
+  }
+};
+
 module.exports = {
-  webhook, create, deleteWebhook, getAllToken,
+  webhook, create, deleteWebhook, getAllToken, updateTrelloAction, deleteTrelloAction,
 };

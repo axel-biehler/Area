@@ -2,9 +2,11 @@
 const Instance = require('../../database/Instance');
 const { verifyAction, verifyReaction } = require('../../../utils/verifyInstance');
 const updateGithubAction = require('../services/github/actions/update');
+const { updateTrelloAction } = require('../services/trello/webhook');
 
 const updateAction = {
   github: updateGithubAction,
+  trello: updateTrelloAction,
 };
 
 const updateInstance = async (req, res) => {
