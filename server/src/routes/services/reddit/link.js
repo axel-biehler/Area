@@ -11,9 +11,6 @@ const link = async (req, res) => {
   try {
     const user = await User.findById(req.userId);
     const { token } = req.body;
-    console.log('token : ');
-    console.log(token);
-    // console.log(req);
     if (!token || token === '') {
       return res.json({
         status: false,
@@ -21,14 +18,12 @@ const link = async (req, res) => {
       });
     }
     const auth = `${clientId}:${clientSecret}`;
-    const buff = new Buffer(auth);
+    const buff = Buffer.from(auth);
     const base64data = buff.toString('base64');
     const requestHeaders = new fetch.Headers();
     requestHeaders.set('User-Agent', 'school project');
     requestHeaders.set('Authorization', `Basic ${base64data}`);
-    const config = {
-      headers: { 'User-Agent': 'school project', Authorization: `Basic ${base64data}` },
-    };
+
     const bodyReq = new URLSearchParams();
     bodyReq.append('grant_type', 'authorization_code');
     bodyReq.append('code', token);
@@ -38,12 +33,8 @@ const link = async (req, res) => {
       body: bodyReq,
       headers: requestHeaders,
     });
-    console.log(config);
-    console.log(bodyReq);
     const dataOauth = await postToken.json();
-    console.log(dataOauth);
     if (!dataOauth.access_token) {
-      console.log(dataOauth);
       return res.json({
         status: false,
         error: 'no access token get from reddit service',

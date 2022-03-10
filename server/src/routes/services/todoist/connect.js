@@ -11,7 +11,6 @@ const connect = async (req, res) => {
       });
     }
     const url = `https://todoist.com/oauth/authorize?client_id=${clientId}&scope=data:read_write&state=${state}`;
-    console.log(url);
     const retObject = { url };
     return res.json(retObject);
   } catch (err) {

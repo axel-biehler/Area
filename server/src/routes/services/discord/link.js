@@ -35,11 +35,7 @@ const link = async (req, res) => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
 
-    // console.log('\n\nresponseOauth begin\n\n', responseOauth, '\n\nresponseOauth end\n\n');
-
     const dataOauth = await responseOauth.json();
-
-    // console.log('\n\ndataOauth begin\n\n', dataOauth, '\n\ndataOauth end\n\n');
 
     if (!dataOauth.access_token || !dataOauth.guild || dataOauth.guild.id !== guildId) {
       res.json({

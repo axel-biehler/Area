@@ -81,7 +81,6 @@ const create = async (userId, action) => {
   })
     .then(async (response) => {
       if (response.status !== 200) {
-        console.log(response.statusText);
         const res = await getAllToken(userId);
 
         const hook = res.find((x) => x.idModel === params.board);

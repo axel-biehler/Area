@@ -40,9 +40,7 @@ const link = async (req, res) => {
       },
     });
     const dataOauth = await postToken.json();
-    console.log(dataOauth);
     if (!dataOauth.access_token) {
-      console.log(dataOauth);
       return res.json({
         status: false,
         error: 'no access token get from todoist service',

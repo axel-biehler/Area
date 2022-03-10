@@ -12,7 +12,7 @@ const metadata = {
       placeholder: 'Please select',
     },
     {
-      name: 'ListName',
+      name: 'listName',
       type: 'string',
       placeholder: '',
     },
