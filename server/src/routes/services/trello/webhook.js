@@ -7,7 +7,7 @@ const runInstance = require('../../instances/runInstance');
 
 const verifyTrelloWebhookRequest = (request) => {
   const base64Digest = (s) => crypto.createHmac('sha1', process.env.TRELLO_API_SECRET).update(s).digest('base64');
-  const content = JSON.stringify(request.body) + process.env.TRELLO_URL;
+  const content = JSON.stringify(request.body) + process.env.TRELLO_WEBHOOK;
   const doubleHash = base64Digest(content);
   const headerHash = request.headers['x-trello-webhook'];
   return doubleHash === headerHash;
@@ -64,7 +64,7 @@ const deleteWebhook = async (userId, id) => {
 const create = async (userId, action) => {
   const apiKey = process.env.TRELLO_API_KEY;
   const u = await User.findById(userId);
-  const callbackURL = process.env.TRELLO_URL;
+  const callbackURL = process.env.TRELLO_WEBHOOK;
   const params = action.params.reduce((a, c) => ({ ...a, [c.name]: c.value }), {});
   let value = '';
 

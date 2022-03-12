@@ -47,19 +47,31 @@ const CreateInstance = () => {
   };
 
   const create = async reactionParams => {
+    const normalizedActionParams = actionParams.map(x => ({
+      name: x.name,
+      type: x.chosenType || x.type,
+      value: x.value,
+    }));
+
+    const normalizedRectionParams = reactionParams.map(x => ({
+      name: x.name,
+      type: x.chosenType || x.type,
+      value: x.value,
+    }));
+
     const body = {
       action: {
         name: selectedAction.widget.name,
         serviceName: selectedAction.action.name,
         displayName: selectedAction.widget.displayName,
         webhookId: '1234',
-        params: actionParams,
+        params: normalizedActionParams,
       },
       reaction: {
         name: selectedReaction.widget.name,
         serviceName: selectedReaction.reaction.name,
         displayName: selectedReaction.widget.displayName,
-        params: reactionParams,
+        params: normalizedRectionParams,
       },
     };
 

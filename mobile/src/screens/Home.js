@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 import { Card, FAB, Button } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import request from '../api/request';
@@ -50,13 +50,13 @@ const Home = () => {
   }, []);
   return (
     <>
-      <View>
+      <ScrollView>
         {instances.map(i => {
           return (
             <Instance key={i._id} instance={i} refreshList={refreshList} />
           );
         })}
-      </View>
+      </ScrollView>
       <FAB
         style={styles.fab}
         small

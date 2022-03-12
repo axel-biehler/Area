@@ -47,7 +47,7 @@ const NumParam = ({ param, setValue }) => {
   return (
     <TextInput
       label={param.name}
-      defaultValue={param.value}
+      defaultValue={param.value.toString()}
       type={'number'}
       keyboardType={'numeric'}
       onChangeText={text => {
@@ -66,12 +66,16 @@ const GetParam = ({ param, setValue }) => {
       const res = await request(param.route);
       setValues(
         res.map(r => ({
-          ...r,
           label: r.name,
+          value: JSON.stringify(r),
         })),
       );
     })();
   }, [param.route]);
+
+  const chosenParam = values.find(
+    x => JSON.parse(x.value).value === param.value,
+  );
 
   return (
     <DropDown
@@ -81,8 +85,10 @@ const GetParam = ({ param, setValue }) => {
       showDropDown={() => setShown(true)}
       onDismiss={() => setShown(false)}
       list={values}
-      setValue={v => setValue(param.name, v)}
-      value={param.value}
+      setValue={v => {
+        setValue(param.name, JSON.parse(v).value, JSON.parse(v).type);
+      }}
+      value={chosenParam ? chosenParam.value : undefined}
     />
   );
 };
@@ -90,9 +96,12 @@ const GetParam = ({ param, setValue }) => {
 const DropdownParam = ({ param, setValue }) => {
   const [shown, setShown] = useState(false);
   const values = param.options.map(r => ({
-    ...r,
     label: r.name,
+    value: JSON.stringify(r),
   }));
+  const chosenParam = values.find(
+    x => JSON.parse(x.value).value === param.value,
+  );
 
   return (
     <DropDown
@@ -102,8 +111,10 @@ const DropdownParam = ({ param, setValue }) => {
       showDropDown={() => setShown(true)}
       onDismiss={() => setShown(false)}
       list={values}
-      setValue={v => setValue(param.name, v)}
-      value={param.value}
+      setValue={v => {
+        setValue(param.name, JSON.parse(v).value, JSON.parse(v).type);
+      }}
+      value={chosenParam ? chosenParam.value : undefined}
     />
   );
 };
@@ -179,9 +190,12 @@ const getDefaultValue = param => {
 };
 
 const Params = ({ params, confirm }) => {
-  const setValue = (name, value) => {
+  const setValue = (name, value, type) => {
     const index = input.findIndex(x => x.name === name);
     input[index].value = value;
+    if (type != null) {
+      input[index].chosenType = type;
+    }
     setInput(input);
   };
 

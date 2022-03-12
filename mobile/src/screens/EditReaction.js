@@ -3,7 +3,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import request from '../api/request';
 import Params from './CreateInstance/Params';
 
@@ -11,8 +11,7 @@ const EditReaction = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { instance } = route.params;
-
-  console.log(instance.reaction.params);
+  const [params, setParams] = useState(null);
 
   const navigateToHome = useCallback(() => {
     navigation.dispatch(
@@ -27,14 +26,40 @@ const EditReaction = () => {
     );
   }, [navigation]);
 
-  const update = async params => {
+  useEffect(() => {
+    (async () => {
+      const reactions = await request('/reactions');
+
+      const defaultReaction = reactions
+        .find(x => x.name === instance.reaction.serviceName)
+        .widgets.find(x => x.name === instance.reaction.name);
+
+      const defaultParams = defaultReaction.params;
+      const newParams = defaultParams.map(x => {
+        const oldParam = instance.reaction.params.find(y => y.name === x.name);
+
+        if (x.type === 'get' || x.type === 'dropdown') {
+          return x;
+        }
+
+        return oldParam;
+      });
+
+      setParams(newParams);
+    })();
+  }, [instance]);
+
+  const update = async p => {
     await request(`/instances/${instance._id}`, 'POST', {
-      reaction: params,
+      reaction: p,
     });
     await navigateToHome();
   };
 
-  return <Params params={instance.reaction.params} confirm={update} />;
+  if (!params) {
+    return null;
+  }
+  return <Params params={params} confirm={update} />;
 };
 
 export default EditReaction;
