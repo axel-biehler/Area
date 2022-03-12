@@ -20,8 +20,6 @@ const getWebhook = async (user, repository, event) => {
 
   const webhook = dataList.find(({ events }) => events.length === 1 && events[0] === event);
 
-  // console.log('\n\nwebhook\n\n', webhook, '\n\nwebhook\n\n');
-
   if (!webhook) {
     return (null);
   }

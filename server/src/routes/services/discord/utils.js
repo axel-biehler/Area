@@ -71,11 +71,7 @@ const getChannels = async (user) => {
     },
   });
 
-  // console.log('\n\nresponse begin\n\n', response, '\n\nresponse end\n\n');
-
   const data = await response.json();
-
-  // console.log('\n\ndata begin\n\n', data, '\n\ndata end\n\n');
 
   if (response.status >= 300) {
     console.error(data);

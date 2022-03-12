@@ -81,7 +81,6 @@ const create = async (userId, action) => {
   })
     .then(async (response) => {
       if (response.status !== 200) {
-        console.log(response.statusText);
         const res = await getAllToken(userId);
 
         const hook = res.find((x) => x.idModel === params.board);
@@ -155,6 +154,25 @@ const webhook = async (req, res) => {
   });
 };
 
+const updateTrelloAction = async (userId, oldAction, newAction) => {
+  const instances = await Instance.find({ 'action.webhookId': oldAction.webhookId });
+
+  if (instances < 2) {
+    await deleteWebhook(userId, instances.webhookId);
+  }
+
+  const id = create(userId, newAction);
+  return id;
+};
+
+const deleteTrelloAction = async (userId, delAction) => {
+  const instances = await Instance.find({ 'action.webhookId': delAction.webhookId });
+
+  if (instances.length < 2) {
+    await deleteWebhook(userId, delAction.webhookId);
+  }
+};
+
 module.exports = {
-  webhook, create, deleteWebhook, getAllToken,
+  webhook, create, deleteWebhook, getAllToken, updateTrelloAction, deleteTrelloAction,
 };

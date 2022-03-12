@@ -19,7 +19,7 @@ const createNewList = async (idBoard, name, u) => {
     .then((body) => JSON.parse(body))
     .catch((err) => console.error(err));
 
-  return res.body;
+  return res;
 };
 
 const getListsOnBoard = async (idBoard, u) => {
@@ -53,19 +53,18 @@ const createCard = async (instance) => {
   const params = instance.reaction.params.reduce((acc, cur) => ({ ...acc, [cur.name]: cur.value }),
     {});
 
-  let lists = await getListsOnBoard(params.board, u);
+  const lists = await getListsOnBoard(params.board, u);
+
+  const listToAdd = lists.find((x) => x.name === params.listName);
 
   let id = '';
 
-  let listToAdd = lists.find((x) => x.name === params.listName);
-
   if (!listToAdd) {
-    await createNewList(params.board, params.listName, u);
-
-    lists = await getListsOnBoard(params.board, u);
-    listToAdd = lists.find((x) => x.name === params.listName);
+    const newList = await createNewList(params.board, params.listName, u);
+    id = newList.id;
+  } else {
+    id = listToAdd.id;
   }
-  id = listToAdd.id;
 
   await fetch(`https://api.trello.com/1/cards?idList=${id}&name=${params.title.replace(' ', '+')}&desc=${params.description.replace(' ', '+')}`,
     {

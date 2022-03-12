@@ -1,9 +1,11 @@
 /* eslint-disable max-len */
 const Instance = require('../../database/Instance');
 const deleteGithubAction = require('../services/github/actions/delete');
+const { deleteTrelloAction } = require('../services/trello/webhook');
 
 const deleteAction = {
   github: deleteGithubAction,
+  trello: deleteTrelloAction,
 };
 
 const deleteInstances = async (req, res) => {

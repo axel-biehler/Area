@@ -85,13 +85,13 @@ function ListServices(props: IProfileProps) {
 
   const trelloOAuth = async () => {
     if (props.infos.trelloLinked) {
+      await myFetch<IStatusResponse>(
+        `/instances/delete/trello`,
+        "DELETE"
+      );
       const res: IStatusResponse = await myFetch<IStatusResponse>(
         "/services/trello/unlink",
         "GET"
-      );
-      myFetch<IStatusResponse>(
-        `/instances/delete/trello`,
-        "DELETE"
       );
       if (res.status) {
         const newInfos: IProfileData = {

@@ -39,9 +39,9 @@ const about = (req, res) => {
     reactions: react.filter((x) => x.name === 'trello').map((x) => x.reaction),
   },
   {
-    name: 'todolist',
-    actions: act.filter((x) => x.name === 'todolist').map((x) => x.action),
-    reactions: react.filter((x) => x.name === 'todolist').map((x) => x.reaction),
+    name: 'todoist',
+    actions: act.filter((x) => x.name === 'todoist').map((x) => x.action),
+    reactions: react.filter((x) => x.name === 'todoist').map((x) => x.reaction),
   },
   {
     name: 'twitter',

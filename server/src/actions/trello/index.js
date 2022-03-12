@@ -2,8 +2,8 @@ const path = require('path');
 
 const metadata = {
   name: path.basename(__dirname),
-  displayName: 'Twitter',
-  description: 'Twitter social media',
+  displayName: 'Trello',
+  description: 'Trello project management tool',
   needsOauth: true,
 };
 

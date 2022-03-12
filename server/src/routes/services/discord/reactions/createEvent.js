@@ -10,8 +10,6 @@ const createEvent = async (instance) => {
 
   const user = await verifUserLinkDiscord(instance.userId);
 
-  // console.log('\n\nparams begin\n\n', params, '\n\nparams end\n\n');
-
   // Create issue with given parameters
   const body = {
     name: params.name,
