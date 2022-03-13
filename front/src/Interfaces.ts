@@ -158,8 +158,10 @@ interface IModalInstanceProps {
 
 interface IInstanceEditorProps {
   instance: IInstance;
-  saveInstance: (id: string, instance: IInstance) => void;
+  saveInstance: (instance: IInstance) => void;
   deleteInstance: (instance: IInstance) => void;
+  actions: IAction[];
+  reactions: IAction[];
 }
 
 export type {

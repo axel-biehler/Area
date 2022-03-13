@@ -13,7 +13,6 @@ class ModalAuth extends React.Component<{
     const { open, handleClose, isLogin, setError } = this.props
     return (
       <Dialog open={open} onClose={handleClose}>
-        {/*@ts-ignore*/}
         { isLogin ? <LoginForm handleClose={handleClose} setError={setError} /> : <RegisterForm handleClose={handleClose} setError={setError} /> }
       </Dialog>
     );

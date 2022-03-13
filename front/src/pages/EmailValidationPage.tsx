@@ -48,7 +48,7 @@ function EmailValidationPage() {
           setToken(resBody.token);
           setStatus("Email validated, you will be redirected to home in 3s.");
           setTimeout(function () {
-            navigate("/home");
+            navigate("/");
           }, 3000);
         }
       })

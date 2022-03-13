@@ -20,7 +20,6 @@ import {
 } from "../../Interfaces";
 import { DeleteOutlineTwoTone, Settings } from "@material-ui/icons";
 import ListParams from "./ListParams";
-import myFetch from "../../api/api";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,9 +54,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 // function to get missing parameters and information such as placeholder or dropdown options
 
-async function getConfig(config: IInstanceConfig, type: string) {
-  const actList: IAction[] = await myFetch<IAction[]>(`/${type}`, "GET");
-  const correspondingService = actList.find((x: IAction) => {
+async function getConfig(config: IInstanceConfig, reference: IAction[]) {
+  const correspondingService = reference.find((x: IAction) => {
     return x.name === config.serviceName;
   });
   if (correspondingService) {
@@ -83,9 +81,9 @@ async function getConfig(config: IInstanceConfig, type: string) {
   return config;
 }
 
-async function getMissingInfos(oldInstance: IInstance): Promise<IInstance> {
-  const action = await getConfig(oldInstance.action!, "actions");
-  const reaction = await getConfig(oldInstance.reaction!, "reactions");
+async function getMissingInfos(oldInstance: IInstance, actions: IAction[], reactions: IAction[]): Promise<IInstance> {
+  const action = await getConfig(oldInstance.action!, actions);
+  const reaction = await getConfig(oldInstance.reaction!, reactions);
 
   return {
     ...oldInstance,
@@ -102,7 +100,7 @@ function InstanceEditor(props: IInstanceEditorProps) {
   const [reactionParams, setReactionParameters] = useState<IEventListItem | undefined>(undefined);
 
   const initialize = useCallback(async () => {
-    const newInstance = await getMissingInfos(props.instance);
+    const newInstance = await getMissingInfos(props.instance, props.actions, props.reactions);
     setInstance(newInstance);
     const tmpAct: IEventListItem = {
       value: newInstance.action?.name!,
@@ -240,7 +238,7 @@ function InstanceEditor(props: IInstanceEditorProps) {
             size={"medium"}
             onClick={() => {
               if (instance) {
-                props.saveInstance(instance._id!, instance);
+                props.saveInstance(instance);
               }
             }}
           >

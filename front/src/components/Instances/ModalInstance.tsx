@@ -12,7 +12,7 @@ import {
 import {
   IAction, IInstance,
   IInstanceConfig,
-  IModalInstanceProps, IParameter,
+  IModalInstanceProps, IParameter, IProfileData,
   IServiceListItem,
   IStatusResponse
 } from "../../Interfaces";
@@ -54,6 +54,25 @@ function checkMissingParams(instance: IInstance, required: IInstance) {
   });
 }
 
+function isServiceEnabled(name: string, profileData: IProfileData) {
+  if (name === "discord" && profileData.discordLinked) {
+    return false;
+  } else if (name === "github" && profileData.githubLinked) {
+    return false;
+  } else if (name === "trello" && profileData.trelloLinked) {
+    return false;
+  } else if (name === "todoist" && profileData.todoistLinked) {
+    return false;
+  } else if (name === "reddit" && profileData.redditLinked) {
+    return false;
+  } else if (name === "twitter" && profileData.twitterLinked) {
+    return false;
+  } else if (name === "mail") {
+    return false;
+  }
+  return true;
+}
+
 function ModalInstance(props: IModalInstanceProps) {
   const classes = useStyles();
   const [actionServices, setActionServices] = useState<IServiceListItem[]>([]);
@@ -63,6 +82,7 @@ function ModalInstance(props: IModalInstanceProps) {
   const [error, setError] = useState<string>("");
 
   const initialize = async () => {
+    const profileData: IProfileData = await myFetch<IProfileData>("/profile", "GET");
     const actions: IAction[] = await myFetch<IAction[]>("/actions", "GET");
     const actionList = Array.from(actions, (x: IAction) => {
       return {
@@ -70,6 +90,7 @@ function ModalInstance(props: IModalInstanceProps) {
         label: x.displayName,
         description: x.description,
         widgets: x.widgets,
+        isDisabled: isServiceEnabled(x.name, profileData),
       };
     });
     setActionServices(actionList);
@@ -81,7 +102,7 @@ function ModalInstance(props: IModalInstanceProps) {
         label: x.displayName,
         description: x.description,
         widgets: x.widgets,
-        isDisabled: false,
+        isDisabled: isServiceEnabled(x.name, profileData),
       };
     });
     setReactionServices(reactionList);
