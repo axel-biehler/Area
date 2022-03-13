@@ -1,6 +1,7 @@
 const OAuth = require('oauth');
 const { promisify } = require('util');
 const { User } = require('../../../database');
+const getTweet = require('./action/newTweetByYou');
 
 const getProfileTest = async (req, res) => {
   const u = await User.findById(req.userId);
@@ -14,6 +15,7 @@ const getProfileTest = async (req, res) => {
   );
 
   const getProfile = promisify(oauth.get.bind(oauth));
+  getTweet(req);
 
   try {
     let body = await getProfile('https://api.twitter.com/2/users/me',

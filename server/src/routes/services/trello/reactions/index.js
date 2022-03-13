@@ -4,8 +4,8 @@ const runReaction = {
   createCard,
 };
 
-const trelloRunReaction = async (instance) => {
+const twitterRunReaction = async (instance) => {
   await runReaction[instance.reaction.name](instance);
 };
 
-module.exports = trelloRunReaction;
+module.exports = twitterRunReaction;

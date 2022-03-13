@@ -4,6 +4,7 @@ const todoistRunReaction = require('../services/todoist/reaction');
 const redditRunReaction = require('../services/reddit/reaction');
 const trelloRunReaction = require('../services/trello/reactions');
 const mailRunReaction = require('../services/mail/reactions');
+const twitterRunReaction = require('../services/twitter/reactions');
 
 const runReaction = {
   github: githubRunReaction,
@@ -12,6 +13,7 @@ const runReaction = {
   reddit: redditRunReaction,
   trello: trelloRunReaction,
   mail: mailRunReaction,
+  twitter: twitterRunReaction,
 };
 
 const runInstance = async (instances) => {

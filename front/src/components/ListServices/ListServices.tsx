@@ -142,7 +142,7 @@ function ListServices(props: IProfileProps) {
         JSON.stringify({ callback: "http://localhost:8081/twitter/link" })
       );
       if (res.status) {
-        const url = `https://api.twitter.com/oauth/authorize?oauth_token=${res.oauthToken}`;
+        const url = `https://api.twitter.com/oauth/authenticate?oauth_token=${res.oauthToken}`;
         window.location.replace(url);
       } else {
         console.log("ERROR: ", res.error);

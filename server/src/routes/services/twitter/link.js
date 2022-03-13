@@ -17,7 +17,7 @@ const link = async (req, res) => {
 
   try {
     const body = await postToken(
-      `https://api.twitter.com/oauth/access_token?oauth_verifier=${oauthVerifier}&oauth_token=${oauthToken}`,
+      `https://api.twitter.com/oauth/access_token?oauth_verifier=${oauthVerifier}&oauth_token=${oauthToken}&scope=tweet.write%20tweet.read%20users.read%20follows.read%20offline.access`,
       null,
       null,
       null,
