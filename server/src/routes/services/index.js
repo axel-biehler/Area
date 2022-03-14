@@ -6,6 +6,9 @@ const router = express.Router();
 router.post('/github/webhook', require('./github/webhook'));
 router.post('/trello/webhook', require('./trello/webhook').webhook);
 
+router.post('/github/login', require('./github/login'));
+router.post('/github/register', require('./github/register'));
+
 router.use(authMiddleware);
 router.post('/twitter/connect', require('./twitter/connect'));
 router.post('/twitter/link', require('./twitter/link'));
