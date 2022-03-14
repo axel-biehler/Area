@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-evenly",
-      height: "280px",
+      height: "310px",
       transition: "all 0.5s ease",
       borderRadius: "0.25rem",
     },
