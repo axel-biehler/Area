@@ -53,13 +53,8 @@ const Profile = () => {
       return;
     }
 
-    const res = await request('/services/twitter/connect', 'POST', {
-      callback: 'http://localhost:8081/twitter/link',
-    });
-
-    Linking.openURL(
-      `https://api.twitter.com/oauth/authorize?oauth_token=${res.oauthToken}`,
-    );
+    const res = await request('/services/twitter/connect');
+    Linking.openURL(res.url);
   };
 
   const linkGithub = async () => {
@@ -148,12 +143,12 @@ const Profile = () => {
       const url = new URL(data.url);
 
       if (url.pathname === '/twitter/link') {
-        const oauthToken = url.searchParams.get('oauth_token');
-        const oauthVerifier = url.searchParams.get('oauth_verifier');
+        const code = url.searchParams.get('code');
+        const state = url.searchParams.get('state');
 
         const res = await request('/services/twitter/link', 'POST', {
-          oauthToken,
-          oauthVerifier,
+          code,
+          state,
         });
 
         if (res.status) {

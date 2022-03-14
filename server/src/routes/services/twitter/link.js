@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const { User } = require('../../../database');
 
 const link = async (req, res) => {
-  const u = User.findById(req.userId);
+  const u = await User.findById(req.userId);
 
   if (u == null) {
     res.status(404).json({
@@ -10,6 +10,9 @@ const link = async (req, res) => {
       error: 'user not found',
     });
   }
+
+  const auth = Buffer.from(`${process.env.TWITTER_CLIENT_ID}:${process.env.TWITTER_CLIENT_SECRET}`).toString('base64');
+
   const params = new URLSearchParams();
 
   params.append('code', req.body.code.toString());
@@ -24,8 +27,9 @@ const link = async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${auth}`,
       },
-      body: params,
+      body: params.toString(),
     });
     const body = await result.json();
 
