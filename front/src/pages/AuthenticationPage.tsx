@@ -6,11 +6,14 @@ import {
   Theme,
   createStyles,
   Button,
-  Typography,
+  Typography, CardMedia, Box, Card,
 } from "@material-ui/core";
 import ModalAuth from "../components/ModalAuth";
 import Navbar from "../components/Navbar";
 import { isAuthenticated } from "../api/auth";
+import GithubLogo from "../assets/GithubLogo.png";
+import {IGithubEnv} from "../Interfaces";
+import myFetch from "../api/api";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
+      alignItems: "center",
     },
     LoginForm: {
       width: "300px",
@@ -51,6 +55,19 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     ErrorMsg: {
       color: "red",
+    },
+    Card: {
+      display: "flex",
+      justifyContent: "space-between",
+      backgroundColor: "white",
+      width: "600px",
+      height: "110px",
+      marginBottom: "20px",
+    },
+    CardMedia: {
+      width: "50%",
+      padding: "20px",
+      objectFit: "contain",
     },
   })
 );
@@ -83,6 +100,16 @@ function AuthenticationPage() {
     setOpen(false);
   };
 
+  const githubOAuth = async (type: string) => {
+    localStorage.setItem("method", type);
+    const res: IGithubEnv = await myFetch<IGithubEnv>(
+      "/services/github/env",
+      "GET"
+    );
+    const url: string = `https://github.com/login/oauth/authorize?client_id=${res.clientId}&state=${res.state}&scope=${res.scope}`;
+    window.location.replace(url);
+  }
+
   return (
     <CssBaseline>
       <Navbar />
@@ -99,6 +126,60 @@ function AuthenticationPage() {
               Register
             </Button>
           </div>
+          <Card className={classes.Card}>
+            <CardMedia
+              component={"img"}
+              className={classes.CardMedia}
+              src={GithubLogo}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                width: "50%",
+                padding: "1%",
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                size={"medium"}
+                onClick={() => {
+                  githubOAuth("register");
+                }}
+              >
+                Create an account with GitHub
+              </Button>
+            </Box>
+          </Card>
+          <Card className={classes.Card}>
+            <CardMedia
+              component={"img"}
+              className={classes.CardMedia}
+              src={GithubLogo}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                width: "50%",
+                padding: "1%",
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                size={"medium"}
+                onClick={() => {
+                  githubOAuth("login");
+                }}
+              >
+                Login with GitHub
+              </Button>
+            </Box>
+          </Card>
           <ModalAuth
             open={open}
             handleClose={handleClose}
