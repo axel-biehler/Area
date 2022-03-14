@@ -86,6 +86,14 @@ const register = async (req, res) => {
       return;
     }
 
+    if (!(await authentication.githubAvailable(dataUser.login))) {
+      res.json({
+        status: false,
+        error: 'github already taken',
+      });
+      return;
+    }
+
     if (!(await authentication.emailAvailable(dataUser.email))) {
       res.json({
         status: false,

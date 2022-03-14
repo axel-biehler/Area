@@ -59,7 +59,7 @@ const login = async (req, res) => {
 
     // save token and name owner in github user object
 
-    const user = await User.findOne({ username: dataUser.login });
+    const user = await User.findOne({ 'github.owner': dataUser.login });
 
     if (user == null) {
       res.json({
@@ -71,6 +71,7 @@ const login = async (req, res) => {
 
     user.github = {
       token: dataOauth.access_token,
+      owner: dataUser.login,
     };
 
     await user.save();
