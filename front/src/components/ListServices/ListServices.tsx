@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Box,
@@ -23,7 +23,8 @@ import {
   IProfileProps,
   IStatusResponse,
   IRedirectOAuth,
-  ITwitterOAuth, IDiscordOAuth,
+  ITwitterOAuth,
+  IDiscordOAuth,
 } from "../../Interfaces";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -35,7 +36,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       justifyContent: "space-between",
       backgroundColor: "white",
-      // backgroundColor: "#4fc3f7ff",
       width: "600px",
       height: "110px",
       marginBottom: "20px",
@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function ListServices(props: IProfileProps) {
   const classes = useStyles();
+  const [error, setError] = useState<boolean>(false);
 
   const githubOAuth = async () => {
     if (props.infos.githubLinked) {
@@ -60,20 +61,24 @@ function ListServices(props: IProfileProps) {
         "/services/github/unlink",
         "GET"
       );
-      myFetch<IStatusResponse>(
-        `/instances/delete/github`,
-        "DELETE"
-      );
       if (res.status) {
         const newInfos: IProfileData = {
           ...props.infos,
           githubLinked: false,
         };
         props.setInfos(newInfos);
+        myFetch<IStatusResponse>(`/instances/delete/github`, "DELETE");
       } else {
+        if (res.error === "Impossible to revoke.") {
+          setError(true);
+          setTimeout(() => {
+            setError(false);
+          }, 5000);
+        }
         console.log("ERROR: ", res.error);
       }
     } else {
+      localStorage.setItem("method", "linking");
       const res: IGithubEnv = await myFetch<IGithubEnv>(
         "/services/github/env",
         "GET"
@@ -85,10 +90,7 @@ function ListServices(props: IProfileProps) {
 
   const trelloOAuth = async () => {
     if (props.infos.trelloLinked) {
-      await myFetch<IStatusResponse>(
-        `/instances/delete/trello`,
-        "DELETE"
-      );
+      await myFetch<IStatusResponse>(`/instances/delete/trello`, "DELETE");
       const res: IStatusResponse = await myFetch<IStatusResponse>(
         "/services/trello/unlink",
         "GET"
@@ -122,10 +124,7 @@ function ListServices(props: IProfileProps) {
         "/services/twitter/unlink",
         "GET"
       );
-      myFetch<IStatusResponse>(
-        `/instances/delete/github`,
-        "DELETE"
-      );
+      myFetch<IStatusResponse>(`/instances/delete/github`, "DELETE");
       if (res.status) {
         const newInfos: IProfileData = {
           ...props.infos,
@@ -138,12 +137,10 @@ function ListServices(props: IProfileProps) {
     } else {
       const res: ITwitterOAuth = await myFetch<ITwitterOAuth>(
         "/services/twitter/connect",
-        "POST",
-        JSON.stringify({ callback: "http://localhost:8081/twitter/link" })
+        "GET",
       );
       if (res.status) {
-        const url = `https://api.twitter.com/oauth/authenticate?oauth_token=${res.oauthToken}`;
-        window.location.replace(url);
+        window.location.replace(res.url!);
       } else {
         console.log("ERROR: ", res.error);
       }
@@ -156,10 +153,7 @@ function ListServices(props: IProfileProps) {
         "/services/reddit/unlink",
         "GET"
       );
-      myFetch<IStatusResponse>(
-        `/instances/delete/github`,
-        "DELETE"
-      );
+      myFetch<IStatusResponse>(`/instances/delete/github`, "DELETE");
       if (res.status) {
         const newInfos: IProfileData = {
           ...props.infos,
@@ -170,10 +164,7 @@ function ListServices(props: IProfileProps) {
         console.log("ERROR: ", res.error);
       }
     } else {
-      const res: any = await myFetch<any>(
-        "/services/reddit/connect",
-        "GET",
-      );
+      const res: any = await myFetch<any>("/services/reddit/connect", "GET");
       window.location.replace(res["url"]);
     }
   };
@@ -184,10 +175,7 @@ function ListServices(props: IProfileProps) {
         "/services/todoist/unlink",
         "GET"
       );
-      myFetch<IStatusResponse>(
-        `/instances/delete/github`,
-        "DELETE"
-      );
+      myFetch<IStatusResponse>(`/instances/delete/github`, "DELETE");
       if (res.status) {
         const newInfos: IProfileData = {
           ...props.infos,
@@ -198,10 +186,7 @@ function ListServices(props: IProfileProps) {
         console.log("ERROR: ", res.error);
       }
     } else {
-      const res: any = await myFetch<any>(
-        "/services/todoist/connect",
-        "GET",
-      );
+      const res: any = await myFetch<any>("/services/todoist/connect", "GET");
       window.location.replace(res["url"]);
     }
   };
@@ -212,10 +197,7 @@ function ListServices(props: IProfileProps) {
         "/services/discord/unlink",
         "GET"
       );
-      myFetch<IStatusResponse>(
-        `/instances/delete/github`,
-        "DELETE"
-      );
+      myFetch<IStatusResponse>(`/instances/delete/github`, "DELETE");
       if (res.status) {
         const newInfos: IProfileData = {
           ...props.infos,
@@ -228,17 +210,26 @@ function ListServices(props: IProfileProps) {
     } else {
       const res: IDiscordOAuth = await myFetch<IDiscordOAuth>(
         "/services/discord/env",
-        "GET",
+        "GET"
       );
       if (res.status) {
-        window.location.replace(`https://discord.com/api/oauth2/authorize?client_id=${res.clientId}&permissions=8&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fdiscord%2Flink&response_type=code&scope=${res.scope}`);
+        window.location.replace(
+          `https://discord.com/api/oauth2/authorize?client_id=${res.clientId}&permissions=8&redirect_uri=http%3A%2F%2Flocalhost%3A8081%2Fdiscord%2Flink&response_type=code&scope=${res.scope}`
+        );
       }
     }
   };
 
   return (
     <div>
-      <Typography variant="h3" className={classes.Title}>My services</Typography>
+      <Typography variant="h3" className={classes.Title}>
+        My services
+      </Typography>
+      {error ? (
+        <Typography variant="h5" className={classes.Title}>
+          You can't unlink the service used to create your account.
+        </Typography>
+      ) : null}
       <div className="ListContainer">
         <Card className={classes.Card}>
           <CardMedia

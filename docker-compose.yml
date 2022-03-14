@@ -1,11 +1,12 @@
 version: "3"
 
 services:
-  nginx:
+  client_web:
     build: nginx  
     depends_on:
       - front
-      - mobile
+      - client_mobile
+      - server
     ports:
       - 8081:8081
     volumes:
@@ -17,7 +18,7 @@ services:
     volumes:
       - "web:/opt"
 
-  mobile:
+  client_mobile:
     build:
       context: ./mobile
     volumes:

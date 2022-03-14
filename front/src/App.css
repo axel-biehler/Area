@@ -1,5 +1,9 @@
 @import "Colors.css";
 
+body {
+  max-width: 100%;
+}
+
 .App {
   text-align: center;
   height:100%;

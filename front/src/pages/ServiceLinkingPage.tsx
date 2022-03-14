@@ -8,7 +8,8 @@ import {
 } from "@material-ui/core";
 import Navbar from "../components/Navbar";
 import myFetch from "../api/api";
-import { IStatusResponse } from "../Interfaces";
+import {IAuthResponse, IStatusResponse} from "../Interfaces";
+import {setToken} from "../api/auth";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,8 +51,8 @@ function getData(service: string) {
 
   if (service === "twitter") {
     return {
-      oauthToken: params.get("oauth_token"),
-      oauthVerifier: params.get("oauth_verifier"),
+      code: params.get("code"),
+      state: params.get("state"),
     };
   } else if (service === "trello") {
     return {
@@ -76,12 +77,40 @@ function getData(service: string) {
   }
 }
 
+async function githubAuthentication(setStatus: React.Dispatch<React.SetStateAction<string>>) {
+  const service = "github";
+  const data = getData(service);
+  const url = `/services/github/${localStorage.getItem("method")}`;
+  const res: IAuthResponse = await myFetch<IAuthResponse>(
+    url,
+    "POST",
+    JSON.stringify(data)
+  );
+  if (res.status) {
+    setToken(res.token!);
+    localStorage.removeItem("method");
+    window.location.replace("/");
+  } else {
+    console.log("ERROR: ", res.error);
+    setStatus(res.error!);
+    setTimeout(function () {
+      window.location.replace("/auth");
+    }, 3000);
+    window.location.replace("/");
+  }
+}
+
 function ServiceLinkingPage() {
   const classes = useStyles();
   const [status, setStatus] = useState("");
 
   async function validateOAuth() {
+    if (window.location.toString().indexOf("github") !== -1 && localStorage.getItem("method") !== "linking") {
+      await githubAuthentication(setStatus);
+      return;
+    }
     try {
+      localStorage.removeItem("method");
       const service: string | undefined = getServiceName();
       if (service === undefined) {
         return;

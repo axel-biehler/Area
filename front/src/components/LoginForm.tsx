@@ -78,6 +78,7 @@ function LoginForm(props: IFormProps) {
       <TextField
         label="Password"
         variant="filled"
+        type={"password"}
         required
         value={password}
         onChange={(e) => setPassword(e.target.value)}
