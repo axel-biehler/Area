@@ -93,25 +93,53 @@ const Login = () => {
     })();
   }, [navigateToHome]);
 
+  const loginWithGithub = async () => {
+    const res = await request('/services/github/env', 'GET');
+
+    const { clientId, scope, state } = res;
+
+    Linking.openURL(
+      `https://github.com/login/oauth/authorize?client_id=${clientId}&state=${state}&scope=${scope}`,
+    );
+  };
+
   useEffect(() => {
     const linkingBind = Linking.addEventListener('url', async data => {
       const url = new URL(data.url);
 
       const prefix = '/validate/';
-      if (!url.pathname.startsWith(prefix)) {
-        return;
+      if (url.pathname.startsWith(prefix)) {
+        const emailToken = url.pathname.substring(prefix.length);
+        const result = await request(`/auth/verifyEmail/${emailToken}`);
+
+        await token.set(result.token);
+
+        const payload = JSON.parse(decode(result.token.split('.')[1]));
+        await usernameStorage.set(payload.username);
+        await exp.set(payload.exp.toString());
+
+        navigateToHome();
+      } else if (url.pathname === '/github/link') {
+        const code = url.searchParams.get('code');
+        const state = url.searchParams.get('state');
+
+        const res = await request('/services/github/login', 'POST', {
+          code,
+          state,
+        });
+
+        if (!res.status) {
+          setError(`An error occured: ${res.error || 'unknown error'}.`);
+        } else {
+          await token.set(res.token);
+
+          const payload = JSON.parse(decode(res.token.split('.')[1]));
+          await usernameStorage.set(payload.username);
+          await exp.set(payload.exp.toString());
+
+          navigateToHome();
+        }
       }
-
-      const emailToken = url.pathname.substring(prefix.length);
-      const result = await request(`/auth/verifyEmail/${emailToken}`);
-
-      await token.set(result.token);
-
-      const payload = JSON.parse(decode(result.token.split('.')[1]));
-      await usernameStorage.set(payload.username);
-      await exp.set(payload.exp.toString());
-
-      navigateToHome();
     });
 
     return () => {
@@ -162,6 +190,9 @@ const Login = () => {
           Log in
         </Button>
       </View>
+      <Button icon="github" onPress={loginWithGithub}>
+        Login with GitHub
+      </Button>
       <Button onPress={navigateToRegister}>Need an account?</Button>
     </View>
   );

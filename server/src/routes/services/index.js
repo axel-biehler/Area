@@ -6,6 +6,7 @@ const router = express.Router();
 router.post('/github/webhook', require('./github/webhook'));
 router.post('/trello/webhook', require('./trello/webhook').webhook);
 
+router.get('/github/env', require('./github/env'));
 router.post('/github/login', require('./github/login'));
 router.post('/github/register', require('./github/register'));
 
@@ -25,7 +26,6 @@ router.get('/trello/listsOnBoard', require('./trello/getListsOnBoard'));
 router.post('/github/link', require('./github/link'));
 router.get('/github/unlink', require('./github/unlink'));
 router.get('/github/user', require('./github/getUserExample'));
-router.get('/github/env', require('./github/env'));
 router.get('/github/unlink', require('./github/unlink'));
 
 router.get('/reddit/connect', require('./reddit/connect'));
