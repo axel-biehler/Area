@@ -11,6 +11,13 @@ const unlink = async (req, res) => {
       });
     }
 
+    if (!user.password) {
+      return res.json({
+        status: false,
+        error: 'Impossible to revoke.',
+      });
+    }
+
     user.github = {};
 
     await user.save();
