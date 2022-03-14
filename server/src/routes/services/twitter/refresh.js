@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 const { User } = require('../../../database');
 
 const refresh = async (userId) => {
@@ -29,7 +30,7 @@ const refresh = async (userId) => {
   u.twitterAccess = body.access_token;
   u.twitterRefresh = body.refresh_token;
 
-  u.save();
+  await u.save();
 };
 
 module.exports = refresh;

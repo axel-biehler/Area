@@ -7,7 +7,7 @@ const get = async (req, res) => {
     res.json({
       username: user.username,
       email: user.email,
-      twitterLinked: user.twitterId != null,
+      twitterLinked: user.twitterAccess != null,
       githubLinked: user.github.token != null,
       trelloLinked: user.trello.trelloToken != null,
       discordLinked: user.discord.token != null,

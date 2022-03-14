@@ -3,10 +3,9 @@ const { User } = require('../../../../database');
 const refresh = require('../refresh');
 
 const postTweet = async (instance) => {
-  const u = await User.findById(instance.userId);
-
   await refresh(instance.userId);
 
+  const u = await User.findById(instance.userId);
   if (u == null) {
     throw Error('user not found');
   }
@@ -15,18 +14,17 @@ const postTweet = async (instance) => {
     {});
 
   const res = await fetch('https://api.twitter.com/2/tweets', {
-    method: 'POSt',
+    method: 'POST',
     headers: {
       Authorization: `Bearer ${u.twitterAccess}`,
+      'Content-Type': 'application/json',
     },
-    body: {
+    body: JSON.stringify({
       text: params.text,
-    },
+    }),
   });
 
-  const body = await res.json();
-
-  console.log(body);
+  await res.json();
 };
 
 module.exports = postTweet;

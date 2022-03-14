@@ -9,8 +9,6 @@ const UserSchema = new Schema({
   emailToken: String,
   twitterAccess: String,
   twitterRefresh: String,
-  twitterId: String,
-  twitterLastTweet: String,
   github: {
     token: String,
     owner: String,
