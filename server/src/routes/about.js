@@ -60,6 +60,7 @@ const about = (req, res) => {
       host: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
     },
     server: {
+      currentTime: Math.floor(new Date().getTime() / 1000),
       services: finalobj,
     },
   });
