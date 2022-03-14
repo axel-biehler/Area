@@ -13,7 +13,6 @@ router.post('/github/register', require('./github/register'));
 router.use(authMiddleware);
 router.get('/twitter/connect', require('./twitter/connect'));
 router.post('/twitter/link', require('./twitter/link'));
-router.get('/twitter/getProfile', require('./twitter/getProfile'));
 router.get('/twitter/unlink', require('./twitter/unlink'));
 
 router.post('/trello/connect', require('./trello/connect'));
