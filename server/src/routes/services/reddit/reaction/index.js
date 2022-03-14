@@ -6,8 +6,8 @@ const runReaction = {
   createPostSub,
 };
 
-const todoistRunReaction = async (instance) => {
+const redditRunReaction = async (instance) => {
   await runReaction[instance.reaction.name](instance);
 };
 
-module.exports = todoistRunReaction;
+module.exports = redditRunReaction;
