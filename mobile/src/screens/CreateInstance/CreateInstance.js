@@ -82,8 +82,35 @@ const CreateInstance = () => {
 
   useEffect(() => {
     (async () => {
-      setActions(await request('/actions'));
-      setReactions(await request('/reactions'));
+      const profile = await request('/profile');
+
+      const allActions = await request('/actions');
+      const availableActions = allActions.filter(service => {
+        const serviceLinkedKey = `${service.name}Linked`;
+
+        if (serviceLinkedKey in profile) {
+          if (profile[serviceLinkedKey] !== true) {
+            return false;
+          }
+          return true;
+        }
+        return true;
+      });
+      setActions(availableActions);
+
+      const allReactions = await request('/reactions');
+      const availableReactions = allReactions.filter(service => {
+        const serviceLinkedKey = `${service.name}Linked`;
+
+        if (serviceLinkedKey in profile) {
+          if (profile[serviceLinkedKey] !== true) {
+            return false;
+          }
+          return true;
+        }
+        return true;
+      });
+      setReactions(availableReactions);
     })();
   }, []);
 
