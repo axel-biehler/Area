@@ -239,6 +239,7 @@ function InstanceEditor(props: IInstanceEditorProps) {
             onClick={() => {
               if (instance) {
                 props.saveInstance(instance);
+                toggleSettings();
               }
             }}
           >
