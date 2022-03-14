@@ -11,7 +11,6 @@ const unlink = async (req, res) => {
       });
     }
 
-    user.twitterId = undefined;
     user.twitterAccess = undefined;
     user.twitterRefresh = undefined;
 

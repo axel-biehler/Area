@@ -22,8 +22,9 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
     "node-fetch": "^2.6.7",
-    "node-mailjet": "^3.3.4",
+    "node-mailjet": "^3.3.7",
     "oauth": "^0.9.15",
+    "oauth-1.0a": "^2.2.6",
     "uuid": "^8.3.2"
   }
 }

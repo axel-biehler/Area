@@ -1,7 +1,7 @@
-const createCard = require('./createCard');
+const postTweet = require('./postTweet');
 
 const runReaction = {
-  createCard,
+  postTweet,
 };
 
 const twitterRunReaction = async (instance) => {
