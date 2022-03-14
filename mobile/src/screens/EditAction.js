@@ -39,19 +39,31 @@ const EditAction = () => {
         const oldParam = instance.action.params.find(y => y.name === x.name);
 
         if (x.type === 'get' || x.type === 'dropdown') {
-          return x;
+          return {
+            ...x,
+            chosenType: oldParam.type,
+            value:
+              oldParam.type !== 'number'
+                ? oldParam.value
+                : parseInt(oldParam.value, 10),
+          };
         }
 
         return oldParam;
       });
-
       setParams(newParams);
     })();
   }, [instance]);
 
   const update = async p => {
+    const normalizedP = p.map(x => ({
+      name: x.name,
+      type: x.chosenType || x.type,
+      value: x.value,
+    }));
+
     await request(`/instances/${instance._id}`, 'POST', {
-      action: p,
+      action: normalizedP,
     });
     await navigateToHome();
   };
