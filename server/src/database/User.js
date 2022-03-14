@@ -10,6 +10,7 @@ const UserSchema = new Schema({
   twitterAccess: String,
   twitterRefresh: String,
   twitterId: String,
+  twitterLastTweet: String,
   github: {
     token: String,
     owner: String,

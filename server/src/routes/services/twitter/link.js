@@ -1,60 +1,49 @@
-const OAuth = require('oauth');
-const { promisify } = require('util');
+const fetch = require('node-fetch');
 const { User } = require('../../../database');
 
 const link = async (req, res) => {
-  const { oauthToken, oauthVerifier } = req.body;
+  const u = User.findById(req.userId);
 
-  const oauth = new OAuth.OAuth(
-    'https://api.twitter.com/oauth/request_token',
-    'https://api.twitter.com/oauth/access_token',
-    process.env.TWITTER_CONSUMER_KEY,
-    process.env.TWITTER_CONSUMER_SECRET,
-    '1.0A', null, 'HMAC-SHA1',
-  );
+  if (u == null) {
+    res.status(404).json({
+      status: false,
+      error: 'user not found',
+    });
+  }
+  const params = new URLSearchParams();
 
-  const postToken = promisify(oauth.post.bind(oauth));
+  params.append('code', req.body.code.toString());
+  params.append('client_id', process.env.TWITTER_CLIENT_ID);
+  params.append('redirect_uri', 'http://localhost:8081/twitter/link');
+  params.append('state', req.body.state);
+  params.append('grant_type', 'authorization_code');
+  params.append('code_verifier', 'challenge');
 
   try {
-    const body = await postToken(
-      `https://api.twitter.com/oauth/access_token?oauth_verifier=${oauthVerifier}&oauth_token=${oauthToken}&scope=tweet.write%20tweet.read%20users.read%20follows.read%20offline.access`,
-      null,
-      null,
-      null,
-    ).catch((err) => console.error(err));
+    const result = await fetch('https://api.twitter.com/2/oauth2/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params,
+    });
+    const body = await result.json();
 
-    const params = new URLSearchParams(body);
+    u.twitterAccess = body.access_token;
+    u.twitterRefresh = body.refresh_token;
 
-    const accessToken = params.get('oauth_token');
-    const oauthTokenSecret = params.get('oauth_token_secret');
-    const userId = params.get('user_id');
+    u.save();
 
-    const u = await User.findById(req.userId);
-
-    if (u == null) {
-      res.json({
-        status: false,
-        error: 'User not found.',
-      });
-      return;
-    }
-
-    u.twitterId = userId;
-    u.twitterAccess = accessToken;
-    u.twitterRefresh = oauthTokenSecret;
-
-    await u.save();
+    res.json({
+      status: true,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({
       status: false,
       error: 'internal error',
     });
-    return;
   }
-  res.json({
-    status: true,
-  });
 };
 
 module.exports = link;
