@@ -47,7 +47,7 @@ interface IRedirectOAuth {
 
 interface ITwitterOAuth {
   status: boolean;
-  oauthToken?: string;
+  url?: string;
   error?: string;
 }
 

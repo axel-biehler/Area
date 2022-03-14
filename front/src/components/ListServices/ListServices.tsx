@@ -137,12 +137,10 @@ function ListServices(props: IProfileProps) {
     } else {
       const res: ITwitterOAuth = await myFetch<ITwitterOAuth>(
         "/services/twitter/connect",
-        "POST",
-        JSON.stringify({ callback: "http://localhost:8081/twitter/link" })
+        "GET",
       );
       if (res.status) {
-        const url = `https://api.twitter.com/oauth/authorize?oauth_token=${res.oauthToken}`;
-        window.location.replace(url);
+        window.location.replace(res.url!);
       } else {
         console.log("ERROR: ", res.error);
       }

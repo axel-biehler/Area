@@ -51,8 +51,8 @@ function getData(service: string) {
 
   if (service === "twitter") {
     return {
-      oauthToken: params.get("oauth_token"),
-      oauthVerifier: params.get("oauth_verifier"),
+      code: params.get("code"),
+      state: params.get("state"),
     };
   } else if (service === "trello") {
     return {
