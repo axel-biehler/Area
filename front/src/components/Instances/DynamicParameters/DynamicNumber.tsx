@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function DynamicNumber(props: IParameterProps) {
   const classes = useStyles();
-  const [number, setNumber] = useState(props.element.value !== undefined ? props.element.value : 3);
+  const [number, setNumber] = useState(props.element.value !== undefined ? props.element.value : null);
 
   return (
     <div key={props.index} className={classes.Input}>

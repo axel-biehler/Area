@@ -26,8 +26,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function DynamicTime(props: IParameterProps) {
   const classes = useStyles();
-  const [hours, setHours] = useState(props.element.value !== undefined ? +(props.element.value.split(":")[0]) : 0);
-  const [minutes, setMinutes] = useState(props.element.value !== undefined ? +(props.element.value.split(":")[1]) : 0);
+  const [hours, setHours] = useState(props.element.value !== undefined ? +(props.element.value.split(":")[0]) : null);
+  const [minutes, setMinutes] = useState(props.element.value !== undefined ? +(props.element.value.split(":")[1]) : null);
   const [error, setError] = useState(false);
 
   const formatTime = (value: string ,type: string) => {
