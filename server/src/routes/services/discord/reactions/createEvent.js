@@ -27,7 +27,7 @@ const createEvent = async (instance) => {
 
   date.setDate(now.getDate() + Number(params.days));
 
-  if (Object.prototype.hasOwnProperty.call(params, 'time') && params.time.match('/[0-2][0-9]:[0-5][0-9]/g')) {
+  if (Object.prototype.hasOwnProperty.call(params, 'time')) {
     time = params.time;
   } else {
     time = '18:00';
@@ -37,6 +37,10 @@ const createEvent = async (instance) => {
 
   date.setHours(time[0]);
   date.setMinutes(time[1]);
+
+  // to utc + 1
+
+  date.setHours(date.getHours() - 1);
 
   body.scheduled_start_time = date.toISOString();
 
