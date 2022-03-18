@@ -10,6 +10,34 @@ To make the webhooks work while respecting the subject and run the server on a l
 
 Hookdeck is a tool that allows us to retrieve webhooks even when developing locally. It is temporary until we deploy it.
 
+#env
+
+For this project you need to setup your environment variables, below is an example .env
+
+```
+MONGO_URL=mongodb://login:password@localhost
+FRONTEND_URL=http://localhost:8081
+MAILJET_API_KEY=XXXXXX
+MAILJET_SECRET=XXXXXX
+FAKE_MAIL=FAKE
+TWITTER_CLIENT_SECRET=XXXXXX
+TWITTER_CLIENT_ID=XXXXXX
+TRELLO_API_KEY=XXXXXX
+TRELLO_API_SECRET=XXXXXX
+GITHUB_CLIENT_ID=XXXXXX
+GITHUB_CLIENT_SECRET=XXXXXX
+GITHUB_STATE=random_string
+DISCORD_CLIENT_ID=XXXXXX
+DISCORD_CLIENT_SECRET=XXXXXX
+DISCORD_BOT_TOKEN=XXXXXX
+REDDIT_ID=XXXXXX
+REDDIT_SECRET=XXXXXX
+TODOIST_ID=XXXXXX
+TODOIST_SECRET=XXXXXX
+TRELLO_WEBHOOK= add link genrated with hookdeck
+GITHUB_WEBHOOK= add link genrated with hookdeck
+```
+
 ### Install
 
 Go to this page: https://github.com/hookdeck/hookdeck-cli/releases/tag/v0.4.4
